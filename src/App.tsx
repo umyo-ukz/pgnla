@@ -10,6 +10,8 @@ import Login from "./pages/Login";
 import Registration from "./pages/Registration";
 import Footer from "./components/Footer";
 import ParentDashboard from "./pages/ParentDashboard";
+import GradesPage from "./pages/GradesPage";
+import AccountSettings from "./pages/AccountSettings";
 
 export default function App() {
   return (
@@ -27,6 +29,10 @@ export default function App() {
           <Route path="/registration" element={<Registration />} />
           <Route path="*" element={<Home />} />
           <Route path="/parent-dashboard" element={<ParentDashboard />} />
+          <Route path="/student/:studentId/grades" element={<GradesPage />} />
+          <Route path="/account" element={<AccountSettings />} />
+
+
 
         </Routes>
         <Footer />

@@ -1,5 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useMutation } from "convex/react";
+import { api } from "../../convex/_generated/api";
+
+
 
 interface FormData {
   // Student Info
@@ -30,6 +34,7 @@ interface FormData {
 }
 
 export default function Registration() {
+  const submitRegistration = useMutation(api.registrations.submitRegistration);
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
@@ -78,17 +83,43 @@ export default function Registration() {
     }
   };
 
-  const handleSubmit = () => {
-    if (!formData.agreeToTerms) {
-      alert("Please agree to the Terms and Conditions");
-      return;
-    }
-    
-    setSubmitted(true);
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 3000);
-  };
+  const handleSubmit = async () => {
+  if (!formData.agreeToTerms) {
+    alert("Please agree to the Terms and Conditions");
+    return;
+  }
+
+  await submitRegistration({
+    studentFirstName: formData.firstName,
+    studentLastName: formData.lastName,
+    middleName: formData.middleName || undefined,
+    dateOfBirth: formData.dateOfBirth,
+    gender: formData.gender || undefined,
+    programType: formData.programType,
+    startDate: formData.startDate,
+    medicalInfo: formData.medicalInfo || undefined,
+
+    primaryParentName: formData.primaryParentName,
+    relationship: formData.relationship,
+    email: formData.email,
+    phone: formData.phone,
+
+    secondaryParentName: formData.secondaryParentName || undefined,
+    secondaryRelationship: formData.secondaryRelationship || undefined,
+    secondaryEmail: formData.secondaryEmail || undefined,
+    secondaryPhone: formData.secondaryPhone || undefined,
+
+    emergencyName: formData.emergencyName,
+    emergencyRelationship: formData.emergencyRelationship,
+    emergencyPhone: formData.emergencyPhone,
+  });
+
+  setSubmitted(true);
+  setTimeout(() => {
+    window.location.href = "/";
+  }, 3000);
+};
+
 
   return (
     <main className="container-wide px-4 py-12">

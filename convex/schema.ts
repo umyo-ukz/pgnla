@@ -15,7 +15,7 @@ export default defineSchema({
     expiresAt: v.number(),
   }).index("by_token", ["token"]),
 
-    sessionsStaff: defineTable({
+  sessionsStaff: defineTable({
     staffId: v.id("staff"),
     token: v.string(),
     expiresAt: v.number(),
@@ -40,7 +40,52 @@ export default defineSchema({
     isActive: v.boolean(),
   }).index("by_email", ["email"]),
 
+  grades: defineTable({
+    studentId: v.id("students"),
+    subject: v.string(),
+    score: v.number(),
+    term: v.string(), // e.g. "Term 1"
+    createdAt: v.number(),
+  }).index("by_student", ["studentId"]),
+
+
+  
+
+  registrations: defineTable({
+    // Student
+    studentFirstName: v.string(),
+    studentLastName: v.string(),
+    middleName: v.optional(v.string()),
+    dateOfBirth: v.string(),
+    gender: v.optional(v.string()),
+    programType: v.string(),
+    startDate: v.string(),
+    medicalInfo: v.optional(v.string()),
+
+    // Parent
+    primaryParentName: v.string(),
+    relationship: v.string(),
+    email: v.string(),
+    phone: v.string(),
+
+    secondaryParentName: v.optional(v.string()),
+    secondaryRelationship: v.optional(v.string()),
+    secondaryEmail: v.optional(v.string()),
+    secondaryPhone: v.optional(v.string()),
+
+    emergencyName: v.string(),
+    emergencyRelationship: v.string(),
+    emergencyPhone: v.string(),
+
+    status: v.union(
+      v.literal("pending"),
+      v.literal("approved"),
+      v.literal("rejected")
+    ),
+
+    createdAt: v.number(),
+  }).index("by_status", ["status"]),
 
 });
-  
+
 

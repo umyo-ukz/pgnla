@@ -60,10 +60,10 @@ export default function Navbar() {
                       <i className="fas fa-user-plus mr-2"></i>Dashboard
                     </Link>
                     <Link
-                      to="/financing"
+                      to="/account"
                       className="block px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-primary-red rounded-xl"
                     >
-                      <i className="fas fa-cog mr-2"></i>Settings
+                      <i className="fas fa-cog mr-2"></i>Account Settings
                     </Link>
                   </div>
                 </div>
