@@ -1,49 +1,201 @@
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const { login } = useAuth();
+  const { loginAsParent, loginAsStaff } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [active, setActive] = useState<"parent" | "staff">("parent");
+  const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmitParent(e: React.FormEvent) {
     e.preventDefault();
+    setError("");
+    setLoading(true);
+
     try {
-      await login(email, password);
+      await loginAsParent(email, password);
       navigate("/parents");
     } catch {
       setError("Invalid email or password");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleSubmitStaff(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      await loginAsStaff(email, password);
+      navigate("/staff");
+    } catch {
+      setError("Invalid email or password");
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
-    <div className="max-w-md mx-auto mt-20 bg-white p-8 rounded-xl shadow">
-      <h1 className="text-2xl font-bold mb-6">Parent Login</h1>
+    <main className="container-wide px-4 py-12">
+      <div className="max-w-md mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="w-20 h-20 bg-primary-red rounded-full flex items-center justify-center mx-auto mb-4">
+            <i className="fas fa-graduation-cap text-white text-3xl"></i>
+          </div>
+          <h1 className="page-title text-center">Welcome Back</h1>
+          <p className="text-gray-600">Login to access your account</p>
+        </div>
 
-      {error && <p className="text-red-600 mb-4">{error}</p>}
+        {/* Login Card */}
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden animate-fade-in">
+          {/* Tabs */}
+          <div className="border-b">
+            <div className="flex">
+              <button
+                type="button"
+                onClick={() => setActive("parent")}
+                className={`flex-1 py-4 font-semibold text-center border-b-2 ${
+                  active === "parent"
+                    ? "border-primary-red text-primary-red"
+                    : "border-transparent text-gray-500"
+                }`}
+              >
+                <i className="fas fa-user-friends mr-2"></i>
+                Parent Login
+              </button>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          className="w-full border p-3 rounded"
-          placeholder="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-        />
+              <button
+                type="button"
+                onClick={() => setActive("staff")}
+                className={`flex-1 py-4 font-semibold text-center border-b-2 ${
+                  active === "staff"
+                    ? "border-primary-red text-primary-red"
+                    : "border-transparent text-gray-500"
+                }`}
+              >
+                <i className="fas fa-chalkboard-teacher mr-2"></i>
+                Staff Login
+              </button>
+            </div>
+          </div>
 
-        <input
-          type="password"
-          className="w-full border p-3 rounded"
-          placeholder="Password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-        />
+          {/* Error */}
+          {error && (
+            <div className="bg-red-50 text-red-700 px-6 py-3 text-sm">
+              {error}
+            </div>
+          )}
 
-        <button className="btn-primary w-full">Login</button>
-      </form>
-    </div>
+          {/* Parent Form */}
+          {active === "parent" && (
+            <form onSubmit={handleSubmitParent} className="p-8">
+              <div className="space-y-6">
+                <div>
+                  <label className="form-label">Email Address</label>
+                  <input
+                    type="email"
+                    required
+                    className="input-field"
+                    placeholder="parent@gmail.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label className="form-label">Password</label>
+                  <input
+                    type="password"
+                    required
+                    className="input-field"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full btn-primary py-3 text-lg disabled:opacity-60"
+                >
+                  <i className="fas fa-sign-in-alt mr-2"></i>
+                  {loading ? "Signing in..." : "Login to Parent Portal"}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* Staff Form */}
+          {active === "staff" && (
+            <form onSubmit={handleSubmitStaff} className="p-8">
+              <div className="space-y-6">
+                <div>
+                  <label className="form-label">Staff Email</label>
+                  <input
+                    type="email"
+                    required
+                    className="input-field"
+                    placeholder="staff@pngla.edu"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label className="form-label">Password</label>
+                  <input
+                    type="password"
+                    required
+                    className="input-field"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full btn-primary py-3 text-lg disabled:opacity-60"
+                >
+                  <i className="fas fa-sign-in-alt mr-2"></i>
+                  {loading ? "Signing in..." : "Login to Staff Portal"}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* Footer */}
+          <div className="bg-gray-50 p-6 border-t">
+            <p className="text-center text-gray-600">
+              New to Pequeños Gigantes?
+              <Link
+                to="/registration"
+                className="text-primary-red font-semibold hover:underline ml-1"
+              >
+                Register here
+              </Link>
+            </p>
+            <p className="text-sm mt-3 text-center text-gray-500">
+              Account credentials are provided upon student registration
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-6 text-center text-gray-500 text-sm">
+          <i className="fas fa-lock mr-1"></i>
+          Your login information is secure and encrypted
+        </div>
+      </div>
+    </main>
   );
 }

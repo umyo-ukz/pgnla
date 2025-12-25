@@ -9,8 +9,14 @@ export default defineSchema({
     isActive: v.boolean(),
   }).index("by_email", ["email"]),
 
-  sessions: defineTable({
+  sessionsParent: defineTable({
     parentId: v.id("parents"),
+    token: v.string(),
+    expiresAt: v.number(),
+  }).index("by_token", ["token"]),
+
+    sessionsStaff: defineTable({
+    staffId: v.id("staff"),
     token: v.string(),
     expiresAt: v.number(),
   }).index("by_token", ["token"]),
@@ -26,6 +32,14 @@ export default defineSchema({
     passwordHash: v.string(),
     name: v.string(),
   }).index("by_email", ["email"]),
+
+  staff: defineTable({
+    email: v.string(),
+    passwordHash: v.string(),
+    fullName: v.string(),
+    isActive: v.boolean(),
+  }).index("by_email", ["email"]),
+
 
 });
   

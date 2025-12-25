@@ -2,7 +2,7 @@ import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import bcrypt from "bcryptjs";
 
-const SESSION_TTL = 1000 * 60 * 60 * 24 * 7; // 7 days
+const SESSION_TTL = 1000 * 60 * 60 * 24 * 7;
 
 function generateToken() {
   return (
@@ -12,7 +12,9 @@ function generateToken() {
   );
 }
 
-export const login = mutation({
+/* ===================== PARENT ===================== */
+
+export const loginParent = mutation({
   args: {
     email: v.string(),
     password: v.string(),
@@ -27,12 +29,13 @@ export const login = mutation({
       throw new Error("Invalid credentials");
     }
 
-    const valid = bcrypt.compareSync(password, parent.passwordHash);
-    if (!valid) throw new Error("Invalid credentials");
+    if (!bcrypt.compareSync(password, parent.passwordHash)) {
+      throw new Error("Invalid credentials");
+    }
 
     const token = generateToken();
 
-    await ctx.db.insert("sessions", {
+    await ctx.db.insert("sessionsParent", {
       parentId: parent._id,
       token,
       expiresAt: Date.now() + SESSION_TTL,
@@ -40,7 +43,8 @@ export const login = mutation({
 
     return {
       token,
-      parent: {
+      role: "parent" as const,
+      user: {
         id: parent._id,
         fullName: parent.fullName,
         email: parent.email,
@@ -50,35 +54,94 @@ export const login = mutation({
 });
 
 export const getCurrentParent = query({
-  args: {
-    token: v.string(),
-  },
+  args: { token: v.string() },
   handler: async (ctx, { token }) => {
     const session = await ctx.db
-      .query("sessions")
+      .query("sessionsParent")
       .withIndex("by_token", q => q.eq("token", token))
       .unique();
 
-    if (!session || session.expiresAt < Date.now()) {
-      return null;
-    }
-
-    return await ctx.db.get(session.parentId);
+    if (!session || session.expiresAt < Date.now()) return null;
+    return ctx.db.get(session.parentId);
   },
 });
 
-export const logout = mutation({
+/* ===================== STAFF ===================== */
+
+export const loginStaff = mutation({
   args: {
-    token: v.string(),
+    email: v.string(),
+    password: v.string(),
   },
+  handler: async (ctx, { email, password }) => {
+    const staff = await ctx.db
+      .query("staff")
+      .withIndex("by_email", q => q.eq("email", email))
+      .unique();
+
+    if (!staff || !staff.isActive) {
+      throw new Error("Invalid credentials");
+    }
+
+    if (!bcrypt.compareSync(password, staff.passwordHash)) {
+      throw new Error("Invalid credentials");
+    }
+
+    const token = generateToken();
+
+    await ctx.db.insert("sessionsStaff", {
+      staffId: staff._id,
+      token,
+      expiresAt: Date.now() + SESSION_TTL,
+    });
+
+    return {
+      token,
+      role: "staff" as const,
+      user: {
+        id: staff._id,
+        fullName: staff.fullName,
+        email: staff.email,
+      },
+    };
+  },
+});
+
+export const getCurrentStaff = query({
+  args: { token: v.string() },
   handler: async (ctx, { token }) => {
     const session = await ctx.db
-      .query("sessions")
+      .query("sessionsStaff")
       .withIndex("by_token", q => q.eq("token", token))
       .unique();
 
-    if (session) {
-      await ctx.db.delete(session._id);
-    }
+    if (!session || session.expiresAt < Date.now()) return null;
+    return ctx.db.get(session.staffId);
+  },
+});
+
+/* ===================== LOGOUT ===================== */
+
+export const logoutParent = mutation({
+  args: { token: v.string() },
+  handler: async (ctx, { token }) => {
+    const session = await ctx.db
+      .query("sessionsParent")
+      .withIndex("by_token", q => q.eq("token", token))
+      .unique();
+
+    if (session) await ctx.db.delete(session._id);
+  },
+});
+
+export const logoutStaff = mutation({
+  args: { token: v.string() },
+  handler: async (ctx, { token }) => {
+    const session = await ctx.db
+      .query("sessionsStaff")
+      .withIndex("by_token", q => q.eq("token", token))
+      .unique();
+
+    if (session) await ctx.db.delete(session._id);
   },
 });

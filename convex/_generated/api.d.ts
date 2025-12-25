@@ -13,6 +13,7 @@ import type * as auth from "../auth.js";
 import type * as http from "../http.js";
 import type * as parents from "../parents.js";
 import type * as signInParent from "../signInParent.js";
+import type * as staff from "../staff.js";
 import type * as students from "../students.js";
 
 import type {
@@ -27,6 +28,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   parents: typeof parents;
   signInParent: typeof signInParent;
+  staff: typeof staff;
   students: typeof students;
 }>;
 

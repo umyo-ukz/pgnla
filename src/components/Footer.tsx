@@ -45,7 +45,7 @@ export default function Footer() {
                     <h3 className="text-white text-lg font-bold mb-4">For Parents</h3>
                     <ul className="space-y-3">
                         <li><Link to="/login" className="hover:text-white transition-colors">Parent Portal</Link></li>
-                        <li><Link to="/grades" className="hover:text-white transition-colors">Grades & Progress</Link>
+                        <li><Link to="/parent-dashboard" className="hover:text-white transition-colors">Dashboard</Link>
                         </li>
                         <li><Link to="/yearbook" className="hover:text-white transition-colors">Yearbook</Link></li>
                         <li><Link to="/gallery" className="hover:text-white transition-colors">Photo Gallery</Link></li>

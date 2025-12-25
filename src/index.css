@@ -17,6 +17,14 @@
   --radius-2xl: 1.5rem;
 }
 
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+
 /* Base styles - keep as is */
 body {
   font-family: 'Noto Sans', sans-serif;
