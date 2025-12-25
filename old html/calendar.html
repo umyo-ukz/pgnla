@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Calendar - Pequeños Gigantes Preschool</title>
+    <link rel="stylesheet" href="./css/output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400..700;1,400..700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-primary-white font-body min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <!-- Top Bar: Logo + Login -->
+        <div class="border-b border-gray-200 bg-white">
+            <div class="container-wide px-4">
+                <div class="flex justify-between items-center py-3">
+                    <!-- Logo -->
+                    <a href="./index.html" class="flex items-center space-x-3 group">
+                        <div
+                            class="w-10 h-10 bg-primary-red rounded-full flex items-center justify-center group-hover:scale-105 transition-transform">
+                            <span class="text-white font-bold text-xl font-childish">PG</span>
+                        </div>
+                        <div class="hidden sm:block">
+                            <div class="text-xl font-bold text-primary-black font-serif leading-tight">Pequeños Gigantes</div>
+                            <div class="text-sm text-primary-black font-serif">Nursery and Learning Academy</div>
+                        </div>
+                        <div class="sm:hidden text-lg text-primary-black font-bold font-serif">PGNLA</div>
+                    </a>
+
+                    <!-- Contact Info + Login -->
+                    <div class="hidden md:flex items-center space-x-6">
+                        <div class="text-sm text-gray-600">
+                            <i class="fas fa-phone text-primary-red mr-1"></i>
+                            <span>1(868) 681-6554</span>
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            <i class="fas fa-envelope text-primary-red mr-1"></i>
+                            <span>info@pequenosgigantes.edu</span>
+                        </div>
+                        <a href="./login.html" class="btn-primary text-sm px-4 py-2">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Login
+                        </a>
+                    </div>
+
+                    <!-- Mobile Login/Menu -->
+                    <div class="flex items-center space-x-4 md:hidden">
+                        <a href="./login.html" class="text-primary-red">
+                            <i class="fas fa-sign-in-alt text-xl"></i>
+                        </a>
+                        <button id="mobileMenuBtn" class="text-primary-black">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Bar: Quick Links -->
+        <div class="hidden md:block bg-primary-red border-t-4 border-red-700">
+            <div class="container-wide px-4">
+                <div class="flex justify-center items-center space-x-8 py-3">
+
+
+                    <!--
+                    <a href="./index.html"
+                        class="nav-link text-white hover:text-white hover:bg-red-700 px-3 py-2 rounded">
+                        <i class="fas fa-home mr-1"></i>Home
+                    </a>
+                    -->
+                    <a href="./about.html"
+                        class="nav-link text-white hover:text-white hover:bg-red-700 px-3 py-2 rounded">
+                        <i class="fas fa-info-circle mr-1"></i>About Us
+                    </a>
+                    <a href="./admissions.html"
+                        class="nav-link text-white hover:text-white hover:bg-red-700 px-3 py-2 rounded">
+                        <i class="fas fa-user-plus mr-1"></i>Admissions
+                    </a>
+
+                    <!-- Student Life with Dropdown -->
+                    <div class="relative group">
+                        <button
+                            class="nav-link text-white hover:text-white hover:bg-red-700 px-3 py-2 rounded flex items-center">
+                            <i class="fas fa-graduation-cap mr-1"></i>Student Life
+                            <i class="fas fa-chevron-down ml-1 text-sm"></i>
+                        </button>
+                        <!-- Dropdown Menu -->
+                        <div
+                            class="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <a href="./student-life.html"
+                                class="block px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-primary-red">
+                                <i class="fas fa-graduation-cap mr-2"></i>Student Life Overview
+                            </a>
+                            <a href="./gallery.html"
+                                class="block px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-primary-red">
+                                <i class="fas fa-images mr-2"></i>Photo Gallery
+                            </a>
+                            <a href="./yearbook.html"
+                                class="block px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-primary-red">
+                                <i class="fas fa-book-open mr-2"></i>Yearbook
+                            </a>
+                            <a href="./calendar.html"
+                                class="block px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-primary-red">
+                                <i class="fas fa-calendar-alt mr-2"></i>School Calendar
+                            </a>
+                        </div>
+                    </div>
+
+                    <a href="./contact.html"
+                        class="nav-link text-white hover:text-white hover:bg-red-700 px-3 py-2 rounded">
+                        <i class="fas fa-phone mr-1"></i>Contact
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="md:hidden hidden bg-white border-t border-gray-200 animate-slide-up">
+            <div class="container-wide px-4 py-4">
+                <div class="space-y-1">
+                    <a href="./index.html" class="flex items-center p-3 nav-link nav-link-active rounded-lg">
+                        <i class="fas fa-home mr-3"></i>Home
+                    </a>
+                    <a href="./about.html" class="flex items-center p-3 nav-link rounded-lg">
+                        <i class="fas fa-info-circle mr-3"></i>About Us
+                    </a>
+                    <a href="./registration.html" class="flex items-center p-3 nav-link rounded-lg">
+                        <i class="fas fa-user-plus mr-3"></i>Admissions
+                    </a>
+                    <!-- Student Life Section Header -->
+                    <div class="p-3 text-sm font-semibold text-primary-red border-l-4 border-primary-red pl-3 mt-4">
+                        <i class="fas fa-graduation-cap mr-2"></i>Student Life
+                    </div>
+                    <!-- Student Life Sub-menu -->
+                    <a href="./student-life.html" class="flex items-center p-3 nav-link rounded-lg ml-4">
+                        <i class="fas fa-circle text-xs mr-3 text-gray-400"></i>Overview
+                    </a>
+                    <a href="./gallery.html" class="flex items-center p-3 nav-link rounded-lg ml-4">
+                        <i class="fas fa-circle text-xs mr-3 text-gray-400"></i>Photo Gallery
+                    </a>
+                    <a href="./yearbook.html" class="flex items-center p-3 nav-link rounded-lg ml-4">
+                        <i class="fas fa-circle text-xs mr-3 text-gray-400"></i>Yearbook
+                    </a>
+                    <a href="./calendar.html" class="flex items-center p-3 nav-link rounded-lg ml-4 bg-red-50">
+                        <i class="fas fa-circle text-xs mr-3 text-gray-400"></i>School Calendar
+                    </a>
+                    <a href="./contact.html" class="flex items-center p-3 nav-link rounded-lg">
+                        <i class="fas fa-phone mr-3"></i>Contact
+                    </a>
+                    <div class="pt-4 mt-4 border-t">
+                        <div class="text-sm text-gray-500 mb-2">Contact Information:</div>
+                        <div class="flex items-center text-sm text-gray-600 mb-2">
+                            <i class="fas fa-phone text-primary-red mr-2"></i>
+                            <span>1(868) 316-6997</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-envelope text-primary-red mr-2"></i>
+                            <span>info@pequenosgigantes.edu</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section class="bg-gradient-to-r from-primary-red to-red-600 text-white py-12">
+            <div class="container-wide px-4">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                        <i class="fas fa-calendar-alt mr-3"></i>School Calendar
+                    </h1>
+                    <p class="text-xl opacity-90">
+                        Important dates, events, and academic schedules for the 2025-2026 school year
+                    </p>
+                    <div class="mt-8 flex flex-wrap gap-4 justify-center">
+                        <div class="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
+                            <span class="font-semibold">Current Term:</span> Term 3 (Apr 14 - Jul 4, 2025)
+                        </div>
+                        <div class="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
+                            <span class="font-semibold">Next Holiday:</span> Independence Day - Aug 31
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Calendar Controls & Filters -->
+        <section class="bg-white py-8 border-b border-gray-200">
+            <div class="container-wide px-4">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                    <!-- Month Navigation -->
+                    <div class="flex items-center space-x-4">
+                        <button id="prevMonth" class="p-3 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div class="text-center">
+                            <h2 id="currentMonth" class="text-2xl font-bold text-primary-black">April 2025</h2>
+                            <p class="text-gray-600">Term 3: April 14 - July 4, 2025</p>
+                        </div>
+                        <button id="nextMonth" class="p-3 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Event Filters -->
+                    <div class="flex flex-wrap gap-3">
+                        <button class="filter-btn active" data-filter="all">
+                            <i class="fas fa-calendar mr-2"></i>All Events
+                        </button>
+                        <button class="filter-btn" data-filter="academic">
+                            <i class="fas fa-graduation-cap mr-2"></i>Academic
+                        </button>
+                        <button class="filter-btn" data-filter="holiday">
+                            <i class="fas fa-umbrella-beach mr-2"></i>Holidays
+                        </button>
+                        <button class="filter-btn" data-filter="event">
+                            <i class="fas fa-users mr-2"></i>School Events
+                        </button>
+                        <button class="filter-btn" data-filter="parent">
+                            <i class="fas fa-user-friends mr-2"></i>Parent Meetings
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Jump -->
+                <div class="mt-8">
+                    <h3 class="font-semibold text-gray-700 mb-3">Quick Jump to:</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <a href="#important-dates" class="quick-jump-link">
+                            <i class="fas fa-star mr-2"></i>Important Dates
+                        </a>
+                        <a href="#term-dates" class="quick-jump-link">
+                            <i class="fas fa-calendar-week mr-2"></i>Term Dates
+                        </a>
+                        <a href="#upcoming-events" class="quick-jump-link">
+                            <i class="fas fa-bullhorn mr-2"></i>Upcoming Events
+                        </a>
+                        <a href="#downloads" class="quick-jump-link">
+                            <i class="fas fa-download mr-2"></i>Downloads
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Calendar Grid -->
+        <section class="py-12 bg-gray-50">
+            <div class="container-wide px-4">
+                <!-- Calendar Header -->
+                <div class="grid grid-cols-7 gap-2 mb-4">
+                    <div class="text-center font-bold text-primary-red p-3">Sun</div>
+                    <div class="text-center font-bold p-3">Mon</div>
+                    <div class="text-center font-bold p-3">Tue</div>
+                    <div class="text-center font-bold p-3">Wed</div>
+                    <div class="text-center font-bold p-3">Thu</div>
+                    <div class="text-center font-bold p-3">Fri</div>
+                    <div class="text-center font-bold text-primary-red p-3">Sat</div>
+                </div>
+
+                <!-- Calendar Grid -->
+                <div id="calendarGrid" class="grid grid-cols-7 gap-2">
+                    <!-- Calendar will be populated by JavaScript -->
+                </div>
+
+                <!-- Legend -->
+                <div class="mt-12 pt-8 border-t border-gray-300">
+                    <h3 class="font-bold text-lg mb-4">Event Legend</h3>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-blue-500 rounded mr-2"></div>
+                            <span>Academic Dates</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-green-500 rounded mr-2"></div>
+                            <span>Holidays</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-purple-500 rounded mr-2"></div>
+                            <span>School Events</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-yellow-500 rounded mr-2"></div>
+                            <span>Parent Meetings</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 bg-red-500 rounded mr-2"></div>
+                            <span>Important Deadlines</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Important Dates -->
+        <section id="important-dates" class="py-12 bg-white">
+            <div class="container-wide px-4">
+                <h2 class="section-title text-center mb-10">
+                    <i class="fas fa-star text-primary-red mr-3"></i>Important Dates 2025-2026
+                </h2>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- First Term -->
+                    <div class="bg-red-50 rounded-xl p-6 border border-red-100">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-primary-red text-white rounded-lg px-4 py-2 font-bold">
+                                Term 1
+                            </div>
+                            <span class="ml-4 font-semibold">Sep 2 - Dec 13, 2025</span>
+                        </div>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <i class="fas fa-circle text-xs text-primary-red mt-2 mr-3"></i>
+                                <span>Sep 2: First Day of School</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-circle text-xs text-primary-red mt-2 mr-3"></i>
+                                <span>Oct 13: Parent-Teacher Conferences</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-circle text-xs text-primary-red mt-2 mr-3"></i>
+                                <span>Nov 10-14: Mid-Term Break</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-circle text-xs text-primary-red mt-2 mr-3"></i>
+                                <span>Dec 13: Last Day of Term</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Second Term -->
+                    <div class="bg-red-50 rounded-xl p-6 border border-red-100">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-primary-red text-white rounded-lg px-4 py-2 font-bold">
+                                Term 2
+                            </div>
+                            <span class="ml-4 font-semibold">Jan 6 - Apr 3, 2026</span>
+                        </div>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <i class="fas fa-circle text-xs text-primary-red mt-2 mr-3"></i>
+                                <span>Jan 6: Term 2 Begins</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-circle text-xs text-primary-red mt-2 mr-3"></i>
+                                <span>Feb 14: Valentine's Day Celebration</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-circle text-xs text-primary-red mt-2 mr-3"></i>
+                                <span>Mar 3-7: Carnival Break</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-circle text-xs text-primary-red mt-2 mr-3"></i>
+                                <span>Apr 3: Term 2 Ends</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Third Term -->
+                    <div class="bg-red-50 rounded-xl p-6 border border-red-100">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-primary-red text-white rounded-lg px-4 py-2 font-bold">
+                                Term 3
+                            </div>
+                            <span class="ml-4 font-semibold">Apr 14 - Jul 4, 2026</span>
+                        </div>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <i class="fas fa-circle text-xs text-primary-red mt-2 mr-3"></i>
+                                <span>Apr 14: Term 3 Begins</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-circle text-xs text-primary-red mt-2 mr-3"></i>
+                                <span>May 5-9: Standardized Testing Week</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-circle text-xs text-primary-red mt-2 mr-3"></i>
+                                <span>Jun 16: Sports Day</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-circle text-xs text-primary-red mt-2 mr-3"></i>
+                                <span>Jul 4: Graduation & Last Day</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upcoming Events List -->
+        <section id="upcoming-events" class="py-12 bg-gray-50">
+            <div class="container-wide px-4">
+                <h2 class="section-title text-center mb-10">
+                    <i class="fas fa-bullhorn text-primary-red mr-3"></i>Upcoming Events
+                </h2>
+
+                <div class="max-w-4xl mx-auto">
+                    <!-- Event 1 -->
+                    <div class="bg-white rounded-xl shadow-md p-6 mb-6 border-l-4 border-primary-red">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between">
+                            <div class="mb-4 md:mb-0">
+                                <div class="flex items-center mb-2">
+                                    <div class="bg-primary-red text-white rounded-lg px-3 py-1 font-bold mr-4">
+                                        Apr 25
+                                    </div>
+                                    <h3 class="text-xl font-bold">Parent-Teacher Conference Night</h3>
+                                </div>
+                                <p class="text-gray-600">
+                                    Meet with your child's teachers to discuss academic progress. Scheduled appointments between 4:00 PM - 7:00 PM.
+                                </p>
+                                <div class="flex items-center mt-3 text-sm text-gray-500">
+                                    <i class="fas fa-clock mr-2"></i>
+                                    <span>4:00 PM - 7:00 PM</span>
+                                    <i class="fas fa-map-marker-alt ml-4 mr-2"></i>
+                                    <span>School Auditorium</span>
+                                    <span class="ml-4 px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-semibold">Parent Meeting</span>
+                                </div>
+                            </div>
+                            <button class="btn-primary px-6 py-3">
+                                <i class="fas fa-calendar-plus mr-2"></i>Add to Calendar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Event 2 -->
+                    <div class="bg-white rounded-xl shadow-md p-6 mb-6 border-l-4 border-green-500">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between">
+                            <div class="mb-4 md:mb-0">
+                                <div class="flex items-center mb-2">
+                                    <div class="bg-green-500 text-white rounded-lg px-3 py-1 font-bold mr-4">
+                                        May 5-9
+                                    </div>
+                                    <h3 class="text-xl font-bold">Standardized Testing Week</h3>
+                                </div>
+                                <p class="text-gray-600">
+                                    Annual standardized testing for all students. Please ensure students arrive on time and have a good breakfast.
+                                </p>
+                                <div class="flex items-center mt-3 text-sm text-gray-500">
+                                    <i class="fas fa-clock mr-2"></i>
+                                    <span>All Day</span>
+                                    <i class="fas fa-graduation-cap ml-4 mr-2"></i>
+                                    <span>All Classrooms</span>
+                                    <span class="ml-4 px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs font-semibold">Academic</span>
+                                </div>
+                            </div>
+                            <button class="btn-primary px-6 py-3">
+                                <i class="fas fa-calendar-plus mr-2"></i>Add to Calendar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Event 3 -->
+                    <div class="bg-white rounded-xl shadow-md p-6 mb-6 border-l-4 border-yellow-500">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between">
+                            <div class="mb-4 md:mb-0">
+                                <div class="flex items-center mb-2">
+                                    <div class="bg-yellow-500 text-white rounded-lg px-3 py-1 font-bold mr-4">
+                                        Jun 16
+                                    </div>
+                                    <h3 class="text-xl font-bold">Annual Sports Day</h3>
+                                </div>
+                                <p class="text-gray-600">
+                                    Fun-filled day of athletic events and competitions. Parents are welcome to attend and cheer for their children.
+                                </p>
+                                <div class="flex items-center mt-3 text-sm text-gray-500">
+                                    <i class="fas fa-clock mr-2"></i>
+                                    <span>9:00 AM - 2:00 PM</span>
+                                    <i class="fas fa-map-marker-alt ml-4 mr-2"></i>
+                                    <span>School Field</span>
+                                    <span class="ml-4 px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-semibold">School Event</span>
+                                </div>
+                            </div>
+                            <button class="btn-primary px-6 py-3">
+                                <i class="fas fa-calendar-plus mr-2"></i>Add to Calendar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Downloads Section -->
+        <section id="downloads" class="py-12 bg-white">
+            <div class="container-wide px-4">
+                <h2 class="section-title text-center mb-10">
+                    <i class="fas fa-download text-primary-red mr-3"></i>Calendar Downloads
+                </h2>
+
+                <div class="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                    <!-- PDF Download -->
+                    <a href="#" class="download-card group">
+                        <div class="download-icon">
+                            <i class="fas fa-file-pdf text-red-500 text-3xl"></i>
+                        </div>
+                        <h3>2025-2026 Calendar (PDF)</h3>
+                        <p>Complete school year calendar in printable format</p>
+                        <div class="download-btn">
+                            <i class="fas fa-download mr-2"></i> Download PDF
+                        </div>
+                    </a>
+
+                    <!-- ICS Download -->
+                    <a href="#" class="download-card group">
+                        <div class="download-icon">
+                            <i class="fas fa-calendar-alt text-blue-500 text-3xl"></i>
+                        </div>
+                        <h3>Digital Calendar (ICS)</h3>
+                        <p>Import all school events to your digital calendar</p>
+                        <div class="download-btn">
+                            <i class="fas fa-download mr-2"></i> Download ICS
+                        </div>
+                    </a>
+
+                    <!-- Printable Version -->
+                    <a href="#" class="download-card group">
+                        <div class="download-icon">
+                            <i class="fas fa-print text-green-500 text-3xl"></i>
+                        </div>
+                        <h3>Printable Version</h3>
+                        <p>Printer-friendly monthly calendar pages</p>
+                        <div class="download-btn">
+                            <i class="fas fa-download mr-2"></i> Download
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer (Same as index.html) -->
+    <footer class="bg-gray-900 text-gray-300 pt-12 pb-8">
+        <div class="container-wide px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- School Info -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 bg-primary-red rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-lg font-main">PG</span>
+                        </div>
+                        <span class="text-2xl font-bold text-white font-main">Pequeños<br>Gigantes</span>
+                    </div>
+                    <p class="mb-6">
+                        Nurturing young minds to become tomorrow's giants through quality early childhood education.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white text-xl">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-white text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="./index.html" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="./about.html" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="./registration.html" class="hover:text-white transition-colors">Admissions</a></li>
+                        <li><a href="./student-life.html" class="hover:text-white transition-colors">Student Life</a></li>
+                        <li><a href="./calendar.html" class="hover:text-white transition-colors">School Calendar</a></li>
+                    </ul>
+                </div>
+
+                <!-- For Parents -->
+                <div>
+                    <h3 class="text-white text-lg font-bold mb-4">For Parents</h3>
+                    <ul class="space-y-3">
+                        <li><a href="./login.html" class="hover:text-white transition-colors">Parent Portal</a></li>
+                        <li><a href="./grades.html" class="hover:text-white transition-colors">Grades & Progress</a></li>
+                        <li><a href="./yearbook.html" class="hover:text-white transition-colors">Yearbook</a></li>
+                        <li><a href="./gallery.html" class="hover:text-white transition-colors">Photo Gallery</a></li>
+                        <li><a href="./rules.html" class="hover:text-white transition-colors">School Handbook</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div>
+                    <h3 class="text-white text-lg font-bold mb-4">Contact Us</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-primary-red mt-1 mr-3"></i>
+                            <span>8 Boothman Drive<br>St. Augustine</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone text-primary-red mr-3"></i>
+                            <span>1(868) 316-6997</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope text-primary-red mr-3"></i>
+                            <span>info@pequenosgigantes.edu</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p>&copy; 2025 Pequeños Gigantes Preschool. All rights reserved.</p>
+                <p class="text-sm mt-2">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a> |
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a> |
+                    <a href="#" class="hover:text-white transition-colors">Accessibility</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Calendar JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentMonthEl = document.getElementById('currentMonth');
+            const calendarGrid = document.getElementById('calendarGrid');
+            const prevMonthBtn = document.getElementById('prevMonth');
+            const nextMonthBtn = document.getElementById('nextMonth');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            
+            let currentDate = new Date();
+            let currentMonth = currentDate.getMonth();
+            let currentYear = currentDate.getFullYear();
+            
+            // School Events Data
+            const schoolEvents = [
+                { date: new Date(2025, 3, 14), title: 'Term 3 Begins', type: 'academic', color: 'blue' },
+                { date: new Date(2025, 3, 25), title: 'Parent Conference', type: 'parent', color: 'yellow' },
+                { date: new Date(2025, 4, 1), title: 'Labor Day', type: 'holiday', color: 'green' },
+                { date: new Date(2025, 4, 5), title: 'Testing Begins', type: 'academic', color: 'blue' },
+                { date: new Date(2025, 4, 9), title: 'Testing Ends', type: 'academic', color: 'blue' },
+                { date: new Date(2025, 4, 30), title: 'Indian Arrival Day', type: 'holiday', color: 'green' },
+                { date: new Date(2025, 5, 16), title: 'Sports Day', type: 'event', color: 'purple' },
+                { date: new Date(2025, 5, 19), title: 'Corpus Christi', type: 'holiday', color: 'green' },
+                { date: new Date(2025, 6, 1), title: 'Emancipation Day', type: 'holiday', color: 'green' },
+                { date: new Date(2025, 6, 4), title: 'Last Day of School', type: 'academic', color: 'blue' },
+                { date: new Date(2025, 6, 31), title: 'Independence Day', type: 'holiday', color: 'green' }
+            ];
+            
+            // Month names
+            const monthNames = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            
+            // Initialize
+            renderCalendar();
+            
+            // Event Listeners
+            prevMonthBtn.addEventListener('click', () => {
+                currentMonth--;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+                renderCalendar();
+            });
+            
+            nextMonthBtn.addEventListener('click', () => {
+                currentMonth++;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+                renderCalendar();
+            });
+            
+            // Filter buttons
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    const filter = this.getAttribute('data-filter');
+                    filterEvents(filter);
+                });
+            });
+            
+            function renderCalendar() {
+                // Update month display
+                currentMonthEl.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+                
+                // Clear calendar grid
+                calendarGrid.innerHTML = '';
+                
+                // Get first day of month
+                const firstDay = new Date(currentYear, currentMonth, 1);
+                // Get last day of month
+                const lastDay = new Date(currentYear, currentMonth + 1, 0);
+                // Get day of week for first day (0 = Sunday, 6 = Saturday)
+                const firstDayIndex = firstDay.getDay();
+                // Get total days in month
+                const totalDays = lastDay.getDate();
+                
+                // Add empty cells for days before first day
+                for (let i = 0; i < firstDayIndex; i++) {
+                    const emptyCell = document.createElement('div');
+                    emptyCell.className = 'calendar-day empty';
+                    calendarGrid.appendChild(emptyCell);
+                }
+                
+                // Add days of the month
+                const today = new Date();
+                const isCurrentMonth = today.getMonth() === currentMonth && today.getFullYear() === currentYear;
+                
+                for (let day = 1; day <= totalDays; day++) {
+                    const dayCell = document.createElement('div');
+                    dayCell.className = 'calendar-day';
+                    
+                    // Check if today
+                    if (isCurrentMonth && day === today.getDate()) {
+                        dayCell.classList.add('today');
+                    }
+                    
+                    // Day number
+                    const dayNumber = document.createElement('div');
+                    dayNumber.className = 'day-number';
+                    dayNumber.textContent = day;
+                    dayCell.appendChild(dayNumber);
+                    
+                    // Check for events on this day
+                    const currentDate = new Date(currentYear, currentMonth, day);
+                    const dayEvents = schoolEvents.filter(event => 
+                        event.date.getDate() === day && 
+                        event.date.getMonth() === currentMonth && 
+                        event.date.getFullYear() === currentYear
+                    );
+                    
+                    // Add event indicators
+                    if (dayEvents.length > 0) {
+                        const eventsContainer = document.createElement('div');
+                        eventsContainer.className = 'day-events';
+                        
+                        dayEvents.slice(0, 3).forEach(event => {
+                            const eventDot = document.createElement('div');
+                            eventDot.className = `event-dot ${event.type}`;
+                            eventDot.style.backgroundColor = getEventColor(event.color);
+                            eventDot.title = event.title;
+                            eventsContainer.appendChild(eventDot);
+                        });
+                        
+                        if (dayEvents.length > 3) {
+                            const moreEvents = document.createElement('div');
+                            moreEvents.className = 'more-events';
+                            moreEvents.textContent = `+${dayEvents.length - 3}`;
+                            eventsContainer.appendChild(moreEvents);
+                        }
+                        
+                        dayCell.appendChild(eventsContainer);
+                    }
+                    
+                    calendarGrid.appendChild(dayCell);
+                }
+            }
+            
+            function filterEvents(filterType) {
+                const allDays = document.querySelectorAll('.calendar-day:not(.empty)');
+                
+                allDays.forEach(day => {
+                    const eventDots = day.querySelectorAll('.event-dot');
+                    
+                    if (filterType === 'all') {
+                        day.style.opacity = '1';
+                        eventDots.forEach(dot => dot.style.display = 'block');
+                    } else {
+                        let hasMatchingEvent = false;
+                        
+                        eventDots.forEach(dot => {
+                            if (dot.classList.contains(filterType)) {
+                                hasMatchingEvent = true;
+                                dot.style.display = 'block';
+                            } else {
+                                dot.style.display = 'none';
+                            }
+                        });
+                        
+                        day.style.opacity = hasMatchingEvent ? '1' : '0.5';
+                    }
+                });
+            }
+            
+            function getEventColor(colorName) {
+                const colors = {
+                    'blue': '#3B82F6',
+                    'green': '#10B981',
+                    'purple': '#8B5CF6',
+                    'yellow': '#F59E0B',
+                    'red': '#EF4444'
+                };
+                return colors[colorName] || '#6B7280';
+            }
+            
+            // Mobile menu toggle (same as index.html)
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('fa-bars')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+                
+                document.addEventListener('click', function(event) {
+                    if (mobileMenu && !mobileMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+                        mobileMenu.classList.add('hidden');
+                        const icon = mobileMenuBtn.querySelector('i');
+                        if (icon) {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+
+    <style>
+        
+    </style>
+</body>
+</html>

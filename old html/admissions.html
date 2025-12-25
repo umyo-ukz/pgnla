@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admissions - Pequeños Gigantes Preschool</title>
+    <link rel="stylesheet" href="./css/output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400..700;1,400..700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-primary-white font-body min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <!-- Top Bar: Logo + Login -->
+        <div class="border-b border-gray-200 bg-white">
+            <div class="container-wide px-4">
+                <div class="flex justify-between items-center py-3">
+                    <!-- Logo -->
+                    <a href="./index.html" class="flex items-center space-x-3 group">
+                        <div
+                            class="w-10 h-10 bg-primary-red rounded-full flex items-center justify-center group-hover:scale-105 transition-transform">
+                            <span class="text-white font-bold text-xl font-childish">PG</span>
+                        </div>
+                        <div class="hidden sm:block">
+                            <div class="text-xl font-bold text-primary-black font-serif leading-tight">Pequeños Gigantes</div>
+                            <div class="text-sm text-primary-black font-serif">Nursery and Learning Academy</div>
+                        </div>
+                        <div class="sm:hidden text-lg text-primary-black font-bold font-serif">PGNLA</div>
+                    </a>
+
+                    <!-- Contact Info + Login -->
+                    <div class="hidden md:flex items-center space-x-6">
+                        <div class="text-sm text-gray-600">
+                            <i class="fas fa-phone text-primary-red mr-1"></i>
+                            <span>1(868) 681-6554</span>
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            <i class="fas fa-envelope text-primary-red mr-1"></i>
+                            <span>info@pequenosgigantes.edu</span>
+                        </div>
+                        <a href="./login.html" class="btn-primary text-sm px-4 py-2">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Login
+                        </a>
+                    </div>
+
+                    <!-- Mobile Login/Menu -->
+                    <div class="flex items-center space-x-4 md:hidden">
+                        <a href="./login.html" class="text-primary-red">
+                            <i class="fas fa-sign-in-alt text-xl"></i>
+                        </a>
+                        <button id="mobileMenuBtn" class="text-primary-black">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Bar: Quick Links -->
+        <div class="hidden md:block bg-primary-red border-t-4 border-red-700">
+            <div class="container-wide px-4">
+                <div class="flex justify-center items-center space-x-8 py-3">
+
+
+                    <!--
+                    <a href="./index.html"
+                        class="nav-link text-white hover:text-white hover:bg-red-700 px-3 py-2 rounded">
+                        <i class="fas fa-home mr-1"></i>Home
+                    </a>
+                    -->
+                    <a href="./about.html"
+                        class="nav-link text-white hover:text-white hover:bg-red-700 px-3 py-2 rounded">
+                        <i class="fas fa-info-circle mr-1"></i>About Us
+                    </a>
+                    <a href="./admissions.html"
+                        class="nav-link text-white hover:text-white hover:bg-red-700 px-3 py-2 rounded">
+                        <i class="fas fa-user-plus mr-1"></i>Admissions
+                    </a>
+
+                    <!-- Student Life with Dropdown -->
+                    <div class="relative group">
+                        <button
+                            class="nav-link text-white hover:text-white hover:bg-red-700 px-3 py-2 rounded flex items-center">
+                            <i class="fas fa-graduation-cap mr-1"></i>Student Life
+                            <i class="fas fa-chevron-down ml-1 text-sm"></i>
+                        </button>
+                        <!-- Dropdown Menu -->
+                        <div
+                            class="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <a href="./student-life.html"
+                                class="block px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-primary-red">
+                                <i class="fas fa-graduation-cap mr-2"></i>Student Life Overview
+                            </a>
+                            <a href="./gallery.html"
+                                class="block px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-primary-red">
+                                <i class="fas fa-images mr-2"></i>Photo Gallery
+                            </a>
+                            <a href="./yearbook.html"
+                                class="block px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-primary-red">
+                                <i class="fas fa-book-open mr-2"></i>Yearbook
+                            </a>
+                            <a href="./calendar.html"
+                                class="block px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-primary-red">
+                                <i class="fas fa-calendar-alt mr-2"></i>School Calendar
+                            </a>
+                        </div>
+                    </div>
+
+                    <a href="./contact.html"
+                        class="nav-link text-white hover:text-white hover:bg-red-700 px-3 py-2 rounded">
+                        <i class="fas fa-phone mr-1"></i>Contact
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="md:hidden hidden bg-white border-t border-gray-200 animate-slide-up">
+            <div class="container-wide px-4 py-4">
+                <div class="space-y-1">
+                    <a href="./index.html" class="flex items-center p-3 nav-link rounded-lg">
+                        <i class="fas fa-home mr-3"></i>Home
+                    </a>
+                    <a href="./about.html" class="flex items-center p-3 nav-link rounded-lg">
+                        <i class="fas fa-info-circle mr-3"></i>About Us
+                    </a>
+                    <a href="./admissions.html" class="flex items-center p-3 nav-link rounded-lg bg-red-50">
+                        <i class="fas fa-user-plus mr-3 text-primary-red"></i>Admissions
+                    </a>
+                    <!-- Student Life Section Header -->
+                    <div class="p-3 text-sm font-semibold text-primary-red border-l-4 border-primary-red pl-3 mt-4">
+                        <i class="fas fa-graduation-cap mr-2"></i>Student Life
+                    </div>
+                    <!-- Student Life Sub-menu -->
+                    <a href="./student-life.html" class="flex items-center p-3 nav-link rounded-lg ml-4">
+                        <i class="fas fa-circle text-xs mr-3 text-gray-400"></i>Overview
+                    </a>
+                    <a href="./gallery.html" class="flex items-center p-3 nav-link rounded-lg ml-4">
+                        <i class="fas fa-circle text-xs mr-3 text-gray-400"></i>Photo Gallery
+                    </a>
+                    <a href="./yearbook.html" class="flex items-center p-3 nav-link rounded-lg ml-4">
+                        <i class="fas fa-circle text-xs mr-3 text-gray-400"></i>Yearbook
+                    </a>
+                    <a href="./calendar.html" class="flex items-center p-3 nav-link rounded-lg ml-4">
+                        <i class="fas fa-circle text-xs mr-3 text-gray-400"></i>School Calendar
+                    </a>
+                    <a href="./contact.html" class="flex items-center p-3 nav-link rounded-lg">
+                        <i class="fas fa-phone mr-3"></i>Contact
+                    </a>
+                    <div class="pt-4 mt-4 border-t">
+                        <div class="text-sm text-gray-500 mb-2">Contact Information:</div>
+                        <div class="flex items-center text-sm text-gray-600 mb-2">
+                            <i class="fas fa-phone text-primary-red mr-2"></i>
+                            <span>1(868) 316-6997</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-envelope text-primary-red mr-2"></i>
+                            <span>info@pequenosgigantes.edu</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section class="relative overflow-hidden bg-gradient-to-br from-primary-red via-red-500 to-red-600 text-white">
+            <div class="absolute inset-0 opacity-10" style='background-image: url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");'></div>
+            <div class="relative z-10 container-wide px-4 py-20">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-6">
+                        Admissions
+                    </h1>
+                    <p class="text-xl md:text-2xl mb-8 opacity-90">
+                        Nurturing tomorrow's leaders through exceptional early childhood and primary education
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="#apply-now" class="btn-primary bg-white text-primary-red hover:bg-gray-100 text-lg px-8 py-4 font-semibold">
+                            <i class="fas fa-edit mr-2"></i>Start Your Application
+                        </a>
+                        <a href="./financing.html" class="btn-secondary border-2 border-white text-white hover:bg-white/20 text-lg px-8 py-4">
+                            <i class="fas fa-dollar-sign mr-2"></i>View Financing and Tuition
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!--
+        <section class="py-16 bg-white">
+            <div class="container-wide px-4">
+                <div class="text-center mb-12">
+                    <h2 class="section-title">Why Choose Pequeños Gigantes?</h2>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                        A comprehensive educational journey from preschool through primary school
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="feature-card border border-gray-200">
+                        <div class="text-primary-red text-4xl mb-4">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3 class="subsection-title">Proven Curriculum</h3>
+                        <p class="text-gray-600">
+                            Our age-appropriate, play-based curriculum is designed to develop cognitive, social, and emotional skills.
+                        </p>
+                    </div>
+
+                    <div class="feature-card border border-gray-200">
+                        <div class="text-primary-red text-4xl mb-4">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h3 class="subsection-title">Nurturing Environment</h3>
+                        <p class="text-gray-600">
+                            Small class sizes and dedicated teachers ensure each child receives individual attention and care.
+                        </p>
+                    </div>
+
+                    <div class="feature-card border border-gray-200">
+                        <div class="text-primary-red text-4xl mb-4">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 class="subsection-title">Family Partnership</h3>
+                        <p class="text-gray-600">
+                            We believe in strong parent-school partnerships for the holistic development of every child.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    -->
+
+        <!-- Admission Process -->
+        <section class="py-16 bg-gray-50">
+            <div class="container-wide px-4">
+                <h2 class="section-title text-center mb-12">Our Admission Process</h2>
+
+                <div class="max-w-4xl mx-auto">
+                    <!-- Process Step 1 -->
+                    <div class="process-step">
+                        <div class="process-number">1</div>
+                        <div class="process-content">
+                            <h3 class="text-xl font-bold text-primary-black mb-2">Inquiry & School Tour</h3>
+                            <p class="text-gray-600 mb-4">
+                                Contact us to schedule a personalized school tour. Meet our staff, observe classrooms, and learn about our programs.
+                            </p>
+                            <a href="./contact.html" class="inline-flex items-center text-primary-red font-semibold hover:underline">
+                                <i class="fas fa-calendar mr-2"></i> Schedule a Tour
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Process Step 2 -->
+                    <div class="process-step">
+                        <div class="process-number">2</div>
+                        <div class="process-content">
+                            <h3 class="text-xl font-bold text-primary-black mb-2">Submit Application</h3>
+                            <p class="text-gray-600 mb-4">
+                                Complete our online application form and submit required documents. Applications are accepted year-round based on availability.
+                            </p>
+                            <a href="./registration.html" class="inline-flex items-center text-primary-red font-semibold hover:underline">
+                                <i class="fas fa-edit mr-2"></i> Access Application Form
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Process Step 3 -->
+                    <div class="process-step">
+                        <div class="process-number">3</div>
+                        <div class="process-content">
+                            <h3 class="text-xl font-bold text-primary-black mb-2">Assessment & Interview</h3>
+                            <p class="text-gray-600 mb-4">
+                                Age-appropriate assessment for primary school applicants and family interview to ensure the best fit.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Process Step 4 -->
+                    <div class="process-step">
+                        <div class="process-number">4</div>
+                        <div class="process-content">
+                            <h3 class="text-xl font-bold text-primary-black mb-2">Admission Decision</h3>
+                            <p class="text-gray-600 mb-4">
+                                Receive admission decision within 10 business days. Accepted students will receive enrollment packet.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Process Step 5 -->
+                    <div class="process-step">
+                        <div class="process-number">5</div>
+                        <div class="process-content">
+                            <h3 class="text-xl font-bold text-primary-black mb-2">Enrollment & Orientation</h3>
+                            <p class="text-gray-600 mb-4">
+                                Complete enrollment paperwork, submit tuition deposit, and attend new family orientation.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Age Requirements -->
+        <section class="py-16 bg-white">
+            <div class="container-wide px-4">
+                <h2 class="section-title text-center mb-12">Age Requirements & Programs</h2>
+
+                <div class="overflow-x-auto">
+                    <table class="admissions-table">
+                        <thead>
+                            <tr>
+                                <th>Program</th>
+                                <th>Age Range</th>
+                                <th>Schedule Options</th>
+                                <th>Class Size</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Preschool</strong><br>Early learning foundation</td>
+                                <td>3-4 years</td>
+                                <td>Half Day (8am-12pm)<br>Full Day (8am-3pm)</td>
+                                <td>Max 15 students</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Pre-Kindergarten</strong><br>Kindergarten readiness</td>
+                                <td>4-5 years</td>
+                                <td>Full Day (8am-3pm)</td>
+                                <td>Max 18 students</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Primary School</strong><br>First Year - Standard 5</td>
+                                <td>5-11 years</td>
+                                <td>Full Day (8am-3pm)<br>After-care available</td>
+                                <td>Max 20 students</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Application Section -->
+        <section id="apply-now" class="py-20 bg-primary-red text-white relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10" style='background-image: url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");'></div>
+            <div class="relative z-10 container-wide px-4 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">
+                    Ready to Begin Your Application?
+                </h2>
+                <p class="text-xl mb-10 max-w-2xl mx-auto opacity-90">
+                    Join the Pequeños Gigantes family and give your child the foundation they need to succeed.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="./registration.html" class="btn-primary bg-white text-primary-red hover:bg-gray-100 text-lg px-8 py-4 font-semibold">
+                        <i class="fas fa-edit mr-2"></i>Start Online Application
+                    </a>
+                    <a href="./contact.html" class="btn-secondary border-2 border-white text-white hover:bg-white/20 text-lg px-8 py-4">
+                        <i class="fas fa-question-circle mr-2"></i>Have Questions?
+                    </a>
+                </div>
+                <p class="mt-8 text-white/80">
+                    <i class="fas fa-clock mr-2"></i>
+                    Applications processed within 10 business days
+                </p>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="py-16 bg-white">
+            <div class="container-wide px-4">
+                <h2 class="section-title text-center mb-12">Frequently Asked Questions</h2>
+
+                <div class="max-w-3xl mx-auto space-y-6">
+                    <!-- FAQ 1 -->
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>What documents are required for application?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Required documents include: birth certificate, immunization records, two passport-sized photos, previous school records (if applicable), and parent/guardian identification.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 2 -->
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Do you offer before/after school care?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Yes, we offer extended care from 7:00 AM to 8:00 AM and from 3:00 PM to 6:00 PM for an additional fee. This service includes supervised activities, homework help, and snacks.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 3 -->
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>What is your student-teacher ratio?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>We maintain a low student-teacher ratio of 15:1 in preschool, 18:1 in pre-kindergarten, and 20:1 in primary school to ensure personalized attention for every child.</p>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 4 -->
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Are meals provided?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>We provide nutritious morning and afternoon snacks. For full-day students, parents may choose to provide lunch or opt for our hot lunch program (additional fee applies).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-12">
+                    <a href="./contact.html" class="text-primary-red font-semibold hover:underline">
+                        <i class="fas fa-envelope mr-2"></i>Have more questions? Contact our admissions team
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer (Same as index.html) -->
+    <footer class="bg-gray-900 text-gray-300 pt-12 pb-8">
+        <div class="container-wide px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- School Info -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 bg-primary-red rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-lg font-main">PG</span>
+                        </div>
+                        <span class="text-2xl font-bold text-white font-main">Pequeños<br>Gigantes</span>
+                    </div>
+                    <p class="mb-6">
+                        Nurturing young minds to become tomorrow's giants through quality early childhood education.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white text-xl">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-white text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="./index.html" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="./about.html" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="./admissions.html" class="hover:text-white transition-colors">Admissions</a></li>
+                        <li><a href="./student-life.html" class="hover:text-white transition-colors">Student Life</a></li>
+                        <li><a href="./calendar.html" class="hover:text-white transition-colors">School Calendar</a></li>
+                    </ul>
+                </div>
+
+                <!-- For Parents -->
+                <div>
+                    <h3 class="text-white text-lg font-bold mb-4">For Parents</h3>
+                    <ul class="space-y-3">
+                        <li><a href="./login.html" class="hover:text-white transition-colors">Parent Portal</a></li>
+                        <li><a href="./grades.html" class="hover:text-white transition-colors">Grades & Progress</a></li>
+                        <li><a href="./yearbook.html" class="hover:text-white transition-colors">Yearbook</a></li>
+                        <li><a href="./gallery.html" class="hover:text-white transition-colors">Photo Gallery</a></li>
+                        <li><a href="./rules.html" class="hover:text-white transition-colors">School Handbook</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div>
+                    <h3 class="text-white text-lg font-bold mb-4">Contact Us</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-primary-red mt-1 mr-3"></i>
+                            <span>8 Boothman Drive<br>St. Augustine</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone text-primary-red mr-3"></i>
+                            <span>1(868) 316-6997</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope text-primary-red mr-3"></i>
+                            <span>info@pequenosgigantes.edu</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p>&copy; 2025 Pequeños Gigantes Preschool. All rights reserved.</p>
+                <p class="text-sm mt-2">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a> |
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a> |
+                    <a href="#" class="hover:text-white transition-colors">Accessibility</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('fa-bars')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+
+                document.addEventListener('click', function(event) {
+                    if (mobileMenu && !mobileMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+                        mobileMenu.classList.add('hidden');
+                        const icon = mobileMenuBtn.querySelector('i');
+                        if (icon) {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    }
+                });
+            }
+
+            // FAQ Accordion
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    const answer = this.nextElementSibling;
+                    const icon = this.querySelector('i');
+                    
+                    // Toggle current answer
+                    answer.classList.toggle('active');
+                    
+                    // Rotate icon
+                    if (answer.classList.contains('active')) {
+                        icon.style.transform = 'rotate(180deg)';
+                    } else {
+                        icon.style.transform = 'rotate(0deg)';
+                    }
+                    
+                    // Close other answers
+                    faqQuestions.forEach(otherQuestion => {
+                        if (otherQuestion !== this) {
+                            const otherAnswer = otherQuestion.nextElementSibling;
+                            const otherIcon = otherQuestion.querySelector('i');
+                            otherAnswer.classList.remove('active');
+                            otherIcon.style.transform = 'rotate(0deg)';
+                        }
+                    });
+                });
+            });
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+    <style>
+        /* Section Title */
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        /* Subsection Title */
+        .subsection-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Feature Card */
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Process Steps */
+        .process-step {
+            display: flex;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .process-step:not(:last-child):after {
+            content: '';
+            position: absolute;
+            left: 2rem;
+            top: 4rem;
+            bottom: -3rem;
+            width: 2px;
+            background: #e5e7eb;
+        }
+
+        .process-number {
+            background: #ef4444;
+            color: white;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-right: 2rem;
+            flex-shrink: 0;
+            z-index: 1;
+        }
+
+        .process-content {
+            flex: 1;
+            padding-top: 0.5rem;
+        }
+
+        /* Admissions Table */
+        .admissions-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .admissions-table th {
+            background: #ef4444;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .admissions-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .admissions-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .admissions-table tr:hover {
+            background: #fef2f2;
+        }
+
+        /* FAQ Styles */
+        .faq-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 1.5rem;
+            background: white;
+            border: none;
+            text-align: left;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .faq-question:hover {
+            background: #f9fafb;
+        }
+
+        .faq-question i {
+            transition: transform 0.3s ease;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-answer.active {
+            padding: 0 1.5rem 1.5rem;
+            max-height: 500px;
+        }
+
+        .faq-answer p {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background: #ef4444;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: inherit;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            border: 2px solid;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .process-step {
+                flex-direction: column;
+            }
+            
+            .process-step:not(:last-child):after {
+                left: 2rem;
+                top: 4rem;
+                bottom: -3rem;
+            }
+            
+            .process-number {
+                margin-bottom: 1rem;
+                margin-right: 0;
+            }
+            
+            .admissions-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Pequenos Gigantes Preschool & Primary School</title>
+    <link rel="stylesheet" href="./css/output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400..700;1,400..700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-primary-white font-body min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <!-- Top Bar: Logo + Login -->
+        <div class="border-b border-gray-200 bg-white">
+            <div class="container-wide px-4">
+                <div class="flex justify-between items-center py-3">
+                    <!-- Logo -->
+                    <a href="./index.html" class="flex items-center space-x-3 group">
+                        <div
+                            class="w-10 h-10 bg-primary-red rounded-full flex items-center justify-center group-hover:scale-105 transition-transform">
+                            <span class="text-white font-bold text-xl font-childish">PG</span>
+                        </div>
+                        <div class="hidden sm:block">
+                            <div class="text-xl font-bold text-primary-black font-serif leading-tight">Pequeños Gigantes</div>
+                            <div class="text-sm text-primary-black font-serif">Nursery and Learning Academy</div>
+                        </div>
+                        <div class="sm:hidden text-lg text-primary-black font-bold font-serif">PGNLA</div>
+                    </a>
+
+                    <!-- Contact Info + Login -->
+                    <div class="hidden md:flex items-center space-x-6">
+                        <div class="text-sm text-gray-600">
+                            <i class="fas fa-phone text-primary-red mr-1"></i>
+                            <span>1(868) 681-6554</span>
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            <i class="fas fa-envelope text-primary-red mr-1"></i>
+                            <span>info@pequenosgigantes.edu</span>
+                        </div>
+                        <a href="./login.html" class="btn-primary text-sm px-4 py-2">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Login
+                        </a>
+                    </div>
+
+                    <!-- Mobile Login/Menu -->
+                    <div class="flex items-center space-x-4 md:hidden">
+                        <a href="./login.html" class="text-primary-red">
+                            <i class="fas fa-sign-in-alt text-xl"></i>
+                        </a>
+                        <button id="mobileMenuBtn" class="text-primary-black">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Bar: Quick Links -->
+        <div class="hidden md:block bg-primary-red border-t-4 border-red-700">
+            <div class="container-wide px-4">
+                <div class="flex justify-center items-center space-x-8 py-3">
+
+
+                    <!--
+                    <a href="./index.html"
+                        class="nav-link text-white hover:text-white hover:bg-red-700 px-3 py-2 rounded">
+                        <i class="fas fa-home mr-1"></i>Home
+                    </a>
+                    -->
+                    <a href="./about.html"
+                        class="nav-link text-white hover:text-white hover:bg-red-700 px-3 py-2 rounded">
+                        <i class="fas fa-info-circle mr-1"></i>About Us
+                    </a>
+                    <a href="./admissions.html"
+                        class="nav-link text-white hover:text-white hover:bg-red-700 px-3 py-2 rounded">
+                        <i class="fas fa-user-plus mr-1"></i>Admissions
+                    </a>
+
+                    <!-- Student Life with Dropdown -->
+                    <div class="relative group">
+                        <button
+                            class="nav-link text-white hover:text-white hover:bg-red-700 px-3 py-2 rounded flex items-center">
+                            <i class="fas fa-graduation-cap mr-1"></i>Student Life
+                            <i class="fas fa-chevron-down ml-1 text-sm"></i>
+                        </button>
+                        <!-- Dropdown Menu -->
+                        <div
+                            class="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <a href="./student-life.html"
+                                class="block px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-primary-red">
+                                <i class="fas fa-graduation-cap mr-2"></i>Student Life Overview
+                            </a>
+                            <a href="./gallery.html"
+                                class="block px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-primary-red">
+                                <i class="fas fa-images mr-2"></i>Photo Gallery
+                            </a>
+                            <a href="./yearbook.html"
+                                class="block px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-primary-red">
+                                <i class="fas fa-book-open mr-2"></i>Yearbook
+                            </a>
+                            <a href="./calendar.html"
+                                class="block px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-primary-red">
+                                <i class="fas fa-calendar-alt mr-2"></i>School Calendar
+                            </a>
+                        </div>
+                    </div>
+
+                    <a href="./contact.html"
+                        class="nav-link text-white hover:text-white hover:bg-red-700 px-3 py-2 rounded">
+                        <i class="fas fa-phone mr-1"></i>Contact
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="md:hidden hidden bg-white border-t border-gray-200 animate-slide-up">
+            <div class="container-wide px-4 py-4">
+                <div class="space-y-1">
+                    <a href="./index.html" class="flex items-center p-3 nav-link rounded-lg">
+                        <i class="fas fa-home mr-3"></i>Home
+                    </a>
+                    <a href="./about.html" class="flex items-center p-3 nav-link nav-link-active rounded-lg bg-red-50">
+                        <i class="fas fa-info-circle mr-3 text-primary-red"></i>About Us
+                    </a>
+                    <a href="./registration.html" class="flex items-center p-3 nav-link rounded-lg">
+                        <i class="fas fa-user-plus mr-3"></i>Admissions
+                    </a>
+                    
+                    <!-- Student Life Section Header -->
+                    <div class="p-3 text-sm font-semibold text-primary-red border-l-4 border-primary-red pl-3 mt-4">
+                        <i class="fas fa-graduation-cap mr-2"></i>Student Life
+                    </div>
+                    
+                    <!-- Student Life Sub-menu -->
+                    <a href="./student-life.html" class="flex items-center p-3 nav-link rounded-lg ml-4">
+                        <i class="fas fa-circle text-xs mr-3 text-gray-400"></i>Overview
+                    </a>
+                    <a href="./gallery.html" class="flex items-center p-3 nav-link rounded-lg ml-4">
+                        <i class="fas fa-circle text-xs mr-3 text-gray-400"></i>Photo Gallery
+                    </a>
+                    <a href="./yearbook.html" class="flex items-center p-3 nav-link rounded-lg ml-4">
+                        <i class="fas fa-circle text-xs mr-3 text-gray-400"></i>Yearbook
+                    </a>
+                    <a href="./calendar.html" class="flex items-center p-3 nav-link rounded-lg ml-4">
+                        <i class="fas fa-circle text-xs mr-3 text-gray-400"></i>School Calendar
+                    </a>
+                    
+                    <a href="./contact.html" class="flex items-center p-3 nav-link rounded-lg">
+                        <i class="fas fa-phone mr-3"></i>Contact
+                    </a>
+                    
+                    <div class="pt-4 mt-4 border-t">
+                        <div class="text-sm text-gray-500 mb-2">Contact Information:</div>
+                        <div class="flex items-center text-sm text-gray-600 mb-2">
+                            <i class="fas fa-phone text-primary-red mr-2"></i>
+                            <span>(123) 456-7890</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-envelope text-primary-red mr-2"></i>
+                            <span>info@pequenosgigantes.edu</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <main class="flex-grow">
+        <section class="relative overflow-hidden bg-primary-red text-white py-20 md:py-24">
+            <div class="container-wide px-4">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-6">
+                        About Pequenos Gigantes
+                    </h1>
+                    <p class="text-xl md:text-2xl opacity-90">
+                        Nurturing tomorrow's giants through quality education since 2012
+                    </p>
+                </div>
+            </div>
+            <!-- Decorative elements -->
+            <div class="absolute top-0 left-0 w-32 h-32 bg-white/10 rounded-full -translate-x-16 -translate-y-16"></div>
+            <div class="absolute bottom-0 right-0 w-48 h-48 bg-white/5 rounded-full translate-x-24 translate-y-24"></div>
+        </section>
+
+        <!-- Our Story -->
+        <section class="py-16 bg-white">
+            <div class="container-wide px-4">
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-bold text-primary-black mb-6">
+                            Our Story & Philosophy
+                        </h2>
+                        <div class="text-lg text-gray-700 mb-6 leading-relaxed">
+                            <p class="mb-4">
+                                Founded in 2012, Pequenos Gigantes began with a simple yet powerful vision: 
+                                to create a learning environment where every child is recognized as a giant 
+                                in the making. What started as a small preschool has grown into a comprehensive 
+                                educational institution serving children from ages 2 through 10.
+                            </p>
+                            <p class="mb-4">
+                                Our name, "Pequenos Gigantes" (Little Giants), reflects our core belief that 
+                                within every child lies immense potential waiting to be discovered and nurtured.
+                            </p>
+                            <p>
+                                We believe that education should inspire curiosity, foster creativity, and 
+                                build character. Our holistic approach ensures that children develop not just 
+                                academically, but socially, emotionally, and physically as well.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="bg-gray-100 rounded-2xl overflow-hidden shadow-xl">
+                            <div class="aspect-video bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center">
+                                <i class="fas fa-history text-primary-red text-8xl opacity-80"></i>
+                            </div>
+                        </div>
+                        <div class="absolute -bottom-4 -left-4 bg-white p-6 rounded-xl shadow-lg">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-primary-red">2012</div>
+                                <div class="text-sm text-gray-600">Year Founded</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mission & Vision -->
+        <section class="py-16 bg-gray-50">
+            <div class="container-wide px-4">
+                <div class="grid md:grid-cols-2 gap-12">
+                    <!-- Mission -->
+                    <div class="bg-white rounded-2xl p-8 shadow-lg border-l-4 border-primary-red">
+                        <div class="text-primary-red text-4xl mb-6">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-primary-black mb-4">Our Mission</h3>
+                        <p class="text-gray-700 leading-relaxed">
+                            To provide a safe, nurturing, and stimulating educational environment where 
+                            every child can discover their unique potential, develop a love for learning, 
+                            and build the foundation for lifelong success as confident, compassionate, 
+                            and responsible individuals.
+                        </p>
+                    </div>
+                    
+                    <!-- Vision -->
+                    <div class="bg-white rounded-2xl p-8 shadow-lg border-l-4 border-primary-red">
+                        <div class="text-primary-red text-4xl mb-6">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-primary-black mb-4">Our Vision</h3>
+                        <p class="text-gray-700 leading-relaxed">
+                            To be recognized as a leading educational institution that transforms 
+                            young learners into tomorrow's giants – individuals who are academically 
+                            excellent, socially responsible, and equipped to make positive contributions 
+                            to their communities and the world.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Core Values -->
+                <div class="mt-16">
+                    <h2 class="section-title">Our Core Values</h2>
+                    <div class="grid md:grid-cols-4 gap-6">
+                        <div class="text-center p-6">
+                            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-heart text-primary-red text-2xl"></i>
+                            </div>
+                            <h4 class="font-bold text-lg mb-2">Nurturing Care</h4>
+                            <p class="text-gray-600">Creating a warm, safe environment where every child feels loved and supported.</p>
+                        </div>
+                        
+                        <div class="text-center p-6">
+                            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-lightbulb text-primary-red text-2xl"></i>
+                            </div>
+                            <h4 class="font-bold text-lg mb-2">Curiosity & Creativity</h4>
+                            <p class="text-gray-600">Encouraging exploration, imagination, and innovative thinking.</p>
+                        </div>
+                        
+                        <div class="text-center p-6">
+                            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-hands-helping text-primary-red text-2xl"></i>
+                            </div>
+                            <h4 class="font-bold text-lg mb-2">Respect & Integrity</h4>
+                            <p class="text-gray-600">Teaching respect for self, others, and the environment with honesty.</p>
+                        </div>
+                        
+                        <div class="text-center p-6">
+                            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-users text-primary-red text-2xl"></i>
+                            </div>
+                            <h4 class="font-bold text-lg mb-2">Community</h4>
+                            <p class="text-gray-600">Building strong partnerships between school, families, and community.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    
+
+        <!-- Facilities -->
+        <section class="py-16 bg-gray-50">
+            <div class="container-wide px-4">
+                <h2 class="section-title">Our Facilities</h2>
+                <p class="text-xl text-gray-600 text-center max-w-3xl mx-auto mb-12">
+                    Modern, safe, and stimulating environments designed for optimal learning
+                </p>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="card text-center">
+                        <div class="text-primary-red text-4xl mb-4">
+                            <i class="fas fa-chalkboard"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Smart Classrooms</h3>
+                        <p class="text-gray-600">Age-appropriate learning spaces with modern educational technology</p>
+                    </div>
+                    
+                    <div class="card text-center">
+                        <div class="text-primary-red text-4xl mb-4">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Outdoor Play Areas</h3>
+                        <p class="text-gray-600">Safe, well-equipped playgrounds for physical development and play</p>
+                    </div>
+                    
+                    <div class="card text-center">
+                        <div class="text-primary-red text-4xl mb-4">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Learning Library</h3>
+                        <p class="text-gray-600">Extensive collection of age-appropriate books and learning resources</p>
+                    </div>
+                    
+                    <div class="card text-center">
+                        <div class="text-primary-red text-4xl mb-4">
+                            <i class="fas fa-paint-brush"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Creative Arts Studio</h3>
+                        <p class="text-gray-600">Dedicated space for art, music, and creative expression</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--
+         Accreditation & Recognition 
+        <section class="py-16 bg-white">
+            <div class="container-wide px-4">
+                <div class="bg-primary-red/5 rounded-2xl p-8 border border-primary-red/20">
+                    <div class="grid lg:grid-cols-2 gap-12 items-center">
+                        <div>
+                            <h2 class="text-3xl font-bold text-primary-black mb-6">
+                                Accreditation & Recognition
+                            </h2>
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <i class="fas fa-award text-primary-red mt-1 mr-3"></i>
+                                    <div>
+                                        <h4 class="font-bold">Fully Accredited</h4>
+                                        <p class="text-gray-600">Recognized by the National Education Department</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fas fa-shield-alt text-primary-red mt-1 mr-3"></i>
+                                    <div>
+                                        <h4 class="font-bold">Safety Certified</h4>
+                                        <p class="text-gray-600">Regular safety inspections and certifications</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fas fa-user-graduate text-primary-red mt-1 mr-3"></i>
+                                    <div>
+                                        <h4 class="font-bold">Qualified Staff</h4>
+                                        <p class="text-gray-600">All teachers certified in early childhood and primary education</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-8 rounded-xl shadow-lg">
+                            <h3 class="text-2xl font-bold text-primary-black mb-6 text-center">Quick Facts</h3>
+                            <div class="grid grid-cols-2 gap-6">
+                                <div class="text-center p-4">
+                                    <div class="text-3xl font-bold text-primary-red mb-2">15+</div>
+                                    <div class="text-gray-600">Qualified Teachers</div>
+                                </div>
+                                <div class="text-center p-4">
+                                    <div class="text-3xl font-bold text-primary-red mb-2">150+</div>
+                                    <div class="text-gray-600">Happy Students</div>
+                                </div>
+                                <div class="text-center p-4">
+                                    <div class="text-3xl font-bold text-primary-red mb-2">2:10</div>
+                                    <div class="text-gray-600">Teacher-Student Ratio</div>
+                                </div>
+                                <div class="text-center p-4">
+                                    <div class="text-3xl font-bold text-primary-red mb-2">98%</div>
+                                    <div class="text-gray-600">Parent Satisfaction</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    -->
+
+        <!-- CTA Section -->
+        <section class="py-20 bg-primary-red text-white relative overflow-hidden">
+            <!-- Background pattern -->
+            <div class="absolute inset-0 opacity-10" style='background-image: url("data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.4\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");'></div>
+            
+            <div class="relative z-10 container-wide px-4 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">
+                    Experience the Pequenos Gigantes Difference
+                </h2>
+                <p class="text-xl mb-10 max-w-2xl mx-auto opacity-90">
+                    Schedule a tour to see our facilities, meet our team, and learn how we can 
+                    support your child's educational journey.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="./registration.html" class="btn-primary bg-white text-primary-red hover:bg-gray-100 text-lg px-8 py-4 font-semibold">
+                        <i class="fas fa-calendar-alt mr-2"></i>Schedule a Tour
+                    </a>
+                    <a href="./contact.html" class="btn-secondary border-2 border-white text-white hover:bg-white/20 text-lg px-8 py-4">
+                        <i class="fas fa-phone mr-2"></i>Contact Us
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 pt-12 pb-8">
+        <div class="container-wide px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- School Info -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 bg-primary-red rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-lg font-main">PG</span>
+                        </div>
+                        <span class="text-2xl font-bold text-white font-main">Pequenos<br>Gigantes</span>
+                    </div>
+                    <p class="mb-6">
+                        Nurturing young minds to become tomorrow's giants through quality education.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white text-xl">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white text-xl">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-white text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="./index.html" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="./about.html" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="./registration.html" class="hover:text-white transition-colors">Admissions</a></li>
+                        <li><a href="./student-life.html" class="hover:text-white transition-colors">Student Life</a></li>
+                        <li><a href="./calendar.html" class="hover:text-white transition-colors">School Calendar</a></li>
+                    </ul>
+                </div>
+                
+                <!-- For Parents -->
+                <div>
+                    <h3 class="text-white text-lg font-bold mb-4">For Parents</h3>
+                    <ul class="space-y-3">
+                        <li><a href="./login.html" class="hover:text-white transition-colors">Parent Portal</a></li>
+                        <li><a href="./grades.html" class="hover:text-white transition-colors">Grades & Progress</a></li>
+                        <li><a href="./yearbook.html" class="hover:text-white transition-colors">Yearbook</a></li>
+                        <li><a href="./gallery.html" class="hover:text-white transition-colors">Photo Gallery</a></li>
+                        <li><a href="./rules.html" class="hover:text-white transition-colors">School Handbook</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact Info -->
+                <div>
+                    <h3 class="text-white text-lg font-bold mb-4">Contact Us</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-primary-red mt-1 mr-3"></i>
+                            <span>123 Learning Street<br>Education City, EC 12345</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone text-primary-red mr-3"></i>
+                            <span>(123) 456-7890</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope text-primary-red mr-3"></i>
+                            <span>info@pequenosgigantes.edu</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-clock text-primary-red mr-3"></i>
+                            <span>Mon-Fri: 7:30 AM - 6:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Copyright -->
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p>&copy; 2024 Pequenos Gigantes Preschool. All rights reserved.</p>
+                <p class="text-sm mt-2">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a> | 
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a> | 
+                    <a href="#" class="hover:text-white transition-colors">Accessibility</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                    // Change icon
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('fa-bars')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+                
+                // Close mobile menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (mobileMenu && !mobileMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+                        mobileMenu.classList.add('hidden');
+                        const icon = mobileMenuBtn.querySelector('i');
+                        if (icon) {
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
