@@ -120,6 +120,60 @@ export const getCurrentStaff = query({
   },
 });
 
+/* ===================== Admin ===================== */
+
+export const loginAdmin = mutation({
+  args: {
+    email: v.string(),
+    password: v.string(),
+  },
+  handler: async (ctx, { email, password }) => {
+    const admin = await ctx.db
+      .query("admins")
+      .withIndex("by_email", q => q.eq("email", email))
+      .unique();
+
+    if (!admin || !admin.isActive) {
+      throw new Error("Invalid credentials");
+    }
+
+    if (!bcrypt.compareSync(password, admin.passwordHash)) {
+      throw new Error("Invalid credentials");
+    }
+
+    const token = generateToken();
+
+    await ctx.db.insert("sessionsAdmin", {
+      adminId: admin._id,
+      token,
+      expiresAt: Date.now() + SESSION_TTL,
+    });
+
+    return {
+      token,
+      role: "admin" as const,
+      user: {
+        id: admin._id,
+        fullName: admin.fullName,
+        email: admin.email,
+      },
+    };
+  },
+});
+
+export const getCurrentAdmin = query({
+  args: { token: v.string() },
+  handler: async (ctx, { token }) => {
+    const session = await ctx.db
+      .query("sessionsStaff")
+      .withIndex("by_token", q => q.eq("token", token))
+      .unique();
+
+    if (!session || session.expiresAt < Date.now()) return null;
+    return ctx.db.get(session.staffId);
+  },
+});
+
 /* ===================== LOGOUT ===================== */
 
 export const logoutParent = mutation({
@@ -139,6 +193,18 @@ export const logoutStaff = mutation({
   handler: async (ctx, { token }) => {
     const session = await ctx.db
       .query("sessionsStaff")
+      .withIndex("by_token", q => q.eq("token", token))
+      .unique();
+
+    if (session) await ctx.db.delete(session._id);
+  },
+});
+
+export const logoutAdmin = mutation({
+  args: { token: v.string() },
+  handler: async (ctx, { token }) => {
+    const session = await ctx.db
+      .query("sessionsAdmin")
       .withIndex("by_token", q => q.eq("token", token))
       .unique();
 

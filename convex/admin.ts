@@ -5,7 +5,7 @@ export const createAdmin = mutation({
   args: {
     email: v.string(),
     passwordHash: v.string(),
-    name: v.string(),
+    fullName: v.string(),
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db
@@ -20,7 +20,10 @@ export const createAdmin = mutation({
     await ctx.db.insert("admins", {
       email: args.email,
       passwordHash: args.passwordHash,
-      name: args.name,
+      fullName: args.fullName,
+      isActive: true,
     });
+
+    return { success: true };
   },
 });

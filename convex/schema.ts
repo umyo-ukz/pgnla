@@ -21,6 +21,12 @@ export default defineSchema({
     expiresAt: v.number(),
   }).index("by_token", ["token"]),
 
+  sessionsAdmin: defineTable({
+    adminId: v.id("admin"),
+    token: v.string(),
+    expiresAt: v.number(),
+  }).index("by_token", ["token"]),
+
   students: defineTable({
     parentId: v.id("parents"),
     fullName: v.string(),
@@ -30,7 +36,8 @@ export default defineSchema({
   admins: defineTable({
     email: v.string(),
     passwordHash: v.string(),
-    name: v.string(),
+    fullName: v.string(),
+    isActive: v.boolean(),
   }).index("by_email", ["email"]),
 
   staff: defineTable({
