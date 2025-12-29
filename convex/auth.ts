@@ -12,202 +12,79 @@ function generateToken() {
   );
 }
 
-/* ===================== PARENT ===================== */
-
-export const loginParent = mutation({
+/* ===================== LOGIN ===================== */
+export const login = mutation({
   args: {
     email: v.string(),
     password: v.string(),
   },
+
+  
   handler: async (ctx, { email, password }) => {
-    const parent = await ctx.db
-      .query("parents")
-      .withIndex("by_email", q => q.eq("email", email))
+
+    const normalizedEmail = email.toLowerCase();
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_email", q => q.eq("email", normalizedEmail))
       .unique();
 
-    if (!parent || !parent.isActive) {
+    if (!user || !user.isActive) {
       throw new Error("Invalid credentials");
     }
 
-    if (!bcrypt.compareSync(password, parent.passwordHash)) {
+    if (!bcrypt.compareSync(password, user.passwordHash)) {
       throw new Error("Invalid credentials");
     }
 
     const token = generateToken();
 
-    await ctx.db.insert("sessionsParent", {
-      parentId: parent._id,
+    await ctx.db.insert("sessions", {
+      userId: user._id,
       token,
       expiresAt: Date.now() + SESSION_TTL,
     });
 
     return {
       token,
-      role: "parent" as const,
+      role: user.role,
       user: {
-        id: parent._id,
-        fullName: parent.fullName,
-        email: parent.email,
+        id: user._id,
+        fullName: user.fullName,
+        email: user.email,
       },
     };
   },
 });
 
-export const getCurrentParent = query({
+export const getCurrentUser = query({
   args: { token: v.string() },
   handler: async (ctx, { token }) => {
     const session = await ctx.db
-      .query("sessionsParent")
+      .query("sessions")
       .withIndex("by_token", q => q.eq("token", token))
       .unique();
 
     if (!session || session.expiresAt < Date.now()) return null;
-    return ctx.db.get(session.parentId);
+
+    return ctx.db.get(session.userId);
   },
 });
 
-/* ===================== STAFF ===================== */
-
-export const loginStaff = mutation({
-  args: {
-    email: v.string(),
-    password: v.string(),
-  },
-  handler: async (ctx, { email, password }) => {
-    const staff = await ctx.db
-      .query("staff")
-      .withIndex("by_email", q => q.eq("email", email))
-      .unique();
-
-    if (!staff || !staff.isActive) {
-      throw new Error("Invalid credentials");
-    }
-
-    if (!bcrypt.compareSync(password, staff.passwordHash)) {
-      throw new Error("Invalid credentials");
-    }
-
-    const token = generateToken();
-
-    await ctx.db.insert("sessionsStaff", {
-      staffId: staff._id,
-      token,
-      expiresAt: Date.now() + SESSION_TTL,
-    });
-
-    return {
-      token,
-      role: "staff" as const,
-      user: {
-        id: staff._id,
-        fullName: staff.fullName,
-        email: staff.email,
-      },
-    };
-  },
-});
-
-export const getCurrentStaff = query({
-  args: { token: v.string() },
-  handler: async (ctx, { token }) => {
-    const session = await ctx.db
-      .query("sessionsStaff")
-      .withIndex("by_token", q => q.eq("token", token))
-      .unique();
-
-    if (!session || session.expiresAt < Date.now()) return null;
-    return ctx.db.get(session.staffId);
-  },
-});
-
-/* ===================== Admin ===================== */
-
-export const loginAdmin = mutation({
-  args: {
-    email: v.string(),
-    password: v.string(),
-  },
-  handler: async (ctx, { email, password }) => {
-    const admin = await ctx.db
-      .query("admins")
-      .withIndex("by_email", q => q.eq("email", email))
-      .unique();
-
-    if (!admin || !admin.isActive) {
-      throw new Error("Invalid credentials");
-    }
-
-    if (!bcrypt.compareSync(password, admin.passwordHash)) {
-      throw new Error("Invalid credentials");
-    }
-
-    const token = generateToken();
-
-    await ctx.db.insert("sessionsAdmin", {
-      adminId: admin._id,
-      token,
-      expiresAt: Date.now() + SESSION_TTL,
-    });
-
-    return {
-      token,
-      role: "admin" as const,
-      user: {
-        id: admin._id,
-        fullName: admin.fullName,
-        email: admin.email,
-      },
-    };
-  },
-});
-
-export const getCurrentAdmin = query({
-  args: { token: v.string() },
-  handler: async (ctx, { token }) => {
-    const session = await ctx.db
-      .query("sessionsStaff")
-      .withIndex("by_token", q => q.eq("token", token))
-      .unique();
-
-    if (!session || session.expiresAt < Date.now()) return null;
-    return ctx.db.get(session.staffId);
-  },
-});
 
 /* ===================== LOGOUT ===================== */
 
-export const logoutParent = mutation({
+export const logout = mutation({
   args: { token: v.string() },
   handler: async (ctx, { token }) => {
     const session = await ctx.db
-      .query("sessionsParent")
+      .query("sessions")
       .withIndex("by_token", q => q.eq("token", token))
       .unique();
 
-    if (session) await ctx.db.delete(session._id);
+    if (session) {
+      await ctx.db.delete(session._id);
+    }
   },
 });
-
-export const logoutStaff = mutation({
-  args: { token: v.string() },
-  handler: async (ctx, { token }) => {
-    const session = await ctx.db
-      .query("sessionsStaff")
-      .withIndex("by_token", q => q.eq("token", token))
-      .unique();
-
-    if (session) await ctx.db.delete(session._id);
-  },
-});
-
-export const logoutAdmin = mutation({
-  args: { token: v.string() },
-  handler: async (ctx, { token }) => {
-    const session = await ctx.db
-      .query("sessionsAdmin")
-      .withIndex("by_token", q => q.eq("token", token))
-      .unique();
-
-    if (session) await ctx.db.delete(session._id);
-  },
-});
+/* ===================== PASSWORD CHANGE ===================== */

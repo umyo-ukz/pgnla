@@ -2,6 +2,25 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
+
+  users: defineTable({
+    email: v.string(),
+    passwordHash: v.string(),
+    fullName: v.string(),
+    role: v.union(
+      v.literal("parent"),
+      v.literal("staff"),
+      v.literal("admin")
+    ),
+    isActive: v.boolean(),
+  }).index("by_email", ["email"]),
+
+  sessions: defineTable({
+    userId: v.id("users"),
+    token: v.string(),
+    expiresAt: v.number(),
+  }).index("by_token", ["token"]),
+
   parents: defineTable({
     email: v.string(),
     passwordHash: v.string(),
@@ -9,26 +28,8 @@ export default defineSchema({
     isActive: v.boolean(),
   }).index("by_email", ["email"]),
 
-  sessionsParent: defineTable({
-    parentId: v.id("parents"),
-    token: v.string(),
-    expiresAt: v.number(),
-  }).index("by_token", ["token"]),
-
-  sessionsStaff: defineTable({
-    staffId: v.id("staff"),
-    token: v.string(),
-    expiresAt: v.number(),
-  }).index("by_token", ["token"]),
-
-  sessionsAdmin: defineTable({
-    adminId: v.id("admin"),
-    token: v.string(),
-    expiresAt: v.number(),
-  }).index("by_token", ["token"]),
-
   students: defineTable({
-    parentId: v.id("parents"),
+    parentId: v.id("users"),
     fullName: v.string(),
     gradeLevel: v.string(),
   }).index("by_parent", ["parentId"]),
@@ -55,6 +56,8 @@ export default defineSchema({
     createdAt: v.number(),
   }).index("by_student", ["studentId"]),
 
+
+  
 
   
 

@@ -4,7 +4,7 @@ import { v } from "convex/values";
 
 export const listForParent = query({
   args: {
-    parentId: v.id("parents"),
+    parentId: v.id("users"),
   },
   handler: async (ctx, { parentId }) => {
     return ctx.db
@@ -16,7 +16,7 @@ export const listForParent = query({
 
 export const createStudent = mutation({
   args: {
-    parentId: v.id("parents"),
+    parentId: v.id("users"),
     fullName: v.string(),
     gradeLevel: v.string(),
   },

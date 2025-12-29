@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 export default function Login() {
-  const { loginAsParent, loginAsStaff } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -12,31 +12,19 @@ export default function Login() {
   const [active, setActive] = useState<"parent" | "staff">("parent");
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmitParent(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
-      await loginAsParent(email, password);
-      navigate("/parents");
-    } catch {
-      setError("Invalid email or password");
-    } finally {
-      setLoading(false);
-    }
-  }
+      const user = await login(email, password);
 
-  async function handleSubmitStaff(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    try {
-      await loginAsStaff(email, password);
-      navigate("/staff");
+      if (user.role === "admin") navigate("/admin");
+      else if (user.role === "staff") navigate("/staff");
+      else navigate("/parent-dashboard");
     } catch {
-      setError("Invalid email or password");
+      setError("Invalid credentials");
     } finally {
       setLoading(false);
     }
@@ -96,7 +84,7 @@ export default function Login() {
 
           {/* Parent Form */}
           {active === "parent" && (
-            <form onSubmit={handleSubmitParent} className="p-8">
+            <form onSubmit={handleSubmit} className="p-8">
               <div className="space-y-6">
                 <div>
                   <label className="form-label">Email Address</label>
@@ -136,7 +124,7 @@ export default function Login() {
 
           {/* Staff Form */}
           {active === "staff" && (
-            <form onSubmit={handleSubmitStaff} className="p-8">
+            <form onSubmit={handleSubmit} className="p-8">
               <div className="space-y-6">
                 <div>
                   <label className="form-label">Staff Email</label>
