@@ -4,13 +4,18 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
 export default function ParentDashboard() {
-  const { parent, logout } = useAuth();
+  const { user, role, logout, isLoading } = useAuth();
 
-  if (parent === undefined) return null;
-  if (!parent) return <Navigate to="/login" />;
+  // Still loading auth state
+  if (isLoading) return null;
+
+  // Not logged in or wrong role
+  if (!user || role !== "parent") {
+    return <Navigate to="/login" />;
+  }
 
   const students = useQuery(api.students.listForParent, {
-    parentId: parent._id,
+    parentId: user._id, // now Id<"users">
   });
 
   const studentCount = students?.length ?? 0;
@@ -21,7 +26,7 @@ export default function ParentDashboard() {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold">
-            Welcome, {parent.fullName}
+            Welcome, {user.fullName}
           </h1>
           <p className="text-gray-600">
             Parent portal overview
@@ -29,9 +34,9 @@ export default function ParentDashboard() {
         </div>
 
         <div className="flex gap-3">
-          <Link to= "/home" onClick={logout} className="btn-secondary">
+          <button onClick={logout} className="btn-secondary">
             Logout
-          </Link>
+          </button>
         </div>
       </div>
 
@@ -118,15 +123,9 @@ export default function ParentDashboard() {
           </h2>
 
           <ul className="space-y-3 text-sm text-gray-700">
-            <li>
-              📄 New term report available
-            </li>
-            <li>
-              📝 Grade updated for Mathematics
-            </li>
-            <li>
-              📅 Attendance recorded
-            </li>
+            <li>📄 New term report available</li>
+            <li>📝 Grade updated for Mathematics</li>
+            <li>📅 Attendance recorded</li>
           </ul>
 
           <div className="mt-4">

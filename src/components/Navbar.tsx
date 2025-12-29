@@ -6,7 +6,16 @@ import { useAuth } from "../hooks/useAuth";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const { parent, staff, role, isLoading, logout } = useAuth();
+  const { user, role, isLoading, logout } = useAuth();
+
+  const dashboardPath =
+    role === "parent"
+      ? "/parent-dashboard"
+      : role === "staff"
+      ? "/staff"
+      : role === "admin"
+      ? "/admin"
+      : "/login";
 
   return (
     <nav className="bg-white shadow-lg sticky top-0 z-50">
@@ -42,71 +51,72 @@ export default function Navbar() {
                 <span>info@pequenosgigantes.edu</span>
               </div>
 
-              {parent || staff ? (
+              {!isLoading && user ? (
                 <div className="relative group">
                   <Link
-                    to={role === "parent" ? "/parent-dashboard" : "/staff"}
+                    to={dashboardPath}
                     className="btn-primary text-sm px-4 py-2"
                   >
                     <i
                       className={`fas ${
                         role === "parent"
                           ? "fa-user"
-                          : "fa-chalkboard-teacher"
+                          : role === "staff"
+                          ? "fa-chalkboard-teacher"
+                          : "fa-user-shield"
                       } mr-2`}
                     ></i>
-                    {`Hello, ${
-                      role === "parent"
-                        ? parent?.fullName.split(" ")[0]
-                        : staff?.fullName.split(" ")[0]
-                    }`}
+                    Hello, {user.fullName.split(" ")[0]}
                   </Link>
 
-                  <div className="absolute py-4 right-0 mt-2 w-48 bg-white rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  {/* Dropdown */}
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
                     <Link
-                      to="/parent-dashboard"
-                      className="block px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-primary-red rounded-xl"
+                      to={dashboardPath}
+                      className="block px-4 py-3 hover:bg-red-50"
                     >
-                      <i className="fas fa-user-plus mr-2"></i>Dashboard
+                      Dashboard
                     </Link>
                     <Link
                       to="/account"
-                      className="block px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-primary-red rounded-xl"
+                      className="block px-4 py-3 hover:bg-red-50"
                     >
-                      <i className="fas fa-cog mr-2"></i>Account Settings
+                      Account Settings
                     </Link>
+                    <button
+                      onClick={logout}
+                      className="w-full text-left px-4 py-3 hover:bg-red-50 text-red-600"
+                    >
+                      Logout
+                    </button>
                   </div>
                 </div>
               ) : (
                 <Link to="/login" className="btn-primary text-sm px-4 py-2">
-                  <i className="fas fa-sign-in-alt mr-2"></i>Login
+                  Login
                 </Link>
               )}
             </div>
 
-            <div className="flex items-center space-x-4 md:hidden">
-              {parent && !isLoading ? (
+            {/* Mobile icons */}
+            <div className="flex items-center md:hidden gap-4">
+              {!isLoading && user ? (
                 <>
-                  <Link
-                    to="/parent-dashboard"
-                    className="text-primary-red font-semibold"
-                  >
-                    Hello, {parent.fullName.split(" ")[0]}
+                  <Link to={dashboardPath} className="text-primary-red font-semibold">
+                    {user.fullName.split(" ")[0]}
                   </Link>
-                  <button onClick={logout} className="text-primary-red">
+                  <button onClick={logout}>
                     <i className="fas fa-sign-out-alt text-xl"></i>
                   </button>
                 </>
               ) : (
-                <Link to="/login" className="text-primary-red">
+                <Link to="/login">
                   <i className="fas fa-sign-in-alt text-xl"></i>
                 </Link>
               )}
 
-              <button onClick={() => setOpen(!open)} className="md:hidden">
-                <i
-                  className={`fas ${open ? "fa-times" : "fa-bars"} text-xl`}
-                ></i>
+              <button onClick={() => setOpen(!open)}>
+                <i className={`fas ${open ? "fa-times" : "fa-bars"} text-xl`}></i>
               </button>
             </div>
           </div>

@@ -65,8 +65,10 @@ export default function Financing() {
         </div>
       </section>
 
+      
+      <div className="flex flex-col lg:flex-row gap-8 justify-center">
       {/* Tuition Overview */}
-      <section id="tuition" className="py-16 bg-gray-50">
+      <section id="tuition" className="py-16 bg-white">
         <div className="container-wide px-4">
           <h2 className="section-title">
             <i className="fas fa-money-check-alt text-primary-red mr-3"></i>Tuition Overview 2025-2026
@@ -182,7 +184,9 @@ export default function Financing() {
             </Link>
           </div>
         </div>
+        
       </section>
+      </div>
     </main>
   );
 }

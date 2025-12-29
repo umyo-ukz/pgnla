@@ -22,7 +22,7 @@ export default function Login() {
 
       if (user.role === "admin") navigate("/admin");
       else if (user.role === "staff") navigate("/staff");
-      else navigate("/parent-dashboard");
+      else navigate("/home");
     } catch {
       setError("Invalid credentials");
     } finally {
