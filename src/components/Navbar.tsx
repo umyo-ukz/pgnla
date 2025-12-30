@@ -83,12 +83,14 @@ export default function Navbar() {
                     >
                       Account Settings
                     </Link>
+                    <Link to="/login">
                     <button
                       onClick={logout}
                       className="w-full text-left px-4 py-3 hover:bg-red-50 text-red-600"
                     >
                       Logout
                     </button>
+                    </Link>
                   </div>
                 </div>
               ) : (

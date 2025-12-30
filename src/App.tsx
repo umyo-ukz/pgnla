@@ -14,6 +14,8 @@ import GradesPage from "./pages/GradesPage";
 import AccountSettings from "./pages/AccountSettings";
 import StaffDashboard from "./pages/StaffDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminRegistrations from "./pages/AdminRegistrations";
+import AdminRegistrationDetails from "./pages/AdminRegistrationDetails";
 
 export default function App() {
   return (
@@ -35,6 +37,9 @@ export default function App() {
           <Route path="/account" element={<AccountSettings />} />
           <Route path="/staff-dashboard" element={<StaffDashboard />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/registrations" element={<AdminRegistrations />} />
+          <Route path="/admin/registrations/:id" element={<AdminRegistrationDetails />} />
+
 
 
 

@@ -1,5 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import bcrypt from "bcryptjs";
 
 export const submitRegistration = mutation({
   args: {
@@ -36,12 +37,91 @@ export const submitRegistration = mutation({
 });
 
 /* Admin only */
+
 export const listPending = query({
-  args: {},
   handler: async (ctx) => {
     return ctx.db
       .query("registrations")
       .withIndex("by_status", q => q.eq("status", "pending"))
+      .collect();
+  },
+});
+
+
+
+
+export const approveRegistration = mutation({
+  args: {
+    registrationId: v.id("registrations"),
+  },
+  handler: async (ctx, { registrationId }) => {
+    const reg = await ctx.db.get(registrationId);
+    if (!reg || reg.status !== "pending") {
+      throw new Error("Invalid registration");
+    }
+
+    // Create parent user
+    const tempPassword = Math.random().toString(36).slice(2, 10);
+    const passwordHash = bcrypt.hashSync(tempPassword, 10);
+
+    const parentUserId = await ctx.db.insert("users", {
+      email: reg.email,
+      fullName: reg.primaryParentName,
+      passwordHash,
+      role: "parent",
+      isActive: true,
+    });
+
+    // Create student
+    await ctx.db.insert("students", {
+      parentId: parentUserId,
+      fullName: `${reg.studentFirstName} ${reg.studentLastName}`,
+      gradeLevel: reg.programType,
+    });
+
+    // Update registration
+    await ctx.db.patch(registrationId, {
+      status: "approved",
+    });
+
+    return {
+      success: true,
+      tempPassword,
+    };
+  },
+});
+
+export const rejectRegistration = mutation({
+  args: {
+    registrationId: v.id("registrations"),
+  },
+  handler: async (ctx, { registrationId }) => {
+    await ctx.db.patch(registrationId, {
+      status: "rejected",
+    });
+  },
+});
+
+export const getById = query({
+  args: { registrationId: v.id("registrations") },
+  handler: async (ctx, { registrationId }) => {
+    return ctx.db.get(registrationId);
+  },
+});
+
+export const listByStatus = query({
+  args: {
+    status: v.union(
+      v.literal("pending"),
+      v.literal("approved"),
+      v.literal("rejected")
+    ),
+  },
+  handler: async (ctx, { status }) => {
+    return ctx.db
+      .query("registrations")
+      .withIndex("by_status", q => q.eq("status", status))
+      .order("desc")
       .collect();
   },
 });
