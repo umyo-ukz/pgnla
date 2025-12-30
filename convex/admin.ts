@@ -1,29 +1,19 @@
-import { mutation } from "./_generated/server";
-import { v } from "convex/values";
+import { query } from "./_generated/server";
 
-export const createAdmin = mutation({
-  args: {
-    email: v.string(),
-    passwordHash: v.string(),
-    fullName: v.string(),
+export const listParents = query({
+  handler: async (ctx) => {
+    return ctx.db
+      .query("users")
+      .filter(q => q.eq(q.field("role"), "parent"))
+      .collect();
   },
-  handler: async (ctx, args) => {
-    const existing = await ctx.db
-      .query("admins")
-      .withIndex("by_email", q => q.eq("email", args.email))
-      .first();
+});
 
-    if (existing) {
-      throw new Error("Admin already exists");
-    }
-
-    await ctx.db.insert("admins", {
-      email: args.email,
-      passwordHash: args.passwordHash,
-      fullName: args.fullName,
-      isActive: true,
-    });
-
-    return { success: true };
+export const listStaff = query({
+  handler: async (ctx) => {
+    return ctx.db
+      .query("users")
+      .filter(q => q.eq(q.field("role"), "staff"))
+      .collect();
   },
 });

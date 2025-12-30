@@ -1,30 +1,63 @@
-import { mutation } from "./_generated/server";
+import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
-import bcrypt from "bcryptjs";
 
-export const createStaff = mutation({
-  args: {
-    email: v.string(),
-    passwordHash: v.string(),
-    fullName: v.string(),
+/* ===================== STUDENTS ===================== */
+
+export const listAllStudents = query({
+  handler: async (ctx) => {
+    return ctx.db.query("students").collect();
   },
-  handler: async (ctx, args) => {
+});
+
+/* ===================== GRADES ===================== */
+
+export const getGradesForStudent = query({
+  args: {
+    studentId: v.id("students"),
+  },
+  handler: async (ctx, { studentId }) => {
+    return ctx.db
+      .query("grades")
+      .withIndex("by_student", q => q.eq("studentId", studentId))
+      .collect();
+  },
+});
+
+/*
+  Update grade if it exists for same student + subject + term
+  Otherwise insert
+*/
+export const upsertGrade = mutation({
+  args: {
+    studentId: v.id("students"),
+    subject: v.string(),
+    term: v.string(),
+    score: v.number(),
+  },
+  handler: async (ctx, { studentId, subject, term, score }) => {
     const existing = await ctx.db
-      .query("staff")
-      .withIndex("by_email", q => q.eq("email", args.email))
+      .query("grades")
+      .withIndex("by_student", q => q.eq("studentId", studentId))
+      .filter(q =>
+        q.and(
+          q.eq(q.field("subject"), subject),
+          q.eq(q.field("term"), term)
+        )
+      )
       .first();
 
     if (existing) {
-      throw new Error("Staff member already exists");
+      await ctx.db.patch(existing._id, {
+        score,
+      });
+    } else {
+      await ctx.db.insert("grades", {
+        studentId,
+        subject,
+        term,
+        score,
+        createdAt: Date.now(),
+      });
     }
-
-    await ctx.db.insert("staff", {
-      email: args.email,
-      passwordHash: args.passwordHash,
-      fullName: args.fullName,
-      isActive: true,
-    });
-
-    return { success: true };
   },
 });

@@ -12,6 +12,8 @@ import Footer from "./components/Footer";
 import ParentDashboard from "./pages/ParentDashboard";
 import GradesPage from "./pages/GradesPage";
 import AccountSettings from "./pages/AccountSettings";
+import StaffDashboard from "./pages/StaffDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 
 export default function App() {
   return (
@@ -31,6 +33,8 @@ export default function App() {
           <Route path="/parent-dashboard" element={<ParentDashboard />} />
           <Route path="/student/:studentId/grades" element={<GradesPage />} />
           <Route path="/account" element={<AccountSettings />} />
+          <Route path="/staff-dashboard" element={<StaffDashboard />} />
+          <Route path="/admin" element={<AdminDashboard />} />
 
 
 
