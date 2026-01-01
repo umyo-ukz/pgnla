@@ -16,20 +16,21 @@ export default function Financing() {
       id: 1,
       question: "When are tuition payments due?",
       answer:
-        "Annual payments are due by August 1. Quarterly payments are due before each term begins (September 1, January 1, April 1). Monthly payments are due on the 1st of each month from August through May.",
+        "Full tuition is due no later than the first day of each term. However, a payment plan can be arranged. Contact us for more information",
     },
     {
       id: 2,
       question: "Are there payment plans for multiple children?",
       answer:
-        "Yes, we offer a 10% discount for the second child and 15% for the third and subsequent children. These discounts apply to tuition only and can be combined with sibling discounts.",
+        "Yes, payment plans can be arranged for two or more siblings. Contact us for more information.",
     },
     {
       id: 3,
-      question: "What happens if we need to withdraw?",
+      question: "Does tuition cover meals and extra-curricular activities?",
       answer:
-        "Withdrawal requests must be submitted in writing. Refunds are prorated based on the date of withdrawal, with a 30-day notice required. Registration fees are non-refundable.",
+        "No, meals, events and extra-curricular activities are paid for separately.",
     },
+    
   ];
 
   const toggleFAQ = (id: number) => {
@@ -50,7 +51,7 @@ export default function Financing() {
         <div className="relative z-10 container-wide px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              <i className="fas fa-hand-holding-usd mr-3"></i>Financing & Tuition
+              <i className=" mr-3"></i>Financing & Tuition
             </h1>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center py-8">
@@ -76,7 +77,7 @@ export default function Financing() {
 
           <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
             {/* Preschool Program */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 border-t-4 border-primary-red">
+            <div className="bg-white rounded-2xl shadow-lg p-8">
               <div className="text-center mb-6">
                 <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
                   <i className="fas fa-baby text-primary-red text-xl"></i>
@@ -97,7 +98,7 @@ export default function Financing() {
             </div>
 
             {/* Primary School */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 border-t-4 border-primary-red">
+            <div className="bg-white rounded-2xl shadow-lg p-8">
               <div className="text-center mb-6">
                 <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
                   <i className="fas fa-school text-primary-red text-xl"></i>

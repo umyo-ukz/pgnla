@@ -107,9 +107,6 @@ export default function Navbar() {
                   <Link to={dashboardPath} className="text-primary-red font-semibold">
                     {user.fullName.split(" ")[0]}
                   </Link>
-                  <button onClick={logout}>
-                    <i className="fas fa-sign-out-alt text-xl"></i>
-                  </button>
                 </>
               ) : (
                 <Link to="/login">

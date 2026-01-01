@@ -7,7 +7,7 @@ export default function Hero() {
 
       <div className="relative z-10 container-wide px-4 py-24 md:py-32 text-center text-white">
         <h1 className="text-4xl md:text-4xl font-serif mb-4">Welcome to</h1>
-        <div className="p-10">
+        <div className="p-20">
         <h2 className="text-5xl md:text-7xl font-bold font-serif mb-6">
           Pequeños Gigantes
         </h2>
@@ -15,10 +15,6 @@ export default function Hero() {
           Nursery and Learning Academy
         </span>
         </div>
-        <p className="p-10 text-xl md:text-2xl mb-10 max-w-3xl mx-auto font-serif">
-          Where today's young minds grow into tomorrow's giants.
-        </p>
-
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             to="/registration"
