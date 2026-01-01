@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function Admissions() {
   useEffect(() => {
     // client-side behaviors (accordion, mobile menu) are handled in components or global scripts
-    return () => {};
+    return () => { };
   }, []);
 
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -23,8 +23,13 @@ export default function Admissions() {
         }
       `}</style>
       <section className="relative overflow-hidden bg-gradient-to-br from-primary-red via-red-500 to-red-600 text-white">
-        <div className="absolute inset-0 opacity-10" style={{backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.4\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")'}}></div>
-        <div className="relative z-10 container-wide px-4 py-20">
+        <div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage:
+              'url("data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23ffffff%22 fill-opacity=%220.4%22%3E%3Cpath d=%22M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+          }}
+        ></div>        <div className="relative z-10 container-wide px-4 py-20">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">Admissions</h1>
             <p className="text-xl md:text-2xl mb-8 opacity-90">Nurturing tomorrow's leaders through exceptional early childhood and primary education</p>
@@ -107,21 +112,21 @@ export default function Admissions() {
               </thead>
               <tbody>
                 <tr>
-                  <td><strong>Preschool</strong><br/>Early learning foundation</td>
+                  <td><strong>Preschool</strong><br />Early learning foundation</td>
                   <td>3-4 years</td>
-                  <td>Half Day (8am-12pm)<br/>Full Day (8am-3pm)</td>
+                  <td>Half Day (8am-12pm)<br />Full Day (8am-3pm)</td>
                   <td>Max 15 students</td>
                 </tr>
                 <tr>
-                  <td><strong>Pre-Kindergarten</strong><br/>Kindergarten readiness</td>
+                  <td><strong>Pre-Kindergarten</strong><br />Kindergarten readiness</td>
                   <td>4-5 years</td>
                   <td>Full Day (8am-3pm)</td>
                   <td>Max 18 students</td>
                 </tr>
                 <tr>
-                  <td><strong>Primary School</strong><br/>First Year - Standard 5</td>
+                  <td><strong>Primary School</strong><br />First Year - Standard 5</td>
                   <td>5-11 years</td>
-                  <td>Full Day (8am-3pm)<br/>After-care available</td>
+                  <td>Full Day (8am-3pm)<br />After-care available</td>
                   <td>Max 20 students</td>
                 </tr>
               </tbody>
@@ -131,7 +136,7 @@ export default function Admissions() {
       </section>
 
       <section id="apply-now" className="py-20 bg-primary-red text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10" style={{backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.4\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")'}}></div>
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.4\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }}></div>
         <div className="relative z-10 container-wide px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Begin Your Application?</h2>
           <p className="text-xl mb-10 max-w-2xl mx-auto opacity-90">Join the Pequeños Gigantes family and give your child the foundation they need to succeed.</p>

@@ -16,11 +16,16 @@ import StaffDashboard from "./pages/StaffDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminRegistrations from "./pages/AdminRegistrations";
 import AdminRegistrationDetails from "./pages/AdminRegistrationDetails";
+import ScrollToTop from "./components/ScrollToTop";
+import AdminMessages from "./pages/AdminMessages";
+import AdminSidebar from "./components/AdminSidebar";
+import AdminLayout from "./components/AdminLayout";
 
 export default function App() {
   return (
     <BrowserRouter>
       <div className="min-h-screen flex flex-col">
+        <ScrollToTop />
         <Navbar />
         <Routes>
           <Route path="/home" element={<Home />} />
@@ -39,6 +44,15 @@ export default function App() {
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/registrations" element={<AdminRegistrations />} />
           <Route path="/admin/registrations/:id" element={<AdminRegistrationDetails />} />
+          <Route path="/admin/messages" element={<AdminMessages />} />
+          <Route
+            path="/admin/registrations"
+            element={
+              <AdminLayout>
+                <AdminRegistrations />
+              </AdminLayout>
+            }
+          />
 
 
 

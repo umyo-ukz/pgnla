@@ -13,6 +13,7 @@ import type * as admin from "../admin.js";
 import type * as auth from "../auth.js";
 import type * as grades from "../grades.js";
 import type * as http from "../http.js";
+import type * as messages from "../messages.js";
 import type * as parents from "../parents.js";
 import type * as registrations from "../registrations.js";
 import type * as signInParent from "../signInParent.js";
@@ -32,6 +33,7 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   grades: typeof grades;
   http: typeof http;
+  messages: typeof messages;
   parents: typeof parents;
   registrations: typeof registrations;
   signInParent: typeof signInParent;

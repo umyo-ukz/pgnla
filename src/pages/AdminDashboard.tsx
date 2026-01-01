@@ -34,7 +34,7 @@ export default function AdminDashboard() {
   return (
     <div className="container-wide px-4 py-10 space-y-8">
       {/* Header */}
-      
+
       <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold">Admin Dashboard</h1>
@@ -42,29 +42,40 @@ export default function AdminDashboard() {
             Manage parents and staff accounts
           </p>
 
-          
+
         </div>
-        <div className="flex gap-3">
+      </header>
+
+      <div className="flex gap-3 container-wide px-4 py-5 align-items-center">
+
+        <Link
+          to="/admin/registrations"
+          className="btn-secondary border-color-red rounded-md p-6 hover:bg-red-50 transition group"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <h3>Registrations</h3>
+            </div>
+          </div>
+        </Link>
+
+        <Link
+          to="/admin/messages"
+          className="btn-secondary border-color-red rounded-md p-6 hover:bg-red-50 transition group"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <h3>Messages</h3>
+            </div>
+          </div>
+        </Link>
+
+
         <button onClick={logout} className="btn-secondary">
           Logout
         </button>
-        <Link
-        to="/admin/registrations"
-        className="border rounded-xl p-6 hover:bg-red-50 transition group"
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-lg font-semibold">Pending Registrations</h3>
-            <p className="text-sm text-gray-600">
-              Review and approve new student applications
-            </p>
-          </div>
-          <i className="fas fa-clipboard-list text-2xl text-primary-red group-hover:scale-110 transition-transform"></i>
         </div>
-      </Link>
-        </div>
-      </header>
-  
+
 
 
       {/* Tabs */}
@@ -138,7 +149,7 @@ export default function AdminDashboard() {
                 <button className="btn-secondary text-sm">
                   View
                 </button>
-                <button className="btn-secondary text-sm">
+                <button className="btn-secondary text-sm text-red-600">
                   Disable
                 </button>
               </div>

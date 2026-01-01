@@ -4,7 +4,6 @@ import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
 
-
 interface FormData {
   // Student Info
   firstName: string;

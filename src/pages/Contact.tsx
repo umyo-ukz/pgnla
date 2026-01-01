@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useMutation } from "convex/react";
+import { api } from "../../convex/_generated/api";
+
 
 interface FormData {
   firstName: string;
@@ -9,6 +12,9 @@ interface FormData {
 }
 
 export default function Contact() {
+  const submitMessage = useMutation(api.messages.submitMessage);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
@@ -28,26 +34,38 @@ export default function Contact() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    // Handle form submission (you can integrate with email service here)
-    console.log("Form submitted:", formData);
-    
-    setSubmitted(true);
-    
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        message: "",
+    setError("");
+    setLoading(true);
+
+    try {
+      await submitMessage({
+        name: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        contactNo: formData.phone,
+        message: formData.message,
       });
-      setSubmitted(false);
-    }, 3000);
+
+      setSubmitted(true);
+
+      setTimeout(() => {
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          message: "",
+        });
+        setSubmitted(false);
+      }, 3000);
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
+
 
   return (
     <main className="flex-grow">
@@ -110,6 +128,12 @@ export default function Contact() {
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
+                  {error && (
+                    <div className="bg-red-50 text-red-700 px-4 py-3 rounded-lg text-sm">
+                      {error}
+                    </div>
+                  )}
+
                   <label className="form-label">First Name *</label>
                   <input
                     type="text"
@@ -168,9 +192,14 @@ export default function Contact() {
                     placeholder="Your message..."
                   ></textarea>
                 </div>
-                <button type="submit" className="btn-primary w-full">
-                  Send Message
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="btn-primary w-full disabled:opacity-60"
+                >
+                  {loading ? "Sending…" : "Send Message"}
                 </button>
+
               </form>
             )}
           </div>

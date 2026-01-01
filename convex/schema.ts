@@ -56,6 +56,21 @@ export default defineSchema({
     createdAt: v.number(),
   }).index("by_student", ["studentId"]),
 
+  messages: defineTable({
+    name: v.string(),
+    email: v.string(),
+    contactNo: v.string(),
+    message: v.string(),
+    createdAt: v.number(),
+    status : v.union(
+      v.literal("new"),
+      v.literal("read"),
+      v.literal("archived")
+    ),
+
+  }) .index("by_status", ["status"])
+     .index("by_createdAt", ["createdAt"]),
+
 
   
 
