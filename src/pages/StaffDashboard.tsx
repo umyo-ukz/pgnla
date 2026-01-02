@@ -2,8 +2,8 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import StudentGradeCard from "../components/StudentGradeCard";
 import { useState, useMemo } from "react";
+import StudentGradeCard from "../components/StudentGradeCard";
 
 export default function StaffDashboard() {
   const { user, role, logout, isLoading } = useAuth();
@@ -11,10 +11,17 @@ export default function StaffDashboard() {
   if (isLoading) return null;
   if (!user || role !== "staff") return <Navigate to="/login" />;
 
+  const subjects = useQuery(api.subjects.listActiveSubjects);
   const students = useQuery(api.staff.listAllStudents);
 
-  const [search, setSearch] = useState("");
+  const [activeSubjectId, setActiveSubjectId] = useState<string | null>(null);
   const [gradeFilter, setGradeFilter] = useState("");
+  const [search, setSearch] = useState("");
+
+  // Auto-select first subject when loaded
+  if (!activeSubjectId && subjects && subjects.length > 0) {
+    setActiveSubjectId(subjects[0]._id);
+  }
 
   const filteredStudents = useMemo(() => {
     if (!students) return [];
@@ -42,7 +49,7 @@ export default function StaffDashboard() {
         <div>
           <h1 className="text-3xl font-bold">Staff Portal</h1>
           <p className="text-gray-600">
-            Search students and manage grades
+            Manage student grades by subject
           </p>
         </div>
 
@@ -50,6 +57,23 @@ export default function StaffDashboard() {
           Logout
         </button>
       </header>
+
+      {/* Subject Tabs */}
+      <div className="flex gap-6 border-b">
+        {subjects?.map((subject) => (
+          <button
+            key={subject._id}
+            onClick={() => setActiveSubjectId(subject._id)}
+            className={`pb-2 font-medium ${
+              activeSubjectId === subject._id
+                ? "border-b-2 border-red-600 text-red-600"
+                : "text-gray-600 hover:text-black"
+            }`}
+          >
+            {subject.name}
+          </button>
+        ))}
+      </div>
 
       {/* Filters */}
       <div className="bg-white border rounded-xl p-4 flex flex-col md:flex-row gap-4">
@@ -75,17 +99,21 @@ export default function StaffDashboard() {
         </select>
       </div>
 
-      {/* Results */}
+      {/* Students */}
       {students === undefined ? (
         <div>Loading students…</div>
       ) : filteredStudents.length === 0 ? (
         <div className="text-gray-600">
-          No students match your search.
+          No students match your filters.
         </div>
       ) : (
         <div className="space-y-6">
-          {filteredStudents.map((s) => (
-            <StudentGradeCard key={s._id} student={s} />
+          {filteredStudents.map((student) => (
+            <StudentGradeCard
+              key={student._id}
+              student={student}
+              subjectId={activeSubjectId}
+            />
           ))}
         </div>
       )}

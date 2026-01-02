@@ -19,6 +19,7 @@ import type * as registrations from "../registrations.js";
 import type * as signInParent from "../signInParent.js";
 import type * as staff from "../staff.js";
 import type * as students from "../students.js";
+import type * as subjects from "../subjects.js";
 import type * as users from "../users.js";
 
 import type {
@@ -39,6 +40,7 @@ declare const fullApi: ApiFromModules<{
   signInParent: typeof signInParent;
   staff: typeof staff;
   students: typeof students;
+  subjects: typeof subjects;
   users: typeof users;
 }>;
 

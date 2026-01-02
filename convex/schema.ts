@@ -48,7 +48,26 @@ export default defineSchema({
     isActive: v.boolean(),
   }).index("by_email", ["email"]),
 
-  grades: defineTable({
+  messages: defineTable({
+    name: v.string(),
+    email: v.string(),
+    contactNo: v.string(),
+    message: v.string(),
+    createdAt: v.number(),
+    status: v.union(
+      v.literal("new"),
+      v.literal("read"),
+      v.literal("archived")
+    ),
+
+  }).index("by_status", ["status"])
+    .index("by_createdAt", ["createdAt"]),
+    
+
+// GRADES COMPONENTS
+
+
+    grades: defineTable({
     studentId: v.id("students"),
     subject: v.string(),
     score: v.number(),
@@ -56,25 +75,28 @@ export default defineSchema({
     createdAt: v.number(),
   }).index("by_student", ["studentId"]),
 
-  messages: defineTable({
+  subjects: defineTable({
     name: v.string(),
-    email: v.string(),
-    contactNo: v.string(),
-    message: v.string(),
-    createdAt: v.number(),
-    status : v.union(
-      v.literal("new"),
-      v.literal("read"),
-      v.literal("archived")
-    ),
+  }).index("by_name", ["name"]),
 
-  }) .index("by_status", ["status"])
-     .index("by_createdAt", ["createdAt"]),
+  subjectComponents: defineTable({
+    subjectId: v.id("subjects"),
+    name: v.string(), 
+    weight: v.number(),
+  }).index("by_subject", ["subjectId"]),
+
+  studentComponentGrades: defineTable({
+  studentId: v.id("students"),
+  subjectId: v.id("subjects"),
+  componentId: v.id("subjectComponents"),
+  score: v.number(), // 0–100
+  term: v.string(), // "Term 1"
+  updatedAt: v.number(),
+})
+.index("by_student", ["studentId"])
+.index("by_subject", ["subjectId"]),
 
 
-  
-
-  
 
   registrations: defineTable({
     // Student
