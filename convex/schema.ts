@@ -62,12 +62,12 @@ export default defineSchema({
 
   }).index("by_status", ["status"])
     .index("by_createdAt", ["createdAt"]),
-    
-
-// GRADES COMPONENTS
 
 
-    grades: defineTable({
+  // GRADES COMPONENTS
+
+
+  grades: defineTable({
     studentId: v.id("students"),
     subject: v.string(),
     score: v.number(),
@@ -81,20 +81,17 @@ export default defineSchema({
 
   subjectComponents: defineTable({
     subjectId: v.id("subjects"),
-    name: v.string(), 
+    name: v.string(),
     weight: v.number(),
   }).index("by_subject", ["subjectId"]),
 
-  studentComponentGrades: defineTable({
-  studentId: v.id("students"),
-  subjectId: v.id("subjects"),
-  componentId: v.id("subjectComponents"),
-  score: v.number(), // 0–100
-  term: v.string(), // "Term 1"
-  updatedAt: v.number(),
-})
-.index("by_student", ["studentId"])
-.index("by_subject", ["subjectId"]),
+  componentGrades: defineTable({
+    studentId: v.id("students"),
+    subjectId: v.id("subjects"),
+    componentId: v.id("subjectComponents"),
+    score: v.number(),          // 0–100
+  }).index("by_student_subject", ["studentId", "subjectId"]),
+
 
 
 

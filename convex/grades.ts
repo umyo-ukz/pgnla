@@ -30,3 +30,43 @@ export const addGrade = mutation({
   },
 });
 
+export const listComponentGrades = query({
+  args: {
+    studentId: v.id("students"),
+    subjectId: v.id("subjects"),
+  },
+  handler: async (ctx, args) => {
+    return ctx.db
+      .query("componentGrades")
+      .withIndex("by_student_subject", q =>
+        q.eq("studentId", args.studentId).eq("subjectId", args.subjectId)
+      )
+      .collect();
+  },
+});
+
+
+
+export const updateComponentScore = mutation({
+  args: {
+    gradeId: v.id("componentGrades"),
+    score: v.number(),
+  },
+  handler: async (ctx, { gradeId, score }) => {
+    await ctx.db.patch(gradeId, { score });
+  },
+});
+
+export const createComponentGrade = mutation({
+  args: {
+    studentId: v.id("students"),
+    subjectId: v.id("subjects"),
+    componentId: v.id("subjectComponents"),
+    score: v.number(),
+  },
+  handler: async (ctx, args) => {
+    return ctx.db.insert("componentGrades", {
+      ...args,
+    });
+  },
+});
