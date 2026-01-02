@@ -1,84 +1,90 @@
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { Id } from "../../convex/_generated/dataModel";
+import { useState, useEffect } from "react";
 
-type Props = {
-  student: {
-    _id: Id<"students">;
-    fullName: string;
-  };
-  subjectId: Id<"subjects"> | null;
-};
+export default function StudentGradeCard({
+  student,
+  subjectId,
+}: {
+  student: any;
+  subjectId: string;
+}) {
+  const components = useQuery(api.subjects.listComponentsForSubject, {
+    subjectId,
+  });
 
-export default function StudentGradeCard({ student, subjectId }: Props) {
-  const components = useQuery(
-    api.subjects.listComponentsForSubject,
-    subjectId ? { subjectId } : "skip"
-  );
+  const grades = useQuery(api.grades.listComponentGrades, {
+    studentId: student._id,
+    subjectId,
+  });
 
-  const grades = useQuery(
-    api.grades.listComponentGrades,
-    subjectId
-      ? {
-        studentId: student._id,
-        subjectId,
-      }
-      : "skip"
-  );
-
-  const updateWeight = useMutation(api.subjects.updateComponentWeight);
   const updateScore = useMutation(api.grades.updateComponentScore);
-  const createGrade = useMutation(api.grades.createComponentGrade);
+  const createScore = useMutation(api.grades.createComponentGrade);
+  const updateWeight = useMutation(api.subjects.updateComponentWeight);
+
+  const [scores, setScores] = useState<Record<string, string>>({});
+  const [weights, setWeights] = useState<Record<string, string>>({});
+
+  /* Sync Convex grades → local state */
+  useEffect(() => {
+    if (!components || !grades) return;
+
+    const nextScores: Record<string, string> = {};
+    const nextWeights: Record<string, string> = {};
+
+    components.forEach((c) => {
+      const g = grades.find((gr) => gr.componentId === c._id);
+      nextScores[c._id] = g ? String(g.score) : "";
+      nextWeights[c._id] = String(c.weight);
+    });
+
+    setScores(nextScores);
+    setWeights(nextWeights);
+  }, [components, grades]);
 
   if (!components || !grades) return null;
 
-  const total = components.reduce((sum, component) => {
-    const grade = grades.find(
-      (g) => g.componentId === component._id
-    );
+  
 
-    const score = grade?.score ?? 0;
-    return sum + (score * component.weight) / 100;
+  const total = components.reduce((sum, c) => {
+    const g = grades.find((gr) => gr.componentId === c._id);
+    return sum + ((g?.score ?? 0) * c.weight) / 100;
   }, 0);
 
   return (
-    <div className="border rounded-xl p-5 space-y-4 bg-white">
-      {/* Header */}
+    <div className="border rounded-xl p-5 space-y-4 bg-gradient-to-t from-gray-200 to-white shadow-sm">
       <div className="flex justify-between items-center">
-        <h3 className="font-semibold text-lg">
-          {student.fullName}
-        </h3>
-        <span className="font-bold text-lg">
-          {Math.round(total)}%
-        </span>
+        <h3 className="font-semibold text-lg">{student.fullName}</h3>
+        <span className="font-bold">{Math.round(total)}%</span>
       </div>
 
-      {/* Components */}
       <div className="flex gap-4 overflow-x-auto">
-        {components.map((component) => {
-          const grade = grades.find(
-            (g) => g.componentId === component._id
-          );
+        {components.map((c) => {
+          const grade = grades.find((g) => g.componentId === c._id);
 
           return (
             <div
-              key={component._id}
-              className="min-w-[170px] border rounded-lg p-3 space-y-2"
+              key={c._id}
+              className="min-w-[180px] border rounded-lg p-3 space-y-2 bg-white"
             >
-              <div className="text-sm font-medium">
-                {component.name}
-              </div>
+              <div className="text-sm font-medium">{c.name}</div>
 
-              {/* Score */}
+              {/* SCORE INPUT */}
               <input
                 type="number"
                 min={0}
                 max={100}
-                value={grade?.score ?? ""}
-                placeholder="Score"
                 className="input text-sm"
-                onBlur={(e) => {
-                  const value = Number(e.target.value);
+                value={scores[c._id] ?? ""}
+                placeholder="Score"
+                onChange={(e) =>
+                  setScores((prev) => ({
+                    ...prev,
+                    [c._id]: e.target.value,
+                  }))
+                }
+                onBlur={() => {
+                  const value = Number(scores[c._id]);
                   if (Number.isNaN(value)) return;
 
                   if (grade) {
@@ -87,31 +93,37 @@ export default function StudentGradeCard({ student, subjectId }: Props) {
                       score: value,
                     });
                   } else {
-                    createGrade({
+                    createScore({
                       studentId: student._id,
                       subjectId,
-                      componentId: component._id,
+                      componentId: c._id,
                       score: value,
                     });
                   }
                 }}
               />
 
-              {/* Weight */}
+              {/* WEIGHT INPUT */}
               <div className="flex items-center gap-2 text-xs">
                 <span>Weight</span>
                 <input
                   type="number"
                   min={0}
                   max={100}
-                  value={component.weight}
+                  className="input w-16 text-xs"
+                  value={weights[c._id] ?? ""}
                   onChange={(e) =>
+                    setWeights((prev) => ({
+                      ...prev,
+                      [c._id]: e.target.value,
+                    }))
+                  }
+                  onBlur={() =>
                     updateWeight({
-                      componentId: component._id,
-                      weight: Number(e.target.value),
+                      componentId: c._id,
+                      weight: Number(weights[c._id]),
                     })
                   }
-                  className="input w-16 text-xs"
                 />
                 %
               </div>

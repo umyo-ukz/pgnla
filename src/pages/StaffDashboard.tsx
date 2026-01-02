@@ -27,11 +27,11 @@ export default function StaffDashboard() {
     if (!students) return [];
 
     return students.filter((s) => {
-      const matchesName =
-        s.fullName.toLowerCase().includes(search.toLowerCase());
+      const matchesName = s.fullName
+        .toLowerCase()
+        .includes(search.toLowerCase());
 
-      const matchesGrade =
-        gradeFilter === "" || s.gradeLevel === gradeFilter;
+      const matchesGrade = gradeFilter === "" || s.gradeLevel === gradeFilter;
 
       return matchesName && matchesGrade;
     });
@@ -39,7 +39,7 @@ export default function StaffDashboard() {
 
   const uniqueGrades = useMemo(() => {
     if (!students) return [];
-    return Array.from(new Set(students.map(s => s.gradeLevel)));
+    return Array.from(new Set(students.map((s) => s.gradeLevel)));
   }, [students]);
 
   return (
@@ -48,9 +48,7 @@ export default function StaffDashboard() {
       <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold">Staff Portal</h1>
-          <p className="text-gray-600">
-            Manage student grades by subject
-          </p>
+          <p className="text-gray-600">Manage student grades by subject</p>
         </div>
 
         <button onClick={logout} className="btn-secondary">
@@ -59,20 +57,23 @@ export default function StaffDashboard() {
       </header>
 
       {/* Subject Tabs */}
-      <div className="flex gap-6 border-b">
-        {subjects?.map((subject) => (
-          <button
-            key={subject._id}
-            onClick={() => setActiveSubjectId(subject._id)}
-            className={`pb-2 font-medium ${
-              activeSubjectId === subject._id
-                ? "border-b-2 border-red-600 text-red-600"
-                : "text-gray-600 hover:text-black"
-            }`}
-          >
-            {subject.name}
-          </button>
-        ))}
+      <div className="shadow-md p-4 bg-gradient-to-t from-gray-100 to-primary-light rounded-xl">
+        <h3 className="font-serif font-semibold text-xl p-2">Subjects</h3>
+        <div className="flex gap-6 border-b">
+          {subjects?.map((subject) => (
+            <button
+              key={subject._id}
+              onClick={() => setActiveSubjectId(subject._id)}
+              className={`pb-2 font-medium ${
+                activeSubjectId === subject._id
+                  ? "bg-primary-red text-white p-2 rounded-t-lg font-semibold"
+                  : "text-gray-600 hover:text-black p-2"
+              }`}
+            >
+              {subject.name}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Filters */}
@@ -86,11 +87,11 @@ export default function StaffDashboard() {
         />
 
         <select
-          className="input md:w-48"
+          className="bg-primary-red rounded-md text-white input md:w-48 p-2"
           value={gradeFilter}
           onChange={(e) => setGradeFilter(e.target.value)}
         >
-          <option value="">All Grades</option>
+          <option value="">All Classes</option>
           {uniqueGrades.map((g) => (
             <option key={g} value={g}>
               Grade {g}
@@ -103,9 +104,7 @@ export default function StaffDashboard() {
       {students === undefined ? (
         <div>Loading students…</div>
       ) : filteredStudents.length === 0 ? (
-        <div className="text-gray-600">
-          No students match your filters.
-        </div>
+        <div className="text-gray-600">No students match your filters.</div>
       ) : (
         <div className="space-y-6">
           {filteredStudents.map((student) => (
