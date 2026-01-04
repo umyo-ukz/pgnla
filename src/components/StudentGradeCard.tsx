@@ -103,7 +103,7 @@ export default function StudentGradeCard({
               key={c._id}
               className="min-w-[180px] border rounded-lg p-3 space-y-2 bg-white"
             >
-              <div className="text-sm font-medium">{c.name}</div>
+              <div className="text-sm font-semibold">{c.name}</div>
 
               {/* SCORE INPUT */}
               <input
@@ -138,6 +138,7 @@ export default function StudentGradeCard({
                   }
                 }}
               />
+              %
 
               {/* WEIGHT INPUT */}
               <div className="flex items-center gap-2 text-xs">

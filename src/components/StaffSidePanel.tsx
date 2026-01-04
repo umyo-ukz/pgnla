@@ -4,7 +4,7 @@ export default function StaffSidePanel() {
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `block px-4 py-3 rounded-lg transition ${
       isActive
-        ? "bg-red-600 text-white"
+        ? "bg-primary-red text-white"
         : "text-gray-700 hover:bg-gray-100"
     }`;
 
@@ -22,6 +22,10 @@ export default function StaffSidePanel() {
 
         <NavLink to="/staff/performance" className={linkClass}>
           Student Performance
+        </NavLink>
+
+        <NavLink to="/account" className={linkClass}>
+          Account Settings
         </NavLink>
       </nav>
     </aside>
