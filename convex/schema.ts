@@ -32,6 +32,8 @@ export default defineSchema({
     parentId: v.id("users"),
     fullName: v.string(),
     gradeLevel: v.string(),
+    overall: v.optional(v.number()),
+    letterGrade: v.optional(v.string()),
   }).index("by_parent", ["parentId"]),
 
   admins: defineTable({

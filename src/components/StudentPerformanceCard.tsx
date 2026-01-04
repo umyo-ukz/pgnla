@@ -2,7 +2,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 
 export default function StudentPerformancePage() {
   const { user, role, logout, isLoading } = useAuth();
@@ -14,54 +14,156 @@ export default function StudentPerformancePage() {
   // Fetch all students
   const students = useQuery(api.students.listAll);
   
-  // Fetch all grades
-  const allGrades = useQuery(api.grades.listAll);
+  // Fetch component grades
+  const componentGrades = useQuery(api.componentGrades.listAll);
   
-  // Fetch all subjects with weights
+  // Fetch all subjects with their components
   const subjects = useQuery(api.subjects.listAll);
+  const subjectComponents = useQuery(api.subjectComponents.listAll);
   
   // State for filters
   const [gradeFilter, setGradeFilter] = useState("");
   const [search, setSearch] = useState("");
   
-  // Calculate overall grade for each student
+  // Calculate overall grade for each student using component grades
   const getStudentPerformance = (studentId: string) => {
-    if (!allGrades || !subjects) return { overall: 0, letterGrade: "N/A" };
+    if (!componentGrades || !subjects || !subjectComponents) {
+      return { overall: 0, letterGrade: "N/A" };
+    }
     
-    const studentGrades = allGrades.filter(grade => grade.studentId === studentId);
-    if (studentGrades.length === 0) return { overall: 0, letterGrade: "N/A" };
+
+// Add this debug function inside your component
+const debugStudentPerformance = (studentId: string) => {
+  if (!componentGrades || !subjects || !subjectComponents) {
+    console.log("Missing data for student:", studentId);
+    return;
+  }
+  
+  const studentComponentGrades = componentGrades.filter(
+    grade => grade.studentId === studentId
+  );
+  
+  console.log("Student:", studentId);
+  console.log("Component grades count:", studentComponentGrades.length);
+  console.log("Total subjects:", subjects.length);
+  console.log("Total components:", subjectComponents.length);
+  
+  if (studentComponentGrades.length === 0) {
+    console.log("No component grades found for student");
+    return;
+  }
+  
+  console.log("Student's component grades:", studentComponentGrades);
+  
+  subjects.forEach(subject => {
+    const subjectComps = subjectComponents.filter(
+      comp => comp.subjectId === subject._id
+    );
     
-    // Group grades by subject
-    const gradesBySubject: Record<string, number[]> = {};
-    studentGrades.forEach(grade => {
-      if (!gradesBySubject[grade.subject]) {
-        gradesBySubject[grade.subject] = [];
-      }
-      gradesBySubject[grade.subject].push(grade.score);
+    console.log(`Subject: ${subject.name} (weight: ${subject.weight})`);
+    console.log(`Components in subject: ${subjectComps.length}`);
+    
+    subjectComps.forEach(component => {
+      const compGrade = studentComponentGrades.find(
+        g => g.componentId === component._id && g.subjectId === subject._id
+      );
+      
+      console.log(`  Component: ${component.name} (weight: ${component.weight}) - Grade: ${compGrade?.score || "none"}`);
     });
+  });
+};
+
+// Then call this for a specific student to see what's happening
+// You can add a button to trigger this or call it in useEffect
+    // Get all component grades for this student
+    // Replace the getStudentPerformance function with this version
+const getStudentPerformance = (studentId: string) => {
+  if (!componentGrades || !subjects || !subjectComponents) {
+    return { overall: 0, letterGrade: "N/A" };
+  }
+  
+  // Get all component grades for this student
+  const studentComponentGrades = componentGrades.filter(
+    grade => grade.studentId === studentId
+  );
+  
+  if (studentComponentGrades.length === 0) {
+    console.log(`No component grades found for student ${studentId}`);
+    return { overall: 0, letterGrade: "N/A" };
+  }
+  
+  console.log(`Calculating for student ${studentId}:`);
+  console.log(`- Component grades: ${studentComponentGrades.length}`);
+  console.log(`- Subjects: ${subjects.length}`);
+  console.log(`- Subject components: ${subjectComponents.length}`);
+  
+  let totalWeightedScore = 0;
+  let totalSubjectWeight = 0;
+  let subjectsWithGrades = 0;
+  
+  // Calculate weighted average for each subject
+  subjects.forEach(subject => {
+    // Get components for this subject
+    const subjectComps = subjectComponents.filter(
+      comp => comp.subjectId === subject._id
+    );
     
-    // Calculate weighted average
-    let totalWeightedScore = 0;
-    let totalWeight = 0;
-    
-    Object.entries(gradesBySubject).forEach(([subjectName, scores]) => {
-      const subject = subjects.find(s => s.name === subjectName);
-      if (subject) {
-        const subjectAverage = scores.reduce((sum, score) => sum + score, 0) / scores.length;
+    if (subjectComps.length > 0) {
+      let subjectComponentScore = 0;
+      let totalComponentWeight = 0;
+      let componentsWithGrades = 0;
+      
+      // Calculate weighted score for each component
+      subjectComps.forEach(component => {
+        // Find component grade for this student
+        const compGrade = studentComponentGrades.find(
+          g => g.componentId === component._id && g.subjectId === subject._id
+        );
+        
+        if (compGrade) {
+          // Add weighted component score
+          subjectComponentScore += compGrade.score * (component.weight / 100);
+          totalComponentWeight += component.weight;
+          componentsWithGrades++;
+        }
+      });
+      
+      // If we have grades for components in this subject
+      if (componentsWithGrades > 0 && totalComponentWeight > 0) {
+        // Calculate subject average (0-100)
+        const subjectAverage = (subjectComponentScore / totalComponentWeight) * 100;
+        
+        console.log(`  Subject: ${subject.name}`);
+        console.log(`  - Components with grades: ${componentsWithGrades}/${subjectComps.length}`);
+        console.log(`  - Subject average: ${subjectAverage}`);
+        console.log(`  - Subject weight: ${subject.weight}`);
+        
+        // Add weighted subject score to total
         totalWeightedScore += subjectAverage * (subject.weight / 100);
-        totalWeight += subject.weight / 100;
+        totalSubjectWeight += subject.weight;
+        subjectsWithGrades++;
       }
-    });
-    
-    const overall = totalWeight > 0 ? Math.round((totalWeightedScore / totalWeight) * 100) / 100 : 0;
-    
-    // Calculate letter grade
-    const letterGrade = getLetterGrade(overall);
-    
-    return { overall, letterGrade };
-  };
+    }
+  });
+  
+  console.log(`  Total subjects with grades: ${subjectsWithGrades}`);
+  console.log(`  Total subject weight: ${totalSubjectWeight}`);
+  console.log(`  Total weighted score: ${totalWeightedScore}`);
+  
+  // Calculate overall grade
+  const overall = totalSubjectWeight > 0 
+    ? Math.round((totalWeightedScore / totalSubjectWeight) * 10000) / 100  // Rounded to 2 decimal places
+    : 0;
+  
+  const letterGrade = getLetterGrade(overall);
+  
+  console.log(`  Final overall: ${overall}% (${letterGrade})`);
+  
+  return { overall, letterGrade };
+};
   
   const getLetterGrade = (score: number): string => {
+    if (!score) return "N/A";
     if (score >= 96) return "A+";
     if (score >= 93) return "A";
     if (score >= 90) return "A-";
@@ -104,7 +206,7 @@ export default function StudentPerformancePage() {
   
   // Calculate overall stats
   const stats = useMemo(() => {
-    if (!students || !allGrades || !subjects) return null;
+    if (!students || !componentGrades || !subjects || !subjectComponents) return null;
     
     let totalOverall = 0;
     let studentCount = 0;
@@ -130,10 +232,11 @@ export default function StudentPerformancePage() {
       needsImprovement,
       atRisk
     };
-  }, [students, allGrades, subjects]);
+  }, [students, componentGrades, subjects, subjectComponents]);
   
   // Loading state
-  if (students === undefined || allGrades === undefined || subjects === undefined) {
+  if (students === undefined || componentGrades === undefined || 
+      subjects === undefined || subjectComponents === undefined) {
     return (
       <div className="container-wide px-4 py-10">
         <h1 className="text-2xl font-bold mb-6">Student Performance</h1>
@@ -149,7 +252,7 @@ export default function StudentPerformancePage() {
         <div>
           <h1 className="text-3xl font-bold">Student Performance Overview</h1>
           <p className="text-gray-600">
-            View overall academic performance for all students
+            View overall academic performance for all students (Component-Based Grading)
           </p>
         </div>
         
@@ -182,6 +285,20 @@ export default function StudentPerformancePage() {
           </div>
         </div>
       )}
+      
+      {/* Information about component grading */}
+      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+        <div className="flex items-start">
+          <i className="fas fa-info-circle text-yellow-600 mt-1 mr-3"></i>
+          <div>
+            <h3 className="font-semibold text-yellow-800">Component-Based Grading</h3>
+            <p className="text-sm text-yellow-700">
+              Grades are calculated from individual component scores (tests, homework, projects) 
+              weighted by subject and component weights.
+            </p>
+          </div>
+        </div>
+      </div>
       
       {/* Filters */}
       <div className="bg-white border rounded-xl p-4 flex flex-col md:flex-row gap-4">
@@ -232,6 +349,7 @@ export default function StudentPerformancePage() {
                 filteredStudents.map((student) => {
                   const perf = getStudentPerformance(student._id);
                   const color = getColor(perf.overall);
+                  const hasComponentGrades = componentGrades.some(g => g.studentId === student._id);
                   
                   return (
                     <tr key={student._id} className="border-t hover:bg-gray-50">
@@ -245,7 +363,9 @@ export default function StudentPerformancePage() {
                       </td>
                       <td className="p-4">
                         <div className={`text-xl font-bold ${color}`}>
-                          {perf.overall > 0 ? `${perf.overall}%` : "No grades"}
+                          {perf.overall > 0 ? `${perf.overall}%` : (
+                            hasComponentGrades ? "Calculating..." : "No grades"
+                          )}
                         </div>
                       </td>
                       <td className="p-4">
@@ -266,6 +386,10 @@ export default function StudentPerformancePage() {
                           <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">
                             Needs Attention
                           </span>
+                        ) : hasComponentGrades ? (
+                          <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                            Calculating
+                          </span>
                         ) : (
                           <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm">
                             No Data
@@ -275,16 +399,16 @@ export default function StudentPerformancePage() {
                       <td className="p-4">
                         <div className="flex gap-2">
                           <a
-                            href={`/student/${student._id}/grades`}
+                            href={`/staff/grade/${student._id}`}
                             className="px-3 py-1 bg-blue-100 text-blue-700 rounded text-sm hover:bg-blue-200"
                           >
-                            View Grades
+                            Enter Grades
                           </a>
                           <a
-                            href={`/staff/student/${student._id}`}
-                            className="px-3 py-1 bg-gray-100 text-gray-700 rounded text-sm hover:bg-gray-200"
+                            href={`/staff/student/${student._id}/components`}
+                            className="px-3 py-1 bg-purple-100 text-purple-700 rounded text-sm hover:bg-purple-200"
                           >
-                            Profile
+                            View Components
                           </a>
                         </div>
                       </td>
@@ -310,6 +434,10 @@ export default function StudentPerformancePage() {
         <div className="flex items-center">
           <div className="w-3 h-3 bg-red-100 border border-red-300 rounded mr-2"></div>
           <span>Needs Attention (Below 60%)</span>
+        </div>
+        <div className="flex items-center">
+          <div className="w-3 h-3 bg-blue-100 border border-blue-300 rounded mr-2"></div>
+          <span>Has Components (No Overall Yet)</span>
         </div>
       </div>
     </div>

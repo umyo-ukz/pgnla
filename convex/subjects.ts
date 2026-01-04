@@ -69,5 +69,11 @@ export const updateSubjectWeight = mutation({
   },
 });
 
+// convex/subjects.ts
+export const listAll = query({
+  handler: async (ctx) => {
+    return ctx.db.query("subjects").collect();
+  },
+});
 
 

@@ -71,35 +71,43 @@ export const createComponentGrade = mutation({
   },
 });
 
-export const calculateOverallGrade = query({
-  args: { studentId: v.id("students") },
-  handler: async (ctx, { studentId }) => {
-    const subjects = await ctx.db.query("subjects").collect();
 
-    let total = 0;
+export const getOverallGrade = query({
+  args: {
+    studentId: v.id("students"),
+    subjectId: v.id("subjects"),
+  },
+  handler: async (ctx, { studentId, subjectId }) => {
+    const subjectGrades = await ctx.db
+      .query("subjects")
+      .withIndex("by_name", q => q.eq("name", subjectId))
+      .collect();
 
-    for (const subject of subjects) {
-      const components = await ctx.db
-        .query("subjectComponents")
-        .withIndex("by_subject", q => q.eq("subjectId", subject._id))
-        .collect();
-
-      const grades = await ctx.db
-        .query("componentGrades")
-        .withIndex("by_student_subject", q =>
-          q.eq("studentId", studentId).eq("subjectId", subject._id)
-        )
-        .collect();
-
-      const subjectScore =
-        components.reduce((sum, c) => {
-          const g = grades.find(gr => gr.componentId === c._id);
-          return sum + ((g?.score ?? 0) * c.weight) / 100;
-        }, 0);
-
-      total += (subjectScore * subject.weight) / 100;
+    let overall = 0;
+    for (const sg of subjectGrades) {
+      overall += (sg.weight || 0) * (sg.weight || 0) / 100;
     }
 
-    return Math.round(total);
+    return overall;
+  },
+}); 
+
+
+// convex/componentGrades.ts (or add to your existing grades.ts)
+export const listAll = query({
+  handler: async (ctx) => {
+    return ctx.db.query("componentGrades").collect();
+  },
+});
+
+export const getByStudent = query({
+  args: {
+    studentId: v.id("students"),
+  },
+  handler: async (ctx, { studentId }) => {
+    return ctx.db
+      .query("componentGrades")
+      .withIndex("by_student_subject", q => q.eq("studentId", studentId))
+      .collect();
   },
 });
