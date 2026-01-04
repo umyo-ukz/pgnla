@@ -12,7 +12,7 @@ export default function Navbar() {
     role === "parent"
       ? "/parent-dashboard"
       : role === "staff"
-      ? "/staff-dashboard"
+      ? "/staff"
       : role === "admin"
       ? "/admin"
       : "/login";

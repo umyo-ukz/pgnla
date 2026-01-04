@@ -20,6 +20,9 @@ import ScrollToTop from "./components/ScrollToTop";
 import AdminMessages from "./pages/AdminMessages";
 import AdminSidebar from "./components/AdminSidebar";
 import AdminLayout from "./components/AdminLayout";
+import StaffLayout from "./pages/StaffLayout";
+import StaffGradesPage from "./pages/StaffGradesPage";
+import StaffPerformancePage from "./pages/StaffPerformancePage";
 
 export default function App() {
   return (
@@ -52,7 +55,14 @@ export default function App() {
                 <AdminRegistrations />
               </AdminLayout>
             }
+
           />
+
+          <Route path="/staff" element={<StaffLayout />}>
+            <Route path="grades" element={<StaffGradesPage />} />
+            <Route path="performance" element={<StaffPerformancePage />} />
+          </Route>
+
 
 
 

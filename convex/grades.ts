@@ -70,3 +70,36 @@ export const createComponentGrade = mutation({
     });
   },
 });
+
+export const calculateOverallGrade = query({
+  args: { studentId: v.id("students") },
+  handler: async (ctx, { studentId }) => {
+    const subjects = await ctx.db.query("subjects").collect();
+
+    let total = 0;
+
+    for (const subject of subjects) {
+      const components = await ctx.db
+        .query("subjectComponents")
+        .withIndex("by_subject", q => q.eq("subjectId", subject._id))
+        .collect();
+
+      const grades = await ctx.db
+        .query("componentGrades")
+        .withIndex("by_student_subject", q =>
+          q.eq("studentId", studentId).eq("subjectId", subject._id)
+        )
+        .collect();
+
+      const subjectScore =
+        components.reduce((sum, c) => {
+          const g = grades.find(gr => gr.componentId === c._id);
+          return sum + ((g?.score ?? 0) * c.weight) / 100;
+        }, 0);
+
+      total += (subjectScore * subject.weight) / 100;
+    }
+
+    return Math.round(total);
+  },
+});

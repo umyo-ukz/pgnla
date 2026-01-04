@@ -77,6 +77,7 @@ export default defineSchema({
 
   subjects: defineTable({
     name: v.string(),
+    weight: v.number(),
   }).index("by_name", ["name"]),
 
   subjectComponents: defineTable({

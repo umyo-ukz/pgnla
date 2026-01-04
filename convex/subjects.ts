@@ -59,4 +59,15 @@ export const updateComponentWeight = mutation({
   },
 });
 
+export const updateSubjectWeight = mutation({
+  args: {
+    subjectId: v.id("subjects"),
+    weight: v.number(),
+  },
+  handler: async (ctx, { subjectId, weight }) => {
+    await ctx.db.patch(subjectId, { weight });
+  },
+});
+
+
 

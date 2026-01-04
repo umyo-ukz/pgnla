@@ -18,6 +18,8 @@ export default function StudentGradeCard({
     subjectId,
   });
 
+
+
   const updateScore = useMutation(api.grades.updateComponentScore);
   const createScore = useMutation(api.grades.createComponentGrade);
   const updateWeight = useMutation(api.subjects.updateComponentWeight);
@@ -44,19 +46,53 @@ export default function StudentGradeCard({
 
   if (!components || !grades) return null;
 
-  
+
+  function getLetterGrade(score: number): string {
+    if (score >= 96) return "A+";
+    if (score >= 93) return "A";
+    if (score >= 90) return "A-";
+    if (score >= 86) return "B+";
+    if (score >= 83) return "B";
+    if (score >= 80) return "B-";
+    if (score >= 76) return "C+";
+    if (score >= 73) return "C";
+    if (score >= 70) return "C-";
+    if (score >= 66) return "D+";
+    if (score >= 63) return "D";
+    if (score >= 60) return "D-";
+    return "F";
+  }
+
 
   const total = components.reduce((sum, c) => {
-    const g = grades.find((gr) => gr.componentId === c._id);
+    const g = grades.find(gr => gr.componentId === c._id);
     return sum + ((g?.score ?? 0) * c.weight) / 100;
   }, 0);
 
+  const roundedTotal = Math.round(total);
+  const letterGrade = getLetterGrade(roundedTotal);
+ 
+
+
   return (
-    <div className="border rounded-xl p-5 space-y-4 bg-gradient-to-t from-gray-200 to-white shadow-sm">
+    <div className="border rounded-xl p-5 space-y-4 bg-gradient-to-r from-gray-100 to-white shadow-md">
       <div className="flex justify-between items-center">
         <h3 className="font-semibold text-lg">{student.fullName}</h3>
-        <span className="font-bold">{Math.round(total)}%</span>
+
+        <div className="text-right">
+          <div className="font-bold text-lg">
+            {roundedTotal}%
+          </div>
+          <div className="text-sm text-gray-600">
+            {letterGrade}
+          </div>
+
+
+
+
+        </div>
       </div>
+
 
       <div className="flex gap-4 overflow-x-auto">
         {components.map((c) => {

@@ -18,6 +18,8 @@ export default function StaffDashboard() {
   const [gradeFilter, setGradeFilter] = useState("");
   const [search, setSearch] = useState("");
 
+ 
+
   // Auto-select first subject when loaded
   if (!activeSubjectId && subjects && subjects.length > 0) {
     setActiveSubjectId(subjects[0]._id);
@@ -64,13 +66,13 @@ export default function StaffDashboard() {
             <button
               key={subject._id}
               onClick={() => setActiveSubjectId(subject._id)}
-              className={`pb-2 font-medium ${
-                activeSubjectId === subject._id
+              className={`pb-2 font-medium ${activeSubjectId === subject._id
                   ? "bg-primary-red text-white p-2 rounded-t-lg font-semibold"
                   : "text-gray-600 hover:text-black p-2"
-              }`}
+                }`}
             >
               {subject.name}
+
             </button>
           ))}
         </div>
