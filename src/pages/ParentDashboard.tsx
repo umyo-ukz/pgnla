@@ -2,7 +2,6 @@ import { useAuth } from "../hooks/useAuth";
 import { Navigate, Link } from "react-router-dom";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { FaUser, FaGraduationCap, FaChartLine, FaCalendarAlt, FaBell, FaFileAlt, FaSignOutAlt, FaUsers, FaBookOpen, FaCalendarCheck } from "react-icons/fa";
 import { useState, useMemo } from "react";
 
 export default function ParentDashboard() {
@@ -20,11 +19,19 @@ export default function ParentDashboard() {
     parentId: user._id,
   });
 
-  const allComponentGrades = useQuery(api.grades.listAll);
-  const classSubjects = useQuery(api.classSubjects.listAll);
   const components = useQuery(api.subjectComponents.listAll);
   const terms = useQuery(api.terms.listAll);
   const activeTerm = terms?.find(t => t.isActive);
+
+  const allComponentGrades = useQuery(api.grades.listAll);
+  const classSubjects = useQuery(
+    api.classSubjects.listByClassAndTerm,
+    activeTerm
+      ? { termId: activeTerm._id }
+      : "skip"
+  );
+
+
 
   // Calculate overall grade for a student
   const calculateStudentGrade = (studentId: string) => {
@@ -34,9 +41,9 @@ export default function ParentDashboard() {
 
     // Filter class subjects for active term
     const termClassSubjects = classSubjects.filter(cs => cs.termId === activeTerm._id);
-    
+
     const studentGrades = allComponentGrades.filter(g => g.studentId === studentId);
-    
+
     if (studentGrades.length === 0) {
       return { overall: 0, letterGrade: "N/A", hasGrades: false };
     }
@@ -46,7 +53,7 @@ export default function ParentDashboard() {
 
     termClassSubjects.forEach(classSubject => {
       const subjectComps = components.filter(comp => comp.classSubjectId === classSubject._id);
-      
+
       if (subjectComps.length === 0) return;
 
       let subjectScore = 0;
@@ -55,7 +62,7 @@ export default function ParentDashboard() {
 
       subjectComps.forEach(comp => {
         const grade = studentGrades.find(g => g.componentId === comp._id);
-        
+
         if (grade) {
           const compWeight = comp.weight ?? 0;
           subjectScore += grade.score * compWeight;
@@ -67,7 +74,7 @@ export default function ParentDashboard() {
       if (hasComponentGrades && componentWeightSum > 0) {
         const subjectAverage = subjectScore / componentWeightSum;
         const subjectWeight = classSubject.weight ?? 100;
-        
+
         totalWeightedScore += subjectAverage * subjectWeight;
         totalWeight += subjectWeight;
       }
@@ -78,7 +85,7 @@ export default function ParentDashboard() {
     }
 
     const overall = Math.round((totalWeightedScore / totalWeight) * 100) / 100;
-    
+
     // Calculate letter grade
     const getLetterGrade = (score: number): string => {
       if (score >= 96) return "A+";
@@ -113,10 +120,10 @@ export default function ParentDashboard() {
     });
 
     const studentsWithValidGrades = studentsWithGrades.filter(s => s.grade.hasGrades);
-    
+
     const totalScore = studentsWithValidGrades.reduce((sum, s) => sum + s.grade.overall, 0);
-    const avgScore = studentsWithValidGrades.length > 0 
-      ? Math.round(totalScore / studentsWithValidGrades.length) 
+    const avgScore = studentsWithValidGrades.length > 0
+      ? Math.round(totalScore / studentsWithValidGrades.length)
       : 0;
 
     const gradeDistribution = {
@@ -162,43 +169,40 @@ export default function ParentDashboard() {
               </span>
               {activeTerm && (
                 <span className="px-3 py-1 bg-blue-50 text-blue-700 text-sm rounded-full border border-blue-200">
-                  <FaCalendarAlt className="inline mr-1" size={12} />
+                  <i className="fas fa-calendar-alt mr-1"></i>
                   {activeTerm.name}
                 </span>
               )}
             </div>
           </div>
-          
-          <button 
+
+          <Link to="/login"
             onClick={logout}
             className="mt-4 md:mt-0 px-4 py-2.5 border border-gray-300 rounded-xl hover:bg-gray-50 transition-all duration-200 text-gray-700 font-medium flex items-center gap-2"
           >
-            <FaSignOutAlt />
+            <i className="fas fa-sign-out-alt"></i>
             Logout
-          </button>
+          </Link>
         </div>
 
         {/* Dashboard Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-primary-red/10 rounded-xl">
-                <FaUsers className="text-2xl text-primary-red" />
+                <i className="fas fa-users text-2xl text-primary-red"></i>
               </div>
               <span className="text-2xl font-bold text-gray-900">
                 {dashboardStats?.studentCount || 0}
               </span>
             </div>
-            <h3 className="text-sm font-medium text-gray-500 mb-1">Registered Children</h3>
-            <p className="text-xs text-gray-400">
-              Total children under your care
-            </p>
+            <h3 className="text-sm font-medium text-gray-500 mb-1">Registered Students</h3>
           </div>
 
           <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-green-100 rounded-xl">
-                <FaChartLine className="text-2xl text-green-600" />
+                <i className="fas fa-chart-line text-2xl text-green-600"></i>
               </div>
               <span className="text-2xl font-bold text-gray-900">
                 {dashboardStats?.avgScore || 0}%
@@ -213,7 +217,7 @@ export default function ParentDashboard() {
           <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-blue-100 rounded-xl">
-                <FaBell className="text-2xl text-blue-600" />
+                <i className="fas fa-bell text-2xl text-blue-600"></i>
               </div>
               <span className="text-2xl font-bold text-gray-900">0</span>
             </div>
@@ -223,20 +227,6 @@ export default function ParentDashboard() {
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-purple-100 rounded-xl">
-                <FaFileAlt className="text-2xl text-purple-600" />
-              </div>
-              <span className="text-2xl font-bold text-gray-900">
-                {dashboardStats?.studentCount || 0}
-              </span>
-            </div>
-            <h3 className="text-sm font-medium text-gray-500 mb-1">Reports Available</h3>
-            <p className="text-xs text-gray-400">
-              Latest term reports
-            </p>
-          </div>
         </div>
 
         {/* Grade Distribution Summary */}
@@ -244,11 +234,11 @@ export default function ParentDashboard() {
           <div className="mb-8 bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2 bg-primary-red/10 rounded-lg">
-                <FaGraduationCap className="text-xl text-primary-red" />
+                <i className="fas fa-graduation-cap text-xl text-primary-red"></i>
               </div>
               <h2 className="text-xl font-bold text-gray-900">Academic Overview</h2>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center p-4 bg-green-50 rounded-xl border border-green-100">
                 <div className="text-2xl font-bold text-green-700 mb-1">
@@ -257,7 +247,7 @@ export default function ParentDashboard() {
                 <div className="text-sm font-medium text-green-800">Excellent (A-B)</div>
                 <div className="text-xs text-green-600 mt-1">80% or higher</div>
               </div>
-              
+
               <div className="text-center p-4 bg-yellow-50 rounded-xl border border-yellow-100">
                 <div className="text-2xl font-bold text-yellow-700 mb-1">
                   {dashboardStats.gradeDistribution.satisfactory}
@@ -265,7 +255,7 @@ export default function ParentDashboard() {
                 <div className="text-sm font-medium text-yellow-800">Satisfactory (C-D)</div>
                 <div className="text-xs text-yellow-600 mt-1">60-79%</div>
               </div>
-              
+
               <div className="text-center p-4 bg-red-50 rounded-xl border border-red-100">
                 <div className="text-2xl font-bold text-red-700 mb-1">
                   {dashboardStats.gradeDistribution.needsAttention}
@@ -286,38 +276,38 @@ export default function ParentDashboard() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-primary-red/10 rounded-lg">
-                      <FaUser className="text-xl text-primary-red" />
+                      <i className="fas fa-user text-xl text-primary-red"></i>
                     </div>
-                    <h2 className="text-xl font-bold text-gray-900">Your Children</h2>
+                    <h2 className="text-xl font-bold text-gray-900">Your Students</h2>
                   </div>
                   <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
                     {students?.length || 0} child{students?.length !== 1 ? 'ren' : ''}
                   </span>
                 </div>
               </div>
-              
+
               <div className="p-6">
                 {students === undefined ? (
                   <div className="text-center py-12">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-red mx-auto mb-4"></div>
-                    <p className="text-gray-600">Loading children information...</p>
+                    <p className="text-gray-600">Loading student information...</p>
                   </div>
                 ) : students.length === 0 ? (
                   <div className="text-center py-12">
                     <div className="text-gray-400 text-5xl mb-4">
-                      <FaUser className="mx-auto" />
+                      <i className="fas fa-user mx-auto"></i>
                     </div>
                     <h3 className="text-xl font-medium text-gray-600 mb-2">
-                      No Children Registered
+                      No Students Registered
                     </h3>
                     <p className="text-gray-500 max-w-md mx-auto mb-6">
-                      No children have been added to your account yet.
+                      No Students have been added to your account yet.
                     </p>
                     <Link
                       to="/registration"
                       className="px-4 py-2 bg-primary-red text-white rounded-lg hover:bg-red-700 transition"
                     >
-                      Register a Child
+                      Register a Student
                     </Link>
                   </div>
                 ) : (
@@ -341,7 +331,7 @@ export default function ParentDashboard() {
                                 </h3>
                                 <div className="flex items-center gap-2 mt-1">
                                   <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium">
-                                    Grade {student.gradeLevel}
+                                     {student.gradeLevel}
                                   </span>
                                   <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">
                                     Student ID: {student._id.slice(0, 6)}...
@@ -350,7 +340,7 @@ export default function ParentDashboard() {
                               </div>
                             </div>
                           </div>
-                          
+
                           {/* Grade Display */}
                           <div className="text-right">
                             <div className={`text-2xl font-bold ${getGradeColor(student.grade.overall)}`}>
@@ -367,8 +357,8 @@ export default function ParentDashboard() {
                           <span className={`px-3 py-1.5 rounded-full text-xs font-medium ${getGradeBadgeColor(student.grade.overall, student.grade.hasGrades)}`}>
                             {student.grade.hasGrades ? (
                               student.grade.overall >= 80 ? "Excellent Performance" :
-                              student.grade.overall >= 60 ? "Satisfactory Performance" : 
-                              "Needs Attention"
+                                student.grade.overall >= 60 ? "Satisfactory Performance" :
+                                  "Needs Attention"
                             ) : "No Grades Yet"}
                           </span>
                         </div>
@@ -376,25 +366,11 @@ export default function ParentDashboard() {
                         {/* Action Buttons */}
                         <div className="grid grid-cols-3 gap-2">
                           <Link
-                            to={`/student/${student._id}/grades`}
+                            to={`/parent/student/${student._id}`}
                             className="px-3 py-2 text-center bg-primary-red text-white rounded-lg hover:bg-red-700 transition text-sm font-medium"
                           >
-                            <FaChartLine className="inline mr-1" size={12} />
+                            <i className="fas fa-chart-line mr-1"></i>
                             Grades
-                          </Link>
-                          <Link
-                            to={`/student/${student._id}/attendance`}
-                            className="px-3 py-2 text-center bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition text-sm font-medium"
-                          >
-                            <FaCalendarCheck className="inline mr-1" size={12} />
-                            Attendance
-                          </Link>
-                          <Link
-                            to={`/student/${student._id}/reports`}
-                            className="px-3 py-2 text-center bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm font-medium"
-                          >
-                            <FaFileAlt className="inline mr-1" size={12} />
-                            Reports
                           </Link>
                         </div>
                       </div>
@@ -412,55 +388,36 @@ export default function ParentDashboard() {
               <div className="p-6 border-b border-gray-100">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-blue-100 rounded-lg">
-                    <FaBell className="text-xl text-blue-600" />
+                    <i className="fas fa-bell text-xl text-blue-600"></i>
                   </div>
-                  <h2 className="text-lg font-bold text-gray-900">Recent Activity</h2>
+                  <h2 className="text-lg font-bold text-gray-900"> General Notices</h2>
                 </div>
               </div>
-              
+
               <div className="p-6">
                 <div className="space-y-4">
-                  <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
-                    <div className="p-2 bg-white rounded-lg">
-                      <FaFileAlt className="text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">New Term Report Available</p>
-                      <p className="text-xs text-gray-500">Term 1 2024 report is now ready</p>
-                      <span className="text-xs text-gray-400">2 hours ago</span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
-                    <div className="p-2 bg-white rounded-lg">
-                      <FaChartLine className="text-green-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">Grade Updates</p>
-                      <p className="text-xs text-gray-500">Mathematics scores updated</p>
-                      <span className="text-xs text-gray-400">1 day ago</span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-3 p-3 bg-yellow-50 rounded-lg">
-                    <div className="p-2 bg-white rounded-lg">
-                      <FaCalendarAlt className="text-yellow-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">Attendance Recorded</p>
-                      <p className="text-xs text-gray-500">Weekly attendance submitted</p>
-                      <span className="text-xs text-gray-400">3 days ago</span>
-                    </div>
+                  <div className="text-gray-600">
+                    <h1>Coming Soon</h1>
                   </div>
                 </div>
-                
-                <div className="mt-6 pt-6 border-t border-gray-100">
-                  <Link 
-                    to="/reports" 
-                    className="w-full py-2.5 text-center border border-gray-300 rounded-lg hover:bg-gray-50 transition text-sm font-medium"
-                  >
-                    View All Activity
-                  </Link>
+              </div>
+            </div>
+            
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+              <div className="p-6 border-b border-gray-100">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-blue-100 rounded-lg">
+                    <i className="fas fa-bell text-xl text-blue-600"></i>
+                  </div>
+                  <h2 className="text-lg font-bold text-gray-900"> Academic Notices</h2>
+                </div>
+              </div>
+
+              <div className="p-6">
+                <div className="space-y-4">
+                  <div className="text-gray-600">
+                    <h1>Coming Soon</h1>
+                  </div>
                 </div>
               </div>
             </div>
@@ -469,39 +426,39 @@ export default function ParentDashboard() {
             <div className="bg-gradient-to-br from-primary-red to-red-600 rounded-2xl p-6 text-white">
               <h3 className="font-bold mb-4 text-lg">Quick Actions</h3>
               <div className="space-y-3">
-                <Link 
-                  to="/messages" 
+                <Link
+                  to="/messages"
                   className="flex items-center justify-between p-3 bg-white/10 rounded-lg hover:bg-white/20 transition"
                 >
                   <span className="font-medium">Message Teachers</span>
                   <span className="text-xs bg-white/20 px-2 py-1 rounded">New</span>
                 </Link>
-                
-                <Link 
-                  to="/calendar" 
+
+                <Link
+                  to="/calendar"
                   className="flex items-center justify-between p-3 bg-white/10 rounded-lg hover:bg-white/20 transition"
                 >
                   <span className="font-medium">School Calendar</span>
                   <span className="text-xs">View</span>
                 </Link>
-                
-                <Link 
-                  to="/fees" 
+
+                <Link
+                  to="/fees"
                   className="flex items-center justify-between p-3 bg-white/10 rounded-lg hover:bg-white/20 transition"
                 >
                   <span className="font-medium">Fee Payments</span>
                   <span className="text-xs">Pay Now</span>
                 </Link>
-                
-                <Link 
-                  to="/account-settings" 
+
+                <Link
+                  to="/account-settings"
                   className="flex items-center justify-between p-3 bg-white/10 rounded-lg hover:bg-white/20 transition"
                 >
                   <span className="font-medium">Account Settings</span>
                   <span className="text-xs">Edit</span>
                 </Link>
               </div>
-              
+
               <div className="mt-6 pt-6 border-t border-white/20">
                 <div className="text-sm opacity-80">
                   Need help? Contact school administration for support.

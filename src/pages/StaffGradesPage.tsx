@@ -360,7 +360,7 @@ export default function StaffGradesPage() {
                     {/* Current Class Display (instead of filter) */}
                     <div className="flex items-center gap-2 px-3 py-2 bg-primary-red/10 text-primary-red rounded-lg border border-primary-red/20">
                       <i className="fas fa-users"></i>
-                      <span className="font-medium">Standard {selectedClassLevel}</span>
+                      <span className="font-medium"> {selectedClassLevel}</span>
                       <span className="text-xs bg-primary-red/20 px-2 py-0.5 rounded">
                         {filteredStudents.length} students
                       </span>
@@ -439,7 +439,7 @@ export default function StaffGradesPage() {
                   Select a Subject
                 </h3>
                 <p className="text-gray-500 max-w-md mx-auto">
-                  Choose a subject for Standard {selectedClassLevel} to begin entering grades.
+                  Choose a subject for {selectedClassLevel} to begin entering grades.
                 </p>
               </div>
             ) : students === undefined ? (
@@ -457,8 +457,8 @@ export default function StaffGradesPage() {
                 </h3>
                 <p className="text-gray-500 mb-6">
                   {search
-                    ? "No students match your search criteria in Standard " + selectedClassLevel
-                    : "No students are enrolled in Standard " + selectedClassLevel}
+                    ? "No students match your search criteria in " + selectedClassLevel
+                    : "No students are enrolled in " + selectedClassLevel}
                 </p>
                 {search && (
                   <button
@@ -475,7 +475,7 @@ export default function StaffGradesPage() {
                 <div className="flex items-center justify-between mb-4 p-3 bg-gray-50 rounded-lg">
                   <div>
                     <h3 className="font-semibold text-gray-800">
-                      Standard {selectedClassLevel} • {activeClassSubject?.subject?.name ?? "Subject"}
+                       {selectedClassLevel} • {activeClassSubject?.subject?.name ?? "Subject"}
                     </h3>
                     <p className="text-sm text-gray-600">
                       Enter grades for {filteredStudents.length} student{filteredStudents.length !== 1 ? 's' : ''}

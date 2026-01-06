@@ -21,9 +21,9 @@ import AdminMessages from "./pages/AdminMessages";
 import AdminLayout from "./components/AdminLayout";
 import StaffLayout from "./pages/StaffLayout";
 import StaffGradesPage from "./pages/StaffGradesPage";
-import StudentPerformanceCard from "./components/StudentPerformanceCard";
 import StudentPerformancePage from "./pages/StudentPerformancePage";
 import StudentProfile from "./pages/StudentProfile";
+import ParentStudentProfile from "./pages/ParentStudentProfile";
 
 export default function App() {
   return (
@@ -49,6 +49,7 @@ export default function App() {
           <Route path="/admin/registrations" element={<AdminRegistrations />} />
           <Route path="/admin/registrations/:id" element={<AdminRegistrationDetails />} />
           <Route path="/admin/messages" element={<AdminMessages />} />
+          <Route path="/parent/student/:studentId" element={<ParentStudentProfile />} />
           <Route
             path="/admin/registrations"
             element={
