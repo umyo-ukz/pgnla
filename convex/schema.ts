@@ -32,7 +32,10 @@ export default defineSchema({
     parentId: v.id("users"),
     fullName: v.string(),
     gradeLevel: v.string(),
+    overall: v.optional(v.number()),
+    letterGrade: v.optional(v.string()),
   }).index("by_parent", ["parentId"]),
+
 
   admins: defineTable({
     email: v.string(),
@@ -70,12 +73,13 @@ export default defineSchema({
     isActive: v.boolean(),
   }),
 
-  classSubjects: defineTable({
-    subjectId: v.id("subjects"),
-    gradeLevel: v.string(),     // "Grade 5"
-    termId: v.id("terms"),
-    weight: v.number(),         // Subject weight for THIS class + term
-  }).index("by_grade_term", ["gradeLevel", "termId"]),
+ classSubjects: defineTable({
+  subjectId: v.id("subjects"),
+  gradeLevel: v.string(),
+  termId: v.id("terms"),
+  weight: v.number(),
+}).index("by_grade_term", ["gradeLevel", "termId"]),
+
 
 
   // GRADES COMPONENTS
@@ -91,7 +95,6 @@ export default defineSchema({
 
   subjects: defineTable({
     name: v.string(),
-    weight: v.number(),
   }).index("by_name", ["name"]),
 
   subjectComponents: defineTable({
@@ -104,9 +107,53 @@ export default defineSchema({
     studentId: v.id("students"),
     classSubjectId: v.id("classSubjects"),
     componentId: v.id("subjectComponents"),
-    termId: v.id("terms"),
-    score: v.number(),          // 0–100
-  }).index("by_student_classSubject", ["classSubjectId", "classSubjectId"]),
+    score: v.number(),
+  })
+    .index("by_student_classSubject", ["studentId", "classSubjectId"])
+    .index("by_component", ["componentId"]),
+
+
+    
+staffApplications: defineTable({
+  userId: v.id("users"),
+  position: v.string(),
+  status: v.union(
+    v.literal("draft"),
+    v.literal("submitted"),
+    v.literal("approved"),
+    v.literal("rejected")
+  ),
+  submittedAt: v.optional(v.number()),
+}),
+
+documents: defineTable({
+  ownerType: v.union(
+    v.literal("studentApplication"),
+    v.literal("staffApplication"),
+    v.literal("event")
+  ),
+
+  ownerId: v.union(
+    v.id("studentApplications"),
+    v.id("staffApplications"),
+    v.id("events")
+  ),
+
+  documentType: v.string(), // validated in backend
+  fileId: v.id("_storage"),
+  originalFilename: v.string(),
+
+  uploadedBy: v.id("users"),
+  uploadedAt: v.number(),
+})
+.index("by_owner", ["ownerType", "ownerId"]),
+
+events: defineTable({
+  title: v.string(),
+  description: v.optional(v.string()),
+  createdBy: v.id("users"),
+  createdAt: v.number(),
+}),
 
 
 
@@ -121,6 +168,8 @@ export default defineSchema({
     programType: v.string(),
     startDate: v.string(),
     medicalInfo: v.optional(v.string()),
+
+
 
     // Parent
     primaryParentName: v.string(),

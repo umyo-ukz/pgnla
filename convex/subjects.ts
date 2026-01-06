@@ -10,8 +10,6 @@ export const listSubjects = query({
 });
 
 
-
-
 export const listActiveSubjects = query({
   handler: async (ctx) => {
     return await ctx.db
@@ -20,15 +18,9 @@ export const listActiveSubjects = query({
   },
 });
 
-export const listComponentsForSubject = query({
-  args: { subjectId: v.id("subjects") },
-  handler: async (ctx, { subjectId }) => {
-    return ctx.db
-      .query("subjectComponents")
-      .withIndex("by_subject", q => q.eq("subjectId", subjectId))
-      .collect();
-  },
-});
+
+
+
 
 
 export const updateComponent = mutation({
@@ -61,11 +53,11 @@ export const updateComponentWeight = mutation({
 
 export const updateSubjectWeight = mutation({
   args: {
-    subjectId: v.id("subjects"),
+    classSubjectId: v.id("classSubjects"),
     weight: v.number(),
   },
-  handler: async (ctx, { subjectId, weight }) => {
-    await ctx.db.patch(subjectId, { weight });
+  handler: async (ctx, { classSubjectId, weight }) => {
+    await ctx.db.patch(classSubjectId, { weight });
   },
 });
 

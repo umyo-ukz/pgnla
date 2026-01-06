@@ -1,21 +1,24 @@
-// convex/subjectComponents.ts (create if doesn't exist)
-import { query } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
-export const listAll = query({
-  handler: async (ctx) => {
-    return ctx.db.query("subjectComponents").collect();
+export const listByClassSubject = query({
+  args: { classSubjectId: v.id("classSubjects") },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("subjectComponents")
+      .withIndex("by_classSubject", q =>
+        q.eq("classSubjectId", args.classSubjectId)
+      )
+      .collect();
   },
 });
 
-export const getBySubject = query({
+export const updateComponentWeight = mutation({
   args: {
-    subjectId: v.id("subjects"),
+    componentId: v.id("subjectComponents"),
+    weight: v.number(),
   },
-  handler: async (ctx, { subjectId }) => {
-    return ctx.db
-      .query("subjectComponents")
-      .withIndex("by_subject", q => q.eq("subjectId", subjectId))
-      .collect();
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.componentId, { weight: args.weight });
   },
 });

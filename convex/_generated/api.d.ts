@@ -11,6 +11,9 @@
 import type * as account from "../account.js";
 import type * as admin from "../admin.js";
 import type * as auth from "../auth.js";
+import type * as classSubjects from "../classSubjects.js";
+import type * as constants from "../constants.js";
+import type * as documents from "../documents.js";
 import type * as grades from "../grades.js";
 import type * as http from "../http.js";
 import type * as messages from "../messages.js";
@@ -21,6 +24,7 @@ import type * as staff from "../staff.js";
 import type * as students from "../students.js";
 import type * as subjectComponents from "../subjectComponents.js";
 import type * as subjects from "../subjects.js";
+import type * as terms from "../terms.js";
 import type * as users from "../users.js";
 
 import type {
@@ -33,6 +37,9 @@ declare const fullApi: ApiFromModules<{
   account: typeof account;
   admin: typeof admin;
   auth: typeof auth;
+  classSubjects: typeof classSubjects;
+  constants: typeof constants;
+  documents: typeof documents;
   grades: typeof grades;
   http: typeof http;
   messages: typeof messages;
@@ -43,6 +50,7 @@ declare const fullApi: ApiFromModules<{
   students: typeof students;
   subjectComponents: typeof subjectComponents;
   subjects: typeof subjects;
+  terms: typeof terms;
   users: typeof users;
 }>;
 
