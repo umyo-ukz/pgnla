@@ -23,6 +23,7 @@ import StaffLayout from "./pages/StaffLayout";
 import StaffGradesPage from "./pages/StaffGradesPage";
 import StudentPerformanceCard from "./components/StudentPerformanceCard";
 import StudentPerformancePage from "./pages/StudentPerformancePage";
+import StudentProfile from "./pages/StudentProfile";
 
 export default function App() {
   return (
@@ -61,6 +62,7 @@ export default function App() {
           <Route path="/staff" element={<StaffLayout />}>
             <Route path="grades" element={<StaffGradesPage />} />
             <Route path="performance" element={<StudentPerformancePage />} />
+            <Route path="performance/:studentId" element={<StudentProfile />} />
             <Route path="account" element={<AccountSettings />} />
           </Route>
 

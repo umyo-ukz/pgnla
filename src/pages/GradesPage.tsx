@@ -4,15 +4,15 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
 export default function GradesPage() {
-  const { parent } = useAuth();
+  const { user } = useAuth();
   const { studentId } = useParams();
 
-  if (parent === undefined) return null;
-  if (parent === null) return <Navigate to="/login" />;
+  if (user === undefined) return null;
+  if (!user || user.role !== "parent") return <Navigate to="/login" />;
 
-  if (!studentId) return <Navigate to="/parents" />;
+  if (!studentId) return <Navigate to="/parent-dashboard" />;
 
-  const grades = useQuery(api.grades.listForStudent, {
+  const grades = useQuery(api.staff.getGradesForStudent, {
     studentId: studentId as any,
   });
 
@@ -45,7 +45,7 @@ export default function GradesPage() {
               </tr>
             </thead>
             <tbody>
-              {grades.map((g) => (
+              {grades.map((g: { _id: string; subject: string; term: string; score: number }) => (
                 <tr key={g._id} className="border-b last:border-0">
                   <td className="p-4">{g.subject}</td>
                   <td className="p-4">{g.term}</td>

@@ -158,42 +158,64 @@ events: defineTable({
 
 
 
-  registrations: defineTable({
-    // Student
-    studentFirstName: v.string(),
-    studentLastName: v.string(),
-    middleName: v.optional(v.string()),
-    dateOfBirth: v.string(),
-    gender: v.optional(v.string()),
-    programType: v.string(),
-    startDate: v.string(),
-    medicalInfo: v.optional(v.string()),
+studentApplications: defineTable({
+  /* =====================
+     STUDENT INFORMATION
+     ===================== */
+  studentFirstName: v.string(),
+  studentLastName: v.string(),
+  middleName: v.optional(v.string()),
+  dateOfBirth: v.string(),
+  gender: v.optional(v.string()),
 
+  programType: v.string(),        // e.g. Preschool, Primary, Secondary
+  intendedGradeLevel: v.optional(v.string()),
+  startDate: v.string(),
 
+  medicalInfo: v.optional(v.string()),
 
-    // Parent
-    primaryParentName: v.string(),
-    relationship: v.string(),
-    email: v.string(),
-    phone: v.string(),
+  /* =====================
+     PARENT / GUARDIAN
+     ===================== */
+  primaryParentName: v.string(),
+  relationship: v.string(),
+  email: v.string(),
+  phone: v.string(),
 
-    secondaryParentName: v.optional(v.string()),
-    secondaryRelationship: v.optional(v.string()),
-    secondaryEmail: v.optional(v.string()),
-    secondaryPhone: v.optional(v.string()),
+  secondaryParentName: v.optional(v.string()),
+  secondaryRelationship: v.optional(v.string()),
+  secondaryEmail: v.optional(v.string()),
+  secondaryPhone: v.optional(v.string()),
 
-    emergencyName: v.string(),
-    emergencyRelationship: v.string(),
-    emergencyPhone: v.string(),
+  emergencyName: v.string(),
+  emergencyRelationship: v.string(),
+  emergencyPhone: v.string(),
 
-    status: v.union(
-      v.literal("pending"),
-      v.literal("approved"),
-      v.literal("rejected")
-    ),
+  /* =====================
+     APPLICATION METADATA
+     ===================== */
+  submittedBy: v.optional(v.id("users")),   // parent account (optional for public registrations)
+  termId: v.optional(v.id("terms")), // intake term (Fall 2026, etc.)
 
-    createdAt: v.number(),
-  }).index("by_status", ["status"]),
+  status: v.union(
+    v.literal("draft"),
+    v.literal("submitted"),
+    v.literal("under_review"),
+    v.literal("approved"),
+    v.literal("rejected")
+  ),
+
+  reviewedBy: v.optional(v.id("users")), // staff/admin
+  reviewedAt: v.optional(v.number()),
+  rejectionReason: v.optional(v.string()),
+
+  createdAt: v.number(),
+  updatedAt: v.optional(v.number()),
+})
+  .index("by_status", ["status"])
+  .index("by_parent", ["submittedBy"])
+  .index("by_term", ["termId"]),
+
 
 });
 

@@ -7,16 +7,16 @@ export default function StudentGradeCard({
   classSubjectId,
 }: {
   student: any;
-  classSubjectId: string;
+  classSubjectId: string | null;
 }) {
   const components = useQuery(
     api.subjectComponents.listByClassSubject,
-    { classSubjectId }
+    classSubjectId ? { classSubjectId } : "skip"
   );
 
   const grades = useQuery(
     api.grades.listByStudentAndClassSubject,
-    { studentId: student._id, classSubjectId }
+    classSubjectId ? { studentId: student._id, classSubjectId } : "skip"
   );
 
   const updateScore = useMutation(api.grades.updateScore);

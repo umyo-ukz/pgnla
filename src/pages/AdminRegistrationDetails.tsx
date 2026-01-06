@@ -12,12 +12,12 @@ export default function AdminRegistrationDetails() {
     return <Navigate to="/login" />;
   }
 
-  const registration = useQuery(api.registrations.getById, {
+  const registration = useQuery(api.studentApplications.getById, {
     registrationId: id as any,
   });
 
-  const approve = useMutation(api.registrations.approveRegistration);
-  const reject = useMutation(api.registrations.rejectRegistration);
+  const approve = useMutation(api.studentApplications.approveRegistration);
+  const reject = useMutation(api.studentApplications.rejectRegistration);
 
   if (registration === undefined) return <div>Loading…</div>;
   if (!registration) return <div>Registration not found.</div>;

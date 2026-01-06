@@ -33,7 +33,7 @@ interface FormData {
 }
 
 export default function Registration() {
-  const submitRegistration = useMutation(api.registrations.submitRegistration);
+  const submitRegistration = useMutation(api.studentApplications.submitRegistration);
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
     firstName: "",

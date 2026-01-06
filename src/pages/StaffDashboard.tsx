@@ -2,8 +2,9 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import StudentGradeCard from "../components/StudentGradeCard";
+import TermSwitcher from "../components/TermSwitcher";
 
 export default function StaffDashboard() {
   const { user, role, logout, isLoading } = useAuth();
@@ -13,17 +14,27 @@ export default function StaffDashboard() {
 
   const subjects = useQuery(api.subjects.listActiveSubjects);
   const students = useQuery(api.staff.listAllStudents);
+  const terms = useQuery(api.terms.listAll);
 
   const [activeSubjectId, setActiveSubjectId] = useState<string | null>(null);
+  const [activeTermId, setActiveTermId] = useState<string | null>(null);
   const [gradeFilter, setGradeFilter] = useState("");
   const [search, setSearch] = useState("");
 
- 
-
   // Auto-select first subject when loaded
-  if (!activeSubjectId && subjects && subjects.length > 0) {
-    setActiveSubjectId(subjects[0]._id);
-  }
+  useEffect(() => {
+    if (!activeSubjectId && subjects && subjects.length > 0) {
+      setActiveSubjectId(subjects[0]._id);
+    }
+  }, [subjects, activeSubjectId]);
+
+  // Auto-select active term when loaded
+  useEffect(() => {
+    if (!activeTermId && terms && terms.length > 0) {
+      const activeTerm = terms.find(t => t.isActive) ?? terms[0];
+      setActiveTermId(activeTerm._id);
+    }
+  }, [terms, activeTermId]);
 
   const filteredStudents = useMemo(() => {
     if (!students) return [];
@@ -100,6 +111,12 @@ export default function StaffDashboard() {
             </option>
           ))}
         </select>
+
+        <TermSwitcher
+          terms={terms}
+          activeTermId={activeTermId}
+          onChange={setActiveTermId}
+        />
       </div>
 
       {/* Students */}

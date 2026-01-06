@@ -1,8 +1,9 @@
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import TermSwitcher from "../components/TermSwitcher";
 
 export default function StudentPerformancePage() {
   const { user, role, logout, isLoading } = useAuth();
@@ -14,9 +15,18 @@ export default function StudentPerformancePage() {
   const componentGrades = useQuery(api.grades.listAll);
   const subjects = useQuery(api.subjects.listAll);
   const subjectComponents = useQuery(api.subjectComponents.listAll);
+  const terms = useQuery(api.terms.listAll);
 
   const [gradeFilter, setGradeFilter] = useState("");
   const [search, setSearch] = useState("");
+  const [activeTermId, setActiveTermId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!activeTermId && terms && terms.length > 0) {
+      const activeTerm = terms.find(t => t.isActive) ?? terms[0];
+      setActiveTermId(activeTerm._id);
+    }
+  }, [terms, activeTermId]);
 
   const getLetterGrade = (score: number) => {
     if (score >= 96) return "A+";
@@ -158,6 +168,12 @@ export default function StudentPerformancePage() {
             </option>
           ))}
         </select>
+
+        <TermSwitcher
+          terms={terms}
+          activeTermId={activeTermId}
+          onChange={setActiveTermId}
+        />
       </div>
 
       <div className="bg-white border rounded-xl overflow-hidden">
@@ -180,8 +196,15 @@ export default function StudentPerformancePage() {
               const color = getColor(perf.overall);
 
               return (
-                <tr key={student._id} className="border-t">
-                  <td className="p-4 font-medium">{student.fullName}</td>
+                <tr key={student._id} className="border-t hover:bg-gray-50 transition">
+                  <td className="p-4 font-medium">
+                    <Link
+                      to={`/staff/performance/${student._id}`}
+                      className="text-primary-red hover:underline"
+                    >
+                      {student.fullName}
+                    </Link>
+                  </td>
                   <td className="p-4">{student.gradeLevel}</td>
                   <td className={`p-4 font-bold ${color}`}>
                     {perf.hasGrades ? `${perf.overall}%` : "No grades"}
@@ -198,6 +221,9 @@ export default function StudentPerformancePage() {
                       ? "Needs Attention"
                       : "No Data"}
                   </td>
+                  <td className="p-4 text-gray-400">—</td>
+                  <td className="p-4 text-gray-400">—</td>
+                  <td className="p-4 text-gray-400">—</td>
                 </tr>
               );
             })}

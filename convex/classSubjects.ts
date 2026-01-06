@@ -3,17 +3,24 @@ import { v } from "convex/values";
 
 export const listByClassAndTerm = query({
     args: {
-        gradeLevel: v.string(),
+        gradeLevel: v.optional(v.string()),
         termId: v.id("terms"),
     },
     handler: async (ctx, args) => {
-        const classSubjects = await ctx.db
-            .query("classSubjects")
-            .withIndex("by_grade_term", q =>
-                q.eq("gradeLevel", args.gradeLevel).eq("termId", args.termId)
-            )
-
-            .collect();
+        let classSubjects;
+        if (args.gradeLevel) {
+            classSubjects = await ctx.db
+                .query("classSubjects")
+                .withIndex("by_grade_term", q =>
+                    q.eq("gradeLevel", args.gradeLevel!).eq("termId", args.termId)
+                )
+                .collect();
+        } else {
+            classSubjects = await ctx.db
+                .query("classSubjects")
+                .filter(q => q.eq(q.field("termId"), args.termId))
+                .collect();
+        }
 
         return Promise.all(
             classSubjects.map(async cs => ({

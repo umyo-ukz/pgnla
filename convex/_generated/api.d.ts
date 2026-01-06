@@ -18,13 +18,14 @@ import type * as grades from "../grades.js";
 import type * as http from "../http.js";
 import type * as messages from "../messages.js";
 import type * as parents from "../parents.js";
-import type * as registrations from "../registrations.js";
 import type * as signInParent from "../signInParent.js";
 import type * as staff from "../staff.js";
+import type * as studentApplications from "../studentApplications.js";
 import type * as students from "../students.js";
 import type * as subjectComponents from "../subjectComponents.js";
 import type * as subjects from "../subjects.js";
 import type * as terms from "../terms.js";
+import type * as useActiveTerm from "../useActiveTerm.js";
 import type * as users from "../users.js";
 
 import type {
@@ -44,13 +45,14 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   messages: typeof messages;
   parents: typeof parents;
-  registrations: typeof registrations;
   signInParent: typeof signInParent;
   staff: typeof staff;
+  studentApplications: typeof studentApplications;
   students: typeof students;
   subjectComponents: typeof subjectComponents;
   subjects: typeof subjects;
   terms: typeof terms;
+  useActiveTerm: typeof useActiveTerm;
   users: typeof users;
 }>;
 

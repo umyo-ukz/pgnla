@@ -4,7 +4,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useAuth } from "../hooks/useAuth";
 
-const TABS = ["pending", "approved", "rejected"] as const;
+const TABS = ["submitted", "approved", "rejected"] as const;
 type Tab = typeof TABS[number];
 
 type SortOption =
@@ -15,7 +15,7 @@ type SortOption =
 
 export default function AdminRegistrations() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<Tab>("pending");
+  const [activeTab, setActiveTab] = useState<Tab>("submitted");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortOption>("date-new");
 
@@ -24,7 +24,7 @@ export default function AdminRegistrations() {
     return <Navigate to="/login" />;
   }
 
-  const registrations = useQuery(api.registrations.listByStatus, {
+  const registrations = useQuery(api.studentApplications.listByStatus, {
     status: activeTab,
   });
 
