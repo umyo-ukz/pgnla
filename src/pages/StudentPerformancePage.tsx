@@ -4,9 +4,11 @@ import { Navigate, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useState, useMemo, useEffect } from "react";
 import TermSwitcher from "../components/TermSwitcher";
+import { useTranslation } from "../hooks/useTranslation";
 
 export default function StudentPerformancePage() {
   const { user, role, logout, isLoading } = useAuth();
+  const { t } = useTranslation();
 
   if (isLoading) return null;
   if (!user || role !== "staff") return <Navigate to="/login" />;
@@ -142,16 +144,16 @@ export default function StudentPerformancePage() {
   return (
     <div className="container-wide px-4 py-10 space-y-8">
       <header className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Student Performance</h1>
+        <h1 className="text-3xl font-bold">{t("performance.studentPerformance")}</h1>
         <button onClick={logout} className="btn-secondary">
-          Logout
+          {t("common.logout")}
         </button>
       </header>
 
       <div className="bg-white border rounded-xl p-4 flex gap-4">
         <input
           className="input flex-1"
-          placeholder="Search by student name…"
+          placeholder={t("performance.searchByName")}
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
@@ -161,7 +163,7 @@ export default function StudentPerformancePage() {
           value={gradeFilter}
           onChange={e => setGradeFilter(e.target.value)}
         >
-          <option value="">All Classes</option>
+          <option value="">{t("performance.allClasses")}</option>
           {uniqueGrades.map(g => (
             <option key={g} value={g}>
               {g}
@@ -180,14 +182,14 @@ export default function StudentPerformancePage() {
         <table className="w-full">
           <thead className="bg-primary-red">
             <tr className ="text-white">
-              <th className="p-4 text-left">Student</th>
-              <th className="p-4 text-left">Class</th>
-              <th className="p-4 text-left">Percentage</th>
-              <th className="p-4 text-left">Grade</th>
-              <th className="p-4 text-left">Status</th>
-              <th className="p-4 text-left">Absences</th>
-              <th className="p-4 text-left">Tardies</th>
-              <th className="p-4 text-left">Conduct</th>
+              <th className="p-4 text-left">{t("performance.student")}</th>
+              <th className="p-4 text-left">{t("performance.class")}</th>
+              <th className="p-4 text-left">{t("performance.percentage")}</th>
+              <th className="p-4 text-left">{t("performance.grade")}</th>
+              <th className="p-4 text-left">{t("performance.status")}</th>
+              <th className="p-4 text-left">{t("performance.absences")}</th>
+              <th className="p-4 text-left">{t("performance.tardies")}</th>
+              <th className="p-4 text-left">{t("performance.conduct")}</th>
             </tr>
           </thead>
           <tbody>
@@ -207,19 +209,19 @@ export default function StudentPerformancePage() {
                   </td>
                   <td className="p-4">{student.gradeLevel}</td>
                   <td className={`p-4 font-bold ${color}`}>
-                    {perf.hasGrades ? `${perf.overall}%` : "No grades"}
+                    {perf.hasGrades ? `${perf.overall}%` : t("performance.noGrades")}
                   </td>
                   <td className={`p-4 font-semibold ${color}`}>
                     {perf.letterGrade}
                   </td>
                   <td className="p-4">
                     {perf.overall >= 80
-                      ? "Excellent"
+                      ? t("student.excellent")
                       : perf.overall >= 60
-                      ? "Satisfactory"
+                      ? t("student.satisfactory")
                       : perf.hasGrades
-                      ? "Needs Attention"
-                      : "No Data"}
+                      ? t("student.needsAttention")
+                      : t("student.noData")}
                   </td>
                   <td className="p-4 text-gray-400">—</td>
                   <td className="p-4 text-gray-400">—</td>

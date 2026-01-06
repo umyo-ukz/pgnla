@@ -1,0 +1,113 @@
+{
+  "common": {
+    "hello": "Hola",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "dashboard": "Panel de control",
+    "accountSettings": "Configuración de cuenta",
+    "back": "Atrás",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "loading": "Cargando",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "all": "Todos",
+    "submit": "Enviar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "view": "Ver",
+    "close": "Cerrar"
+  },
+  "navbar": {
+    "nurseryAndLearningAcademy": "Guardería y Academia de Aprendizaje",
+    "aboutUs": "Sobre Nosotros",
+    "admissions": "Admisiones",
+    "financing": "Financiamiento",
+    "studentLife": "Vida Estudiantil",
+    "studentLifeOverview": "Resumen de Vida Estudiantil",
+    "photoGallery": "Galería de Fotos",
+    "yearbook": "Anuario",
+    "schoolCalendar": "Calendario Escolar",
+    "contact": "Contacto"
+  },
+  "home": {
+    "whereYoungMindsGrow": "Donde las mentes jóvenes crecen hasta convertirse en los gigantes del mañana.",
+    "applyNow": "Aplicar Ahora",
+    "learnMore": "Saber Más"
+  },
+  "student": {
+    "studentProfile": "Perfil del Estudiante",
+    "fullName": "Nombre Completo",
+    "classGradeLevel": "Clase/Nivel de Grado",
+    "overallAverage": "Promedio General",
+    "subjectsCompleted": "Materias Completadas",
+    "letterGrade": "Calificación",
+    "academicSummary": "Resumen Académico",
+    "componentBreakdown": "Desglose de Componentes",
+    "weight": "Peso",
+    "noGradesFound": "No se encontraron calificaciones",
+    "noGradesForTerm": "No se encontraron calificaciones para el período seleccionado.",
+    "noGradesForStudent": "No se encontraron calificaciones para este estudiante.",
+    "excellent": "Excelente",
+    "satisfactory": "Satisfactorio",
+    "needsAttention": "Necesita Atención",
+    "noData": "Sin Datos"
+  },
+  "performance": {
+    "studentPerformance": "Rendimiento Estudiantil",
+    "student": "Estudiante",
+    "class": "Clase",
+    "percentage": "Porcentaje",
+    "grade": "Calificación",
+    "status": "Estado",
+    "absences": "Ausencias",
+    "tardies": "Retrasos",
+    "conduct": "Conducta",
+    "searchByName": "Buscar por nombre de estudiante…",
+    "allClasses": "Todas las Clases",
+    "noGrades": "Sin calificaciones"
+  },
+  "grades": {
+    "editGrades": "Editar Calificaciones",
+    "subject": "Materia",
+    "term": "Período",
+    "score": "Puntuación",
+    "pleaseSelectTerm": "Por favor seleccione un período",
+    "loadingSubjects": "Cargando materias...",
+    "noSubjectsFound": "No se encontraron materias para este período. Por favor cree materias de clase para este período.",
+    "pleaseSelectSubject": "Por favor seleccione una materia arriba",
+    "loadingStudents": "Cargando estudiantes...",
+    "noStudentsFound": "No se encontraron estudiantes.",
+    "subjectWeight": "Peso de la Materia (%)",
+    "backToDashboard": "Volver al Panel de Control"
+  },
+  "admin": {
+    "adminDashboard": "Panel de Administración",
+    "registrations": "Registros",
+    "messages": "Mensajes",
+    "manageParentsAndStaff": "Gestionar cuentas de padres y personal",
+    "pending": "Pendiente",
+    "approved": "Aprobado",
+    "rejected": "Rechazado",
+    "submitted": "Enviado"
+  },
+  "staff": {
+    "staffPortal": "Portal del Personal",
+    "manageStudentGrades": "Gestionar calificaciones de estudiantes por materia"
+  },
+  "parent": {
+    "parentDashboard": "Panel de Padres",
+    "grades": "Calificaciones",
+    "backToDashboard": "Volver al Panel de Control",
+    "noGradesAvailable": "Aún no hay calificaciones disponibles."
+  },
+  "registration": {
+    "studentRegistration": "Registro de Estudiante",
+    "beginJourney": "Comience el viaje de su hijo con Pequeños Gigantes"
+  },
+  "contact": {
+    "phone": "Teléfono",
+    "email": "Correo electrónico"
+  }
+}
+

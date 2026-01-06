@@ -1,0 +1,113 @@
+{
+  "common": {
+    "hello": "Hello",
+    "login": "Login",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "accountSettings": "Account Settings",
+    "back": "Back",
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading",
+    "search": "Search",
+    "filter": "Filter",
+    "all": "All",
+    "submit": "Submit",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View",
+    "close": "Close"
+  },
+  "navbar": {
+    "nurseryAndLearningAcademy": "Nursery and Learning Academy",
+    "aboutUs": "About Us",
+    "admissions": "Admissions",
+    "financing": "Financing",
+    "studentLife": "Student Life",
+    "studentLifeOverview": "Student Life Overview",
+    "photoGallery": "Photo Gallery",
+    "yearbook": "Yearbook",
+    "schoolCalendar": "School Calendar",
+    "contact": "Contact"
+  },
+  "home": {
+    "whereYoungMindsGrow": "Where young minds grow into tomorrow's giants.",
+    "applyNow": "Apply Now",
+    "learnMore": "Learn More"
+  },
+  "student": {
+    "studentProfile": "Student Profile",
+    "fullName": "Full Name",
+    "classGradeLevel": "Class/Grade Level",
+    "overallAverage": "Overall Average",
+    "subjectsCompleted": "Subjects Completed",
+    "letterGrade": "Letter Grade",
+    "academicSummary": "Academic Summary",
+    "componentBreakdown": "Component Breakdown",
+    "weight": "Weight",
+    "noGradesFound": "No grades found",
+    "noGradesForTerm": "No grades found for the selected term.",
+    "noGradesForStudent": "No grades found for this student.",
+    "excellent": "Excellent",
+    "satisfactory": "Satisfactory",
+    "needsAttention": "Needs Attention",
+    "noData": "No Data"
+  },
+  "performance": {
+    "studentPerformance": "Student Performance",
+    "student": "Student",
+    "class": "Class",
+    "percentage": "Percentage",
+    "grade": "Grade",
+    "status": "Status",
+    "absences": "Absences",
+    "tardies": "Tardies",
+    "conduct": "Conduct",
+    "searchByName": "Search by student name…",
+    "allClasses": "All Classes",
+    "noGrades": "No grades"
+  },
+  "grades": {
+    "editGrades": "Edit Grades",
+    "subject": "Subject",
+    "term": "Term",
+    "score": "Score",
+    "pleaseSelectTerm": "Please select a term",
+    "loadingSubjects": "Loading subjects...",
+    "noSubjectsFound": "No subjects found for this term. Please create class subjects for this term.",
+    "pleaseSelectSubject": "Please select a subject above",
+    "loadingStudents": "Loading students...",
+    "noStudentsFound": "No students found.",
+    "subjectWeight": "Subject Weight (%)",
+    "backToDashboard": "Back to Dashboard"
+  },
+  "admin": {
+    "adminDashboard": "Admin Dashboard",
+    "registrations": "Registrations",
+    "messages": "Messages",
+    "manageParentsAndStaff": "Manage parents and staff accounts",
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "submitted": "Submitted"
+  },
+  "staff": {
+    "staffPortal": "Staff Portal",
+    "manageStudentGrades": "Manage student grades by subject"
+  },
+  "parent": {
+    "parentDashboard": "Parent Dashboard",
+    "grades": "Grades",
+    "backToDashboard": "Back to Dashboard",
+    "noGradesAvailable": "No grades available yet."
+  },
+  "registration": {
+    "studentRegistration": "Student Registration",
+    "beginJourney": "Begin your child's journey with Pequeños Gigantes"
+  },
+  "contact": {
+    "phone": "Phone",
+    "email": "Email"
+  }
+}
+
