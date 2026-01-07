@@ -28,6 +28,7 @@ import StudentProfile from "./pages/StudentProfile";
 import ParentStudentProfile from "./pages/ParentStudentProfile";
 import AdminManageAccounts from "./pages/AdminManageAccounts";
 import AdminParentProfile from "./pages/AdminParentProfile";
+import ComingSoon from "./pages/ComingSoon";
 
 
 export default function App() {
@@ -48,6 +49,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/registration" element={<Registration />} />
           <Route path="*" element={<Home />} />
+          <Route path="/coming-soon" element={<ComingSoon />} />
 
           {/* Parent Routes */}
           <Route path="/parent-dashboard" element={<ParentDashboard />} />

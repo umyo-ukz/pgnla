@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 export default function QuickLinks() {
   return (
     <section className="py-16 bg-white">
@@ -5,7 +6,7 @@ export default function QuickLinks() {
         <h2 className="section-title">Quick Links</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <a href="./login.html" className="group">
+          <Link to="login" className="group">
             <div
               className="bg-primary-red text-white rounded-xl p-8 h-full transform group-hover:-translate-y-2 transition-transform duration-300">
               <div className="text-4xl mb-4">
@@ -19,10 +20,10 @@ export default function QuickLinks() {
                 Login Now <i className="fas fa-arrow-right ml-1"></i>
               </span>
             </div>
-          </a>
+          </Link>
 
 
-          <a href="./calendar.html" className="group">
+          <Link to="coming-soon" className="group">
             <div
               className="bg-gray-800 text-white rounded-xl p-8 h-full transform group-hover:-translate-y-2 transition-transform duration-300">
               <div className="text-4xl mb-4">
@@ -36,10 +37,10 @@ export default function QuickLinks() {
                 View Calendar <i className="fas fa-arrow-right ml-1"></i>
               </span>
             </div>
-          </a>
+          </Link>
 
 
-          <a href="./admissions.html" className="group">
+          <Link to="admissions" className="group">
             <div
               className="bg-gray-100 rounded-xl p-8 h-full transform group-hover:-translate-y-2 transition-transform duration-300 border-2 border-transparent group-hover:border-primary-red">
               <div className="text-primary-red text-4xl mb-4">
@@ -53,10 +54,10 @@ export default function QuickLinks() {
                 Apply Now <i className="fas fa-arrow-right ml-1"></i>
               </span>
             </div>
-          </a>
+          </Link>
 
 
-          <a href="./gallery.html" className="group">
+          <Link to="coming-soon" className="group">
             <div
               className="bg-gray-100 rounded-xl p-8 h-full transform group-hover:-translate-y-2 transition-transform duration-300 border-2 border-transparent group-hover:border-primary-red">
               <div className="text-primary-red text-4xl mb-4">
@@ -64,13 +65,13 @@ export default function QuickLinks() {
               </div>
               <h3 className="text-xl font-bold mb-3">Photo Gallery</h3>
               <p className="text-gray-600 mb-4">
-                See our students in action through classNameroom and event photos
+                See our students in action
               </p>
               <span className="font-semibold text-primary-red group-hover:underline">
                 View Gallery <i className="fas fa-arrow-right ml-1"></i>
               </span>
             </div>
-          </a>
+          </Link>
         </div>
       </div>
     </section>

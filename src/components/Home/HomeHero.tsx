@@ -17,7 +17,7 @@ export default function Hero() {
         </div>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            to="/registration"
+            to="/admissions"
             className="btn-primary bg-white text-primary-red hover:bg-gray-100 text-lg px-8 py-4 font-semibold"
           >
             <i className="fas fa-calendar-check mr-2"></i>Apply Now
