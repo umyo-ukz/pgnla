@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { LanguageProvider } from "./contexts/LanguageContext";
 
 import Navbar from "./components/Navbar";
@@ -39,6 +39,7 @@ export default function App() {
           <ScrollToTop />
           <Navbar />
           <Routes>
+            <Route path="/home" element={<Navigate to="/" replace />} />
             <Route path="/" element={<Home />} />
             {/* Public Routes */}
             <Route path="/admissions" element={<Admissions />} />
