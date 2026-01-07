@@ -132,7 +132,8 @@ export default function StudentProfile() {
             </p>
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-500">{t("student.subject")}</label>
+            <label className="text-sm font-medium text-gray-500">Subjects</label>
+
             <p className="text-lg font-semibold mt-1">{filteredGrades.length}</p>
           </div>
         </div>

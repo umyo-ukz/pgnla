@@ -31,16 +31,14 @@ export default function ParentDashboard() {
   const activeTerm = terms?.find(t => t.isActive);
 
   const allComponentGrades = useQuery(api.grades.listAll);
+  
+  // FIXED: Check if activeTerm exists before calling the query
   const classSubjects = useQuery(
-    api.classSubjects.listByClassAndTerm,
-    activeTerm
-      ? { termId: activeTerm._id }
-      : "skip"
-  );
+  api.classSubjects.listByClassAndTerm,
+  activeTerm ? { termId: activeTerm._id } : "skip"
+);
 
-
-
-  // Calculate overall grade for a student
+  // Calculate overall grade for a student - UPDATED FOR POINTS SYSTEM
   const calculateStudentGrade = (studentId: string) => {
     if (!allComponentGrades || !classSubjects || !components || !activeTerm) {
       return { overall: 0, letterGrade: "N/A", hasGrades: false };
@@ -54,52 +52,40 @@ export default function ParentDashboard() {
       return { overall: 0, letterGrade: "N/A", hasGrades: false };
     }
 
-    let totalEarnedPoints = 0;
-    let totalPossiblePoints = 0;
+    const subjectPercentages: number[] = [];
 
     termClassSubjects.forEach(classSubject => {
       const subjectComps = components.filter(comp => comp.classSubjectId === classSubject._id);
-      const subjectWeight = classSubject.weight || 100;
-
-      if (subjectComps.length === 0) return;
-
-      let subjectEarned = 0;
-      let subjectPossible = 0;
-      let hasComponentGrades = false;
+      
+      let totalEarned = 0;
+      let totalPossible = 0;
+      let hasGrades = false;
 
       subjectComps.forEach(comp => {
         const grade = studentGrades.find(g => g.componentId === comp._id);
         const compWeight = comp.weight || 0;
 
         if (grade) {
-          // Cap earned points at component weight (safety check)
           const earned = Math.min(grade.score, compWeight);
-          const compContribution = (earned / compWeight) * compWeight;
-
-          subjectEarned += compContribution;
-          subjectPossible += compWeight;
-          hasComponentGrades = true;
+          totalEarned += earned;
+          totalPossible += compWeight;
+          hasGrades = true;
         } else {
-          // Component exists but no grade - still count toward total possible
-          subjectPossible += compWeight;
+          totalPossible += compWeight;
         }
       });
 
-      if (hasComponentGrades && subjectPossible > 0) {
-        // Calculate subject percentage
-        const subjectPercentage = (subjectEarned / subjectPossible) * 100;
-
-        // Apply subject weight to overall calculation
-        totalEarnedPoints += (subjectPercentage / 100) * subjectWeight;
-        totalPossiblePoints += subjectWeight;
+      if (hasGrades && totalPossible > 0) {
+        const subjectPercentage = (totalEarned / totalPossible) * 100;
+        subjectPercentages.push(subjectPercentage);
       }
     });
 
-    if (totalPossiblePoints === 0) {
+    if (subjectPercentages.length === 0) {
       return { overall: 0, letterGrade: "N/A", hasGrades: false };
     }
 
-    const overall = (totalEarnedPoints / totalPossiblePoints) * 100;
+    const overall = subjectPercentages.reduce((sum, p) => sum + p, 0) / subjectPercentages.length;
 
     // Calculate letter grade
     const getLetterGrade = (score: number): string => {
@@ -119,7 +105,7 @@ export default function ParentDashboard() {
     };
 
     return {
-      overall: Math.round(overall * 100) / 100, // 2 decimal places
+      overall: Math.round(overall * 100) / 100,
       letterGrade: getLetterGrade(overall),
       hasGrades: true
     };
