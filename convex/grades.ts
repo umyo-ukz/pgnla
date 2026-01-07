@@ -55,6 +55,54 @@ export const deleteScore = mutation({
   },
 });
 
+export const createOrUpdateGradeWithValidation = mutation({
+  args: {
+    studentId: v.id("students"),
+    classSubjectId: v.id("classSubjects"),
+    componentId: v.id("subjectComponents"),
+    score: v.number(), // Score should be <= component weight
+  },
+  handler: async (ctx, args) => {
+    // Get component to check its weight
+    const component = await ctx.db.get(args.componentId);
+    if (!component) {
+      throw new Error("Component not found");
+    }
+
+    // Validate score doesn't exceed component weight
+    if (args.score > component.weight) {
+      throw new Error(`Score cannot exceed component weight of ${component.weight}`);
+    }
+
+    if (args.score < 0) {
+      throw new Error("Score cannot be negative");
+    }
+
+    // Check if grade already exists
+    const existingGrade = await ctx.db
+      .query("componentGrades")
+      .withIndex("by_student_classSubject", q =>
+        q.eq("studentId", args.studentId).eq("classSubjectId", args.classSubjectId)
+      )
+      .filter(q => q.eq(q.field("componentId"), args.componentId))
+      .first();
+
+    if (existingGrade) {
+      // Update existing grade
+      await ctx.db.patch(existingGrade._id, { score: args.score });
+      return { updated: true, id: existingGrade._id };
+    } else {
+      // Create new grade
+      const gradeId = await ctx.db.insert("componentGrades", {
+        studentId: args.studentId,
+        classSubjectId: args.classSubjectId,
+        componentId: args.componentId,
+        score: args.score,
+      });
+      return { created: true, id: gradeId };
+    }
+  },
+});
 
 export const getStudentProfile = query({
   args: {
@@ -126,24 +174,32 @@ export const getStudentProfile = query({
 
     // Calculate averages for each subject
     Object.values(groupedGrades).forEach((group) => {
-      if (group.components.length === 0) {
-        group.average = 0;
-        return;
-      }
+  if (group.components.length === 0) {
+    group.average = 0;
+    return;
+  }
 
-      let totalWeightedScore = 0;
-      let totalWeight = 0;
+  let totalScore = 0;
+  let maxPossibleScore = 0;
 
-      group.components.forEach(({ component, grade }) => {
-        if (component) {
-          const weight = component.weight || 0;
-          totalWeightedScore += grade.score * weight;
-          totalWeight += weight;
-        }
-      });
+  group.components.forEach(({ component, grade }) => {
+    if (component) {
+      // Component weight represents MAXIMUM points for this component
+      const maxPoints = component.weight;
+      
+      // Student's score is points earned out of component weight
+      const earnedPoints = Math.min(grade.score, maxPoints); // Cap at max points
+      
+      totalScore += earnedPoints;
+      maxPossibleScore += maxPoints;
+    }
+  });
+       group.average = maxPossibleScore > 0 
+    ? Math.round((totalScore / maxPossibleScore) * 10000) / 100 // Keep 2 decimal places
+    : 0;
+});
 
-      group.average = totalWeight > 0 ? Math.round((totalWeightedScore / totalWeight) * 100) / 100 : 0;
-    });
+
 
     return {
       student,
