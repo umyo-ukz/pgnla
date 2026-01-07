@@ -9,7 +9,7 @@ export default function Footer() {
                     <div>
                         <div className="flex items-center space-x-3 mb-6">
                             <div className="w-20 h-20 flex items-center justify-center group-hover:scale-105 transition-transform">
-                                <img src="./img/logo.png" alt="PGNLA Logo" loading="lazy" />
+                                <img src="./public/logo.png" alt="PGNLA Logo" loading="lazy" />
                             </div>
                             <span className="text-2xl font-bold font-serif text-white font-main">Pequeños Gigantes</span>
                         </div>

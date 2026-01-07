@@ -139,7 +139,7 @@ export default function Navbar() {
           <div className="flex justify-between items-center py-3">
             <Link to="/home" className="flex items-center space-x-3 group">
               <div className="w-15 h-15 flex items-center justify-center group-hover:scale-105 transition-transform">
-                <img src="./img/logo.png" alt="PGNLA Logo" loading="lazy"/>
+                <img src="./public/logo.png" alt="PGNLA Logo" loading="lazy"/>
               </div>
               <div className="hidden sm:block">
                 <div className="text-xl font-bold text-primary-black font-serif leading-tight">
