@@ -6,7 +6,7 @@ export default function QuickLinks() {
         <h2 className="section-title">Quick Links</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Link to="login" className="group">
+          <Link to="/parent-dashboard" className="group">
             <div
               className="bg-primary-red text-white rounded-xl p-8 h-full transform group-hover:-translate-y-2 transition-transform duration-300">
               <div className="text-4xl mb-4">
@@ -23,7 +23,7 @@ export default function QuickLinks() {
           </Link>
 
 
-          <Link to="coming-soon" className="group">
+          <Link to="/coming-soon" className="group">
             <div
               className="bg-gray-800 text-white rounded-xl p-8 h-full transform group-hover:-translate-y-2 transition-transform duration-300">
               <div className="text-4xl mb-4">
@@ -40,7 +40,7 @@ export default function QuickLinks() {
           </Link>
 
 
-          <Link to="admissions" className="group">
+          <Link to="/admissions" className="group">
             <div
               className="bg-gray-100 rounded-xl p-8 h-full transform group-hover:-translate-y-2 transition-transform duration-300 border-2 border-transparent group-hover:border-primary-red">
               <div className="text-primary-red text-4xl mb-4">
@@ -57,7 +57,7 @@ export default function QuickLinks() {
           </Link>
 
 
-          <Link to="coming-soon" className="group">
+          <Link to="/coming-soon" className="group">
             <div
               className="bg-gray-100 rounded-xl p-8 h-full transform group-hover:-translate-y-2 transition-transform duration-300 border-2 border-transparent group-hover:border-primary-red">
               <div className="text-primary-red text-4xl mb-4">
