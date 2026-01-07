@@ -71,91 +71,79 @@ export default function StudentPerformancePage() {
   /**
    * FIXED: Simplified calculation - classSubjects already filtered by term
    */
-  const getStudentPerformance = (studentId: string) => {
-    // Show loading if data isn't ready
-    if (!componentGrades || !components || classSubjects === undefined || !activeTermId) {
-      return { overall: 0, letterGrade: "N/A", hasGrades: false, subjectsCount: 0 };
-    }
+  /**
+ * UPDATED with subject weighting: Calculate performance using points/weight system
+ */
+const getStudentPerformance = (studentId: string) => {
+  if (!componentGrades || !components || classSubjects === undefined || !activeTermId) {
+    return { overall: 0, letterGrade: "N/A", hasGrades: false, subjectsCount: 0 };
+  }
 
-    // If no class subjects for this term
-    if (!classSubjects || classSubjects.length === 0) {
-      return { overall: 0, letterGrade: "N/A", hasGrades: false, subjectsCount: 0 };
-    }
+  if (!classSubjects || classSubjects.length === 0) {
+    return { overall: 0, letterGrade: "N/A", hasGrades: false, subjectsCount: 0 };
+  }
 
-    // Get all component grades for this student
-    const studentGrades = componentGrades.filter(
-      g => g.studentId === studentId
-    );
+  const studentGrades = componentGrades.filter(g => g.studentId === studentId);
 
-    if (studentGrades.length === 0) {
-      return { overall: 0, letterGrade: "N/A", hasGrades: false, subjectsCount: 0 };
-    }
+  if (studentGrades.length === 0) {
+    return { overall: 0, letterGrade: "N/A", hasGrades: false, subjectsCount: 0 };
+  }
 
-    let totalWeightedScore = 0;
-    let totalSubjectWeight = 0;
-    let gradedSubjects = 0;
+  let totalWeightedScore = 0;
+  let totalSubjectWeight = 0;
+  let gradedSubjects = 0;
 
-    // Calculate for each class subject (already filtered by term)
-    classSubjects.forEach(classSubject => {
-      // Get components for this class subject
-      const subjectComps = components.filter(
-        comp => comp.classSubjectId === classSubject._id
-      );
+  classSubjects.forEach(classSubject => {
+    const subjectComps = components.filter(comp => comp.classSubjectId === classSubject._id);
 
-      if (subjectComps.length === 0) {
-        return; // Skip subjects with no components
-      }
+    if (subjectComps.length === 0) return;
 
-      let subjectScore = 0;
-      let componentWeightSum = 0;
-      let hasComponentGrades = false;
-      let componentsWithGrades = 0;
+    let totalEarnedPoints = 0;
+    let totalPossiblePoints = 0;
+    let hasComponentGrades = false;
 
-      // Calculate weighted average for components in this subject
-      subjectComps.forEach(comp => {
-        const grade = studentGrades.find(
-          g => g.componentId === comp._id
-        );
+    subjectComps.forEach(comp => {
+      const grade = studentGrades.find(g => g.componentId === comp._id);
+      const compWeight = comp.weight ?? 0;
 
-        if (grade) {
-          const compWeight = comp.weight ?? 0;
-          subjectScore += grade.score * compWeight;
-          componentWeightSum += compWeight;
-          hasComponentGrades = true;
-          componentsWithGrades++;
-        }
-      });
-
-      // Only include subjects with actual grades
-      if (hasComponentGrades && componentWeightSum > 0) {
-        const subjectAverage = subjectScore / componentWeightSum;
-        const subjectWeight = classSubject.weight ?? 100; // Default to 100 if not set
-
-        totalWeightedScore += subjectAverage * subjectWeight;
-        totalSubjectWeight += subjectWeight;
-        gradedSubjects++;
+      if (grade) {
+        const earned = Math.min(grade.score, compWeight);
+        totalEarnedPoints += earned;
+        totalPossiblePoints += compWeight;
+        hasComponentGrades = true;
+      } else {
+        totalPossiblePoints += compWeight;
       }
     });
 
-    if (totalSubjectWeight === 0 || gradedSubjects === 0) {
-      return {
-        overall: 0,
-        letterGrade: "N/A",
-        hasGrades: false,
-        subjectsCount: gradedSubjects
-      };
+    if (hasComponentGrades && totalPossiblePoints > 0) {
+      const subjectPercentage = (totalEarnedPoints / totalPossiblePoints) * 100;
+      const subjectWeight = classSubject.weight ?? 100;
+      
+      totalWeightedScore += subjectPercentage * subjectWeight;
+      totalSubjectWeight += subjectWeight;
+      gradedSubjects++;
     }
+  });
 
-    // Calculate final weighted average (0-100 scale)
-    const overall = Math.round((totalWeightedScore / totalSubjectWeight) * 100) / 100;
-
+  if (totalSubjectWeight === 0 || gradedSubjects === 0) {
     return {
-      overall,
-      letterGrade: getLetterGrade(overall),
-      hasGrades: true,
+      overall: 0,
+      letterGrade: "N/A",
+      hasGrades: false,
       subjectsCount: gradedSubjects
     };
+  }
+
+  const overall = totalWeightedScore / totalSubjectWeight;
+
+  return {
+    overall: Math.round(overall * 100) / 100,
+    letterGrade: getLetterGrade(overall),
+    hasGrades: true,
+    subjectsCount: gradedSubjects
   };
+};
 
   // Get unique grade levels
   const uniqueGrades = useMemo(() => {

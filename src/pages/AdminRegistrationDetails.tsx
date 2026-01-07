@@ -403,8 +403,6 @@ export default function AdminRegistrationDetails() {
                     <ul className="text-sm text-green-700 space-y-1">
                       <li>• Create a parent account for the guardian</li>
                       <li>• Add the student to the system</li>
-                      <li>• Send approval confirmation to parent</li>
-                      <li>• Update application status to approved</li>
                     </ul>
                   </div>
                 </div>
@@ -476,13 +474,10 @@ export default function AdminRegistrationDetails() {
                     onChange={(e) => setRejectionReason(e.target.value)}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-colors"
                     rows={4}
-                    placeholder="Provide a clear reason for rejecting this application. This will be shared with the parent..."
+                    placeholder="Reason..."
                     required
                     disabled={isProcessing}
                   />
-                  <p className="text-xs text-gray-500 mt-2">
-                    This reason will be visible to the parent and saved in the application record.
-                  </p>
                 </div>
 
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">

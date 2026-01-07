@@ -174,30 +174,35 @@ export const getStudentProfile = query({
 
     // Calculate averages for each subject
     Object.values(groupedGrades).forEach((group) => {
-  if (group.components.length === 0) {
-    group.average = 0;
-    return;
-  }
+      if (group.components.length === 0) {
+        group.average = 0;
+        return;
+      }
 
-  let totalScore = 0;
-  let maxPossibleScore = 0;
+      let totalEarnedPoints = 0;
+      let totalPossiblePoints = 0;
+      let hasGrades = false;
 
-  group.components.forEach(({ component, grade }) => {
-    if (component) {
-      // Component weight represents MAXIMUM points for this component
-      const maxPoints = component.weight;
+      group.components.forEach(({ component, grade }) => {
+        if (component) {
+          const maxPoints = component.weight || 0;
+          const earnedPoints = Math.min(grade.score, maxPoints);
+          
+          totalEarnedPoints += earnedPoints;
+          totalPossiblePoints += maxPoints;
+          hasGrades = true;
+        }
+      });
       
-      // Student's score is points earned out of component weight
-      const earnedPoints = Math.min(grade.score, maxPoints); // Cap at max points
+      // Store points data for frontend display
+      (group as any).totalEarnedPoints = totalEarnedPoints;
+      (group as any).totalPossiblePoints = totalPossiblePoints;
+      (group as any).hasGrades = hasGrades;
       
-      totalScore += earnedPoints;
-      maxPossibleScore += maxPoints;
-    }
-  });
-       group.average = maxPossibleScore > 0 
-    ? Math.round((totalScore / maxPossibleScore) * 10000) / 100 // Keep 2 decimal places
-    : 0;
-});
+      group.average = totalPossiblePoints > 0 && hasGrades
+        ? (totalEarnedPoints / totalPossiblePoints) * 100
+        : 0;
+    });
 
 
 

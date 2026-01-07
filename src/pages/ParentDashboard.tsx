@@ -48,50 +48,58 @@ export default function ParentDashboard() {
 
     // Filter class subjects for active term
     const termClassSubjects = classSubjects.filter(cs => cs.termId === activeTerm._id);
-
     const studentGrades = allComponentGrades.filter(g => g.studentId === studentId);
 
     if (studentGrades.length === 0) {
       return { overall: 0, letterGrade: "N/A", hasGrades: false };
     }
 
-    let totalWeightedScore = 0;
-    let totalWeight = 0;
+    let totalEarnedPoints = 0;
+    let totalPossiblePoints = 0;
 
     termClassSubjects.forEach(classSubject => {
       const subjectComps = components.filter(comp => comp.classSubjectId === classSubject._id);
+      const subjectWeight = classSubject.weight || 100;
 
       if (subjectComps.length === 0) return;
 
-      let subjectScore = 0;
-      let componentWeightSum = 0;
+      let subjectEarned = 0;
+      let subjectPossible = 0;
       let hasComponentGrades = false;
 
       subjectComps.forEach(comp => {
         const grade = studentGrades.find(g => g.componentId === comp._id);
+        const compWeight = comp.weight || 0;
 
         if (grade) {
-          const compWeight = comp.weight ?? 0;
-          subjectScore += grade.score * compWeight;
-          componentWeightSum += compWeight;
+          // Cap earned points at component weight (safety check)
+          const earned = Math.min(grade.score, compWeight);
+          const compContribution = (earned / compWeight) * compWeight;
+
+          subjectEarned += compContribution;
+          subjectPossible += compWeight;
           hasComponentGrades = true;
+        } else {
+          // Component exists but no grade - still count toward total possible
+          subjectPossible += compWeight;
         }
       });
 
-      if (hasComponentGrades && componentWeightSum > 0) {
-        const subjectAverage = subjectScore / componentWeightSum;
-        const subjectWeight = classSubject.weight ?? 100;
+      if (hasComponentGrades && subjectPossible > 0) {
+        // Calculate subject percentage
+        const subjectPercentage = (subjectEarned / subjectPossible) * 100;
 
-        totalWeightedScore += subjectAverage * subjectWeight;
-        totalWeight += subjectWeight;
+        // Apply subject weight to overall calculation
+        totalEarnedPoints += (subjectPercentage / 100) * subjectWeight;
+        totalPossiblePoints += subjectWeight;
       }
     });
 
-    if (totalWeight === 0) {
+    if (totalPossiblePoints === 0) {
       return { overall: 0, letterGrade: "N/A", hasGrades: false };
     }
 
-    const overall = Math.round((totalWeightedScore / totalWeight) * 100) / 100;
+    const overall = (totalEarnedPoints / totalPossiblePoints) * 100;
 
     // Calculate letter grade
     const getLetterGrade = (score: number): string => {
@@ -111,7 +119,7 @@ export default function ParentDashboard() {
     };
 
     return {
-      overall,
+      overall: Math.round(overall * 100) / 100, // 2 decimal places
       letterGrade: getLetterGrade(overall),
       hasGrades: true
     };
@@ -340,7 +348,7 @@ export default function ParentDashboard() {
                                 </h3>
                                 <div className="flex items-center gap-2 mt-1">
                                   <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium">
-                                     {student.gradeLevel}
+                                    {student.gradeLevel}
                                   </span>
                                   <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">
                                     Student ID: {student._id.slice(0, 6)}...
@@ -411,7 +419,7 @@ export default function ParentDashboard() {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
               <div className="p-6 border-b border-gray-100">
                 <div className="flex items-center gap-3">

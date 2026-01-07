@@ -47,16 +47,28 @@ export default function StudentProfile() {
     return "F";
   };
 
-  const getColor = (score: number) => {
-    if (score >= 75) return "text-green-600";
-    if (score >= 60) return "text-yellow-600";
+  const getColor = (percentage: number) => {
+    if (percentage >= 75) return "text-green-600";
+    if (percentage >= 60) return "text-yellow-600";
     return "text-red-600";
   };
 
-  const getStatusColor = (score: number) => {
-    if (score >= 80) return "bg-green-100 text-green-800";
-    if (score >= 60) return "bg-yellow-100 text-yellow-800";
+  const getBgColor = (percentage: number) => {
+    if (percentage >= 75) return "bg-green-500";
+    if (percentage >= 60) return "bg-yellow-500";
+    return "bg-red-500";
+  };
+
+  const getStatusColor = (percentage: number) => {
+    if (percentage >= 80) return "bg-green-100 text-green-800";
+    if (percentage >= 60) return "bg-yellow-100 text-yellow-800";
     return "bg-red-100 text-red-800";
+  };
+
+  // Helper to calculate component percentage from points
+  const getComponentPercentage = (points: number, maxPoints: number) => {
+    if (maxPoints === 0) return 0;
+    return (points / maxPoints) * 100;
   };
 
   if (profile === undefined) {
@@ -104,7 +116,7 @@ export default function StudentProfile() {
 
       {/* Student Info Card */}
       <div className="bg-white border rounded-xl p-6">
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-4 gap-6">
           <div>
             <label className="text-sm font-medium text-gray-500">{t("student.fullName")}</label>
             <p className="text-lg font-semibold mt-1">{profile.student.fullName}</p>
@@ -116,8 +128,12 @@ export default function StudentProfile() {
           <div>
             <label className="text-sm font-medium text-gray-500">{t("student.overallAverage")}</label>
             <p className={`text-lg font-bold mt-1 ${getColor(overallAverage)}`}>
-              {overallAverage > 0 ? `${overallAverage.toFixed(2)}%` : "N/A"}
+              {overallAverage > 0 ? `${overallAverage.toFixed(1)}%` : "N/A"}
             </p>
+          </div>
+          <div>
+            <label className="text-sm font-medium text-gray-500">{t("student.subject")}</label>
+            <p className="text-lg font-semibold mt-1">{filteredGrades.length}</p>
           </div>
         </div>
       </div>
@@ -132,6 +148,7 @@ export default function StudentProfile() {
         />
       </div>
 
+
       {/* Grades by Subject */}
       {filteredGrades.length === 0 ? (
         <div className="bg-white border rounded-xl p-8 text-center text-gray-600">
@@ -144,9 +161,20 @@ export default function StudentProfile() {
           {filteredGrades.map((subjectGroup, idx) => {
             const color = getColor(subjectGroup.average);
             const statusColor = getStatusColor(subjectGroup.average);
+            
+            // Calculate points for this subject
+            let totalEarnedPoints = 0;
+            let totalPossiblePoints = 0;
+            
+            subjectGroup.components.forEach(({ component, grade }) => {
+              const maxPoints = component?.weight || 0;
+              const earnedPoints = Math.min(grade.score, maxPoints);
+              totalEarnedPoints += earnedPoints;
+              totalPossiblePoints += maxPoints;
+            });
 
             return (
-              <div key={idx} className="bg-white border rounded-xl overflow-hidden">
+              <div key={idx} className="bg-white border rounded-xl overflow-hidden hover:shadow-md transition-shadow">
                 {/* Subject Header */}
                 <div className="bg-gray-50 border-b p-4">
                   <div className="flex justify-between items-center">
@@ -154,14 +182,23 @@ export default function StudentProfile() {
                       <h3 className="text-xl font-bold">
                         {subjectGroup.subject?.name ?? t("grades.subject")}
                       </h3>
-                      <p className="text-sm text-gray-600">
-                        {subjectGroup.term?.name ?? t("grades.term")} •{" "}
-                        {subjectGroup.classSubject?.gradeLevel ?? "N/A"}
-                      </p>
+                      <div className="flex flex-wrap items-center gap-2 mt-1 text-sm text-gray-600">
+                        <span>
+                          {subjectGroup.term?.name ?? t("grades.term")}
+                        </span>
+                        <span>•</span>
+                        <span>
+                          Class: {subjectGroup.classSubject?.gradeLevel ?? "N/A"}
+                        </span>
+                        <span>•</span>
+                        <span className="font-medium">
+                          {totalEarnedPoints.toFixed(1)}/{totalPossiblePoints.toFixed(1)} points
+                        </span>
+                      </div>
                     </div>
                     <div className="text-right">
                       <div className={`text-2xl font-bold ${color}`}>
-                        {subjectGroup.average.toFixed(2)}%
+                        {subjectGroup.average.toFixed(1)}%
                       </div>
                       <div className={`text-sm font-semibold ${color}`}>
                         {getLetterGrade(subjectGroup.average)}
@@ -182,41 +219,79 @@ export default function StudentProfile() {
                 {/* Component Grades */}
                 <div className="p-4">
                   <h4 className="text-sm font-medium text-gray-700 mb-3">
-                    {t("student.componentBreakdown")}
+                    <i className="fas fa-puzzle-piece mr-2"></i>
+                    Component Breakdown (Points System)
                   </h4>
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {subjectGroup.components.map(({ component, grade }) => (
-                      <div
-                        key={component?._id ?? grade._id}
-                        className="border rounded-lg p-4 bg-gray-50"
-                      >
-                        <div className="flex justify-between items-start mb-2">
-                          <div>
-                            <p className="font-medium text-sm">
-                              {component?.name ?? t("student.componentBreakdown")}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {t("student.weight")}: {component?.weight ?? 0}%
-                            </p>
+                    {subjectGroup.components.map(({ component, grade }) => {
+                      const maxPoints = component?.weight || 0;
+                      const earnedPoints = Math.min(grade.score, maxPoints);
+                      const percentage = getComponentPercentage(earnedPoints, maxPoints);
+                      const componentColor = getColor(percentage);
+                      const bgColor = getBgColor(percentage);
+
+                      return (
+                        <div
+                          key={component?._id ?? grade._id}
+                          className="border rounded-lg p-4 hover:border-primary-red/30 transition-colors"
+                        >
+                          <div className="flex justify-between items-start mb-3">
+                            <div className="flex-1">
+                              <p className="font-medium text-gray-900 text-sm">
+                                {component?.name ?? "Component"}
+                              </p>
+                              <div className="flex items-center gap-2 mt-1">
+                                <span className="text-xs text-gray-500">
+                                  Weight: {maxPoints} points
+                                </span>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <div className={`text-lg font-bold ${componentColor}`}>
+                                {earnedPoints.toFixed(1)}/{maxPoints}
+                              </div>
+                              <div className={`text-sm font-medium ${componentColor}`}>
+                                {percentage.toFixed(1)}%
+                              </div>
+                            </div>
                           </div>
-                          <div className={`text-lg font-bold ${getColor(grade.score)}`}>
-                            {grade.score}%
+                          
+                          {/* Progress Bar */}
+                          <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                            <div
+                              className={`h-2 rounded-full ${bgColor}`}
+                              style={{ width: `${Math.min(percentage, 100)}%` }}
+                            />
+                          </div>
+                          
+                          {/* Status */}
+                          <div className="flex justify-between text-xs text-gray-500">
+                            <span>
+                              {percentage >= 80 ? "Excellent" :
+                               percentage >= 60 ? "Satisfactory" :
+                               "Needs Improvement"}
+                            </span>
+                            <span>{percentage.toFixed(1)}% of component</span>
                           </div>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                          <div
-                            className={`h-2 rounded-full ${
-                              grade.score >= 75
-                                ? "bg-green-500"
-                                : grade.score >= 60
-                                ? "bg-yellow-500"
-                                : "bg-red-500"
-                            }`}
-                            style={{ width: `${Math.min(grade.score, 100)}%` }}
-                          />
-                        </div>
+                      );
+                    })}
+                  </div>
+                  
+                  {/* Subject Points Summary */}
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <div className="flex justify-between items-center text-sm">
+                      <div className="text-gray-600">
+                        <span className="font-medium">Subject Total:</span>
+                        <span className="ml-2">{totalEarnedPoints.toFixed(1)}/{totalPossiblePoints.toFixed(1)} points</span>
                       </div>
-                    ))}
+                      <div className={`font-bold ${color}`}>
+                        = {subjectGroup.average.toFixed(1)}%
+                      </div>
+                    </div>
+                    <div className="text-xs text-gray-400 mt-1">
+                      Formula: (Points Earned ÷ Max Points) × 100
+                    </div>
                   </div>
                 </div>
               </div>
@@ -229,10 +304,10 @@ export default function StudentProfile() {
       {filteredGrades.length > 0 && (
         <div className="bg-primary-red text-white rounded-xl p-6">
           <h2 className="text-xl font-bold mb-4">{t("student.academicSummary")}</h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-4 gap-6">
             <div>
               <p className="text-sm opacity-90">{t("student.overallAverage")}</p>
-              <p className="text-3xl font-bold">{overallAverage.toFixed(2)}%</p>
+              <p className="text-3xl font-bold">{overallAverage.toFixed(1)}%</p>
             </div>
             <div>
               <p className="text-sm opacity-90">{t("student.letterGrade")}</p>
@@ -242,10 +317,14 @@ export default function StudentProfile() {
               <p className="text-sm opacity-90">{t("student.subjectsCompleted")}</p>
               <p className="text-3xl font-bold">{filteredGrades.length}</p>
             </div>
+            <div>
+              <p className="text-sm opacity-90">Grading System</p>
+              <p className="text-lg font-bold">Points-Based</p>
+              <p className="text-xs opacity-80 mt-1">Scores show points earned</p>
+            </div>
           </div>
         </div>
       )}
     </div>
   );
 }
-
