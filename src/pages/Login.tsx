@@ -1,10 +1,24 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { useEffect } from "react";
 
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+  const handleAuthChange = () => {
+    // This will force a re-render when auth state changes
+    console.log("Auth state changed, re-rendering navbar");
+  };
+
+  window.addEventListener('authstatechange', handleAuthChange);
+  
+  return () => {
+    window.removeEventListener('authstatechange', handleAuthChange);
+  };
+}, []);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,23 +27,34 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+  e.preventDefault();
+  setError("");
+  setLoading(true);
 
-    try {
-      const user = await login(email, password);
-
-      if (user.role === "admin") navigate("/admin");
-      else if (user.role === "staff") navigate("/staff");
-      else navigate("/home");
-    } catch {
-      setError("Invalid credentials");
-    } finally {
-      setLoading(false);
-    }
+  try {
+    const user = await login(email, password);
+    
+    // Add a small delay to ensure state updates propagate
+    setTimeout(() => {
+      // Check role and navigate
+      if (user.role === "admin") {
+        navigate("/admin", { replace: true });
+      } else if (user.role === "staff") {
+        navigate("/staff", { replace: true });
+      } else {
+        navigate("/home", { replace: true });
+      }
+      
+      // Force a small state refresh for immediate UI update
+      window.dispatchEvent(new Event('authstatechange'));
+    }, 100);
+    
+  } catch (err: any) {
+    setError(err.message || "Invalid credentials");
+  } finally {
+    setLoading(false);
   }
-
+}
   return (
     <main className="container-wide px-4 py-12">
       <div className="max-w-md mx-auto">

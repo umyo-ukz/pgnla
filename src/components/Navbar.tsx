@@ -17,21 +17,30 @@ export default function Navbar() {
   useEffect(() => {
     const path = location.pathname;
     setIsDashboardPage(
-      path.startsWith("/staff") || 
-      path.startsWith("/parent") || 
+      path.startsWith("/staff") ||
+      path.startsWith("/parent") ||
       path.startsWith("/admin") ||
       path === "/account"
     );
+
+    const handleAuthLogin = (event: CustomEvent) => {
+      console.log("Auth login event received:", event.detail);
+      // Force re-render
+      window.location.reload(); // Or use state to trigger update
+    };
+
+    window.addEventListener('auth-login', handleAuthLogin as EventListener);
+    return () => window.removeEventListener('auth-login', handleAuthLogin as EventListener);
   }, [location]);
 
   const dashboardPath =
     role === "parent"
       ? "/parent-dashboard"
       : role === "staff"
-      ? "/staff"
-      : role === "admin"
-      ? "/admin"
-      : "/login";
+        ? "/staff"
+        : role === "admin"
+          ? "/admin"
+          : "/login";
 
   // Simplified navbar for dashboard pages
   if (isDashboardPage && user) {
@@ -40,8 +49,8 @@ export default function Navbar() {
         <div className="px-4">
           <div className="flex justify-between items-center py-3">
             {/* Logo/Back button */}
-            <Link 
-              to="/home" 
+            <Link
+              to="/home"
               className="flex items-center gap-2 text-gray-700 hover:text-primary-red transition"
             >
               <i className="fas fa-arrow-left text-sm"></i>
@@ -106,7 +115,7 @@ export default function Navbar() {
               </div>
 
               {/* Mobile menu button */}
-              <button 
+              <button
                 onClick={() => setOpen(!open)}
                 className="md:hidden p-2 rounded-lg hover:bg-gray-100"
               >
@@ -165,20 +174,19 @@ export default function Navbar() {
                 <span>pequenosacademy@gmail.com</span>
               </div>
 
-              { user ? (
+              {user ? (
                 <div className="relative group">
                   <Link
                     to={dashboardPath}
                     className="btn-primary text-sm px-4 py-2"
                   >
                     <i
-                      className={`fas ${
-                        role === "parent"
+                      className={`fas ${role === "parent"
                           ? "fa-user"
                           : role === "staff"
-                          ? "fa-chalkboard-teacher"
-                          : "fa-user-shield"
-                      } mr-2`}
+                            ? "fa-chalkboard-teacher"
+                            : "fa-user-shield"
+                        } mr-2`}
                     ></i>
                     {t("common.hello")}, {user.fullName.split(" ")[0]}
                   </Link>
@@ -198,12 +206,12 @@ export default function Navbar() {
                       {t("common.accountSettings")}
                     </Link>
                     <Link to="/login">
-                    <button
-                      onClick={logout}
-                      className="w-full text-left px-4 py-3 hover:bg-red-50 text-red-600"
-                    >
-                      {t("common.logout")}
-                    </button>
+                      <button
+                        onClick={logout}
+                        className="w-full text-left px-4 py-3 hover:bg-red-50 text-red-600"
+                      >
+                        {t("common.logout")}
+                      </button>
                     </Link>
                   </div>
                 </div>
@@ -225,7 +233,7 @@ export default function Navbar() {
                 {language === "en" ? "ES" : "EN"}
               </button>
 
-              { user ? (
+              {user ? (
                 <>
                   <Link to={dashboardPath} className="text-primary-red font-semibold">
                     {user.fullName.split(" ")[0]}

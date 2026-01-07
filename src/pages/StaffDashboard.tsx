@@ -2,9 +2,22 @@ import { useAuth } from "../hooks/useAuth";
 import { Navigate, Link } from "react-router-dom";
 
 export default function StaffDashboard() {
-  const { user, role } = useAuth();
+  const { user, role, isLoading, isAuthenticated } = useAuth();
 
-  if (!user || role !== "staff") return <Navigate to="/login" />;
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <i className="fas fa-spinner fa-spin text-4xl text-primary-red mb-4"></i>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated || !user || (role !== "staff" && role !== "admin")) {
+    return <Navigate to="/login" />;
+  }
 
   return (
     <div className="max-w-6xl mx-auto">

@@ -5,13 +5,20 @@ import { api } from "../../convex/_generated/api";
 import { useMemo } from "react";
 
 export default function ParentDashboard() {
-  const { user, role, logout } = useAuth();
+  const { user, role, isLoading, isAuthenticated, logout } = useAuth();
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <i className="fas fa-spinner fa-spin text-4xl text-primary-red mb-4"></i>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
-
-
-  // Not logged in or wrong role
-  if (!user || role !== "parent") {
+  if (!isAuthenticated || !user || role !== "parent") {
     return <Navigate to="/login" />;
   }
 

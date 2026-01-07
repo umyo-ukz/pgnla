@@ -85,7 +85,7 @@ export default function StaffGradesPage() {
   // Filter students by selected class level
   const filteredStudents = useMemo(() => {
     if (!students) return [];
-    
+
     let filtered = students.filter((s) => {
       const matchesName = s.fullName
         .toLowerCase()
@@ -141,10 +141,10 @@ export default function StaffGradesPage() {
 
   const handleSaveWeight = async () => {
     if (!activeClassSubjectId || isSavingWeight) return;
-    
+
     const weightValue = Number(subjectWeight);
     if (Number.isNaN(weightValue)) return;
-    
+
     setIsSavingWeight(true);
     try {
       await updateSubjectWeight({
@@ -206,7 +206,7 @@ export default function StaffGradesPage() {
                     terms={terms}
                     activeTermId={activeTermId}
                     onChange={(id) => {
-                      setActiveTermId(id as Id<"terms">);
+                      setActiveTermId(id);
                       setSelectedClassLevel("");
                       setActiveClassSubjectId(null);
                       setIsMobileMenuOpen(false);
@@ -216,7 +216,7 @@ export default function StaffGradesPage() {
                   />
                 </div>
               )}
-              <button 
+              <button
                 onClick={logout}
                 className="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
               >
@@ -234,13 +234,13 @@ export default function StaffGradesPage() {
         <div className="hidden md:flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4">
           <div className="flex-1 min-w-0">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 truncate">
-            {t("grades.editGrades")}
+              {t("grades.editGrades")}
             </h1>
             <p className="text-gray-600 text-sm md:text-base mt-1 truncate">
               Manage student grades and subject weights
             </p>
           </div>
-          
+
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 md:gap-3">
             {terms && activeTermId && (
               <div className="flex items-center gap-2 bg-white border rounded-lg p-2 w-full sm:w-auto">
@@ -257,7 +257,7 @@ export default function StaffGradesPage() {
                 />
               </div>
             )}
-            <button 
+            <button
               onClick={logout}
               className="px-3 md:px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2 w-full sm:w-auto justify-center"
             >
@@ -275,7 +275,7 @@ export default function StaffGradesPage() {
               <h2 className="text-base md:text-lg font-semibold text-gray-800 whitespace-nowrap">
                 Class & Subject Selection
               </h2>
-              
+
               {!activeTermId ? (
                 <div className="text-amber-600 bg-amber-50 px-2 md:px-3 py-1.5 md:py-2 rounded-lg text-xs md:text-sm">
                   <i className="fas fa-info-circle mr-1 md:mr-2"></i>
@@ -305,11 +305,10 @@ export default function StaffGradesPage() {
                     <button
                       key={level}
                       onClick={() => setSelectedClassLevel(level)}
-                      className={`px-2 md:px-3 py-1.5 md:py-2 rounded-lg transition-all flex items-center gap-1 md:gap-2 text-xs md:text-sm ${
-                        selectedClassLevel === level
+                      className={`px-2 md:px-3 py-1.5 md:py-2 rounded-lg transition-all flex items-center gap-1 md:gap-2 text-xs md:text-sm ${selectedClassLevel === level
                           ? "bg-primary-red text-white shadow-sm"
                           : "bg-white text-gray-700 border border-gray-300 hover:border-primary-red/50 hover:bg-primary-red/5"
-                      }`}
+                        }`}
                     >
                       <i className="fas fa-users text-xs md:text-sm"></i>
                       <span className="font-medium whitespace-nowrap">{level}</span>
@@ -331,11 +330,10 @@ export default function StaffGradesPage() {
                       <button
                         key={cs._id}
                         onClick={() => setActiveClassSubjectId(cs._id)}
-                        className={`flex-shrink-0 px-3 md:px-4 py-1.5 md:py-2.5 rounded-lg transition-all text-xs md:text-sm ${
-                          activeClassSubjectId === cs._id
+                        className={`flex-shrink-0 px-3 md:px-4 py-1.5 md:py-2.5 rounded-lg transition-all text-xs md:text-sm ${activeClassSubjectId === cs._id
                             ? "bg-primary-red text-white shadow-sm"
                             : "bg-white text-gray-700 border border-gray-300 hover:border-primary-red/50 hover:bg-primary-red/5"
-                        }`}
+                          }`}
                       >
                         <span className="font-medium whitespace-nowrap truncate max-w-[100px] md:max-w-none">
                           {cs.subject?.name ?? "Unknown"}
@@ -362,7 +360,7 @@ export default function StaffGradesPage() {
                       {selectedClassLevel} • {activeClassSubject?.subject?.name ?? "Subject"}
                     </span>
                   </div>
-                  
+
                   <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
                     <div className="relative flex-1 sm:flex-none">
                       <input
@@ -378,15 +376,14 @@ export default function StaffGradesPage() {
                         %
                       </span>
                     </div>
-                    
+
                     <button
                       onClick={handleSaveWeight}
                       disabled={!hasWeightChanges || isSavingWeight}
-                      className={`px-3 md:px-4 py-2 md:py-2.5 rounded-lg font-medium transition-all flex items-center justify-center gap-1 md:gap-2 text-sm md:text-base whitespace-nowrap ${
-                        hasWeightChanges && !isSavingWeight
+                      className={`px-3 md:px-4 py-2 md:py-2.5 rounded-lg font-medium transition-all flex items-center justify-center gap-1 md:gap-2 text-sm md:text-base whitespace-nowrap ${hasWeightChanges && !isSavingWeight
                           ? "bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
                           : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                      }`}
+                        }`}
                     >
                       {isSavingWeight ? (
                         <>
@@ -402,7 +399,7 @@ export default function StaffGradesPage() {
                     </button>
                   </div>
                 </div>
-                
+
                 {hasWeightChanges && (
                   <div className="text-xs md:text-sm text-amber-600 bg-amber-50 px-2 md:px-3 py-1.5 md:py-2 rounded-lg mt-2 md:mt-0">
                     <i className="fas fa-exclamation-triangle mr-1"></i>
@@ -444,22 +441,20 @@ export default function StaffGradesPage() {
                     <div className="flex gap-1 md:gap-2">
                       <button
                         onClick={() => setSortBy("name")}
-                        className={`px-2 md:px-3 py-1.5 md:py-2 rounded-lg border flex items-center gap-1 md:gap-2 text-xs md:text-sm ${
-                          sortBy === "name"
+                        className={`px-2 md:px-3 py-1.5 md:py-2 rounded-lg border flex items-center gap-1 md:gap-2 text-xs md:text-sm ${sortBy === "name"
                             ? "bg-primary-red/10 border-primary-red text-primary-red"
                             : "border-gray-300 text-gray-600 hover:border-gray-400"
-                        }`}
+                          }`}
                       >
                         <i className="fas fa-sort-alpha-down text-xs md:text-sm"></i>
                         <span className="hidden sm:inline">Name</span>
                       </button>
                       <button
                         onClick={() => setSortBy("grade")}
-                        className={`px-2 md:px-3 py-1.5 md:py-2 rounded-lg border flex items-center gap-1 md:gap-2 text-xs md:text-sm ${
-                          sortBy === "grade"
+                        className={`px-2 md:px-3 py-1.5 md:py-2 rounded-lg border flex items-center gap-1 md:gap-2 text-xs md:text-sm ${sortBy === "grade"
                             ? "bg-blue-600/10 border-blue-600 text-blue-600"
                             : "border-gray-300 text-gray-600 hover:border-gray-400"
-                        }`}
+                          }`}
                       >
                         <i className="fas fa-layer-group text-xs md:text-sm"></i>
                         <span className="hidden sm:inline">Grade</span>
@@ -580,18 +575,17 @@ export default function StaffGradesPage() {
                     Sorted by {sortBy === "name" ? "Name (A-Z)" : "Grade Level"}
                   </div>
                 </div>
-                
+
                 {/* Student Cards */}
                 {filteredStudents.map(student => (
                   <div key={student._id} className="hover:bg-gray-50/50 transition-colors">
                     {/* Mobile: Compact Student Card with Dropdown */}
                     <div className="md:hidden">
-                      <div 
-                        className={`bg-white border rounded-lg p-3 cursor-pointer transition-all ${
-                          expandedStudentId === student._id 
-                            ? 'border-primary-red shadow-sm' 
+                      <div
+                        className={`bg-white border rounded-lg p-3 cursor-pointer transition-all ${expandedStudentId === student._id
+                            ? 'border-primary-red shadow-sm'
                             : 'border-gray-200'
-                        }`}
+                          }`}
                         onClick={() => toggleStudentExpansion(student._id)}
                       >
                         <div className="flex items-center justify-between">
@@ -624,6 +618,7 @@ export default function StaffGradesPage() {
                         {expandedStudentId === student._id && (
                           <div className="mt-3 pt-3 border-t border-gray-100">
                             <StudentGradeCard
+                              key={student._id}
                               student={student}
                               classSubjectId={activeClassSubjectId}
                             />
@@ -647,8 +642,8 @@ export default function StaffGradesPage() {
                   <div className="md:hidden pt-2">
                     <div className="text-center">
                       <div className="text-xs text-gray-400 mb-2">
-                        {expandedStudentId 
-                          ? `Showing ${filteredStudents.length} students` 
+                        {expandedStudentId
+                          ? `Showing ${filteredStudents.length} students`
                           : `Tap on a student to view and edit grades`}
                       </div>
                       {expandedStudentId && (
