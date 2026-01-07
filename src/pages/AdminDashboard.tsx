@@ -317,40 +317,6 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
-
-      {/* System Status */}
-      <div className="mt-8 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">System Status</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-              <i className="fas fa-database text-green-600"></i>
-            </div>
-            <div>
-              <p className="font-medium text-gray-900">Database</p>
-              <p className="text-sm text-green-600">Operational</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-            <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-              <i className="fas fa-server text-green-600"></i>
-            </div>
-            <div>
-              <p className="font-medium text-gray-900">API Server</p>
-              <p className="text-sm text-green-600">Online</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-              <i className="fas fa-users text-blue-600"></i>
-            </div>
-            <div>
-              <p className="font-medium text-gray-900">Active Users</p>
-              <p className="text-sm text-blue-600">{stats?.activeUsers || 0} online</p>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

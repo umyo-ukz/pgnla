@@ -421,50 +421,6 @@ export default function ParentDashboard() {
                 </div>
               </div>
             </div>
-
-            {/* Quick Links */}
-            <div className="bg-gradient-to-br from-primary-red to-red-600 rounded-2xl p-6 text-white">
-              <h3 className="font-bold mb-4 text-lg">Quick Actions</h3>
-              <div className="space-y-3">
-                <Link
-                  to="/messages"
-                  className="flex items-center justify-between p-3 bg-white/10 rounded-lg hover:bg-white/20 transition"
-                >
-                  <span className="font-medium">Message Teachers</span>
-                  <span className="text-xs bg-white/20 px-2 py-1 rounded">New</span>
-                </Link>
-
-                <Link
-                  to="/calendar"
-                  className="flex items-center justify-between p-3 bg-white/10 rounded-lg hover:bg-white/20 transition"
-                >
-                  <span className="font-medium">School Calendar</span>
-                  <span className="text-xs">View</span>
-                </Link>
-
-                <Link
-                  to="/fees"
-                  className="flex items-center justify-between p-3 bg-white/10 rounded-lg hover:bg-white/20 transition"
-                >
-                  <span className="font-medium">Fee Payments</span>
-                  <span className="text-xs">Pay Now</span>
-                </Link>
-
-                <Link
-                  to="/account-settings"
-                  className="flex items-center justify-between p-3 bg-white/10 rounded-lg hover:bg-white/20 transition"
-                >
-                  <span className="font-medium">Account Settings</span>
-                  <span className="text-xs">Edit</span>
-                </Link>
-              </div>
-
-              <div className="mt-6 pt-6 border-t border-white/20">
-                <div className="text-sm opacity-80">
-                  Need help? Contact school administration for support.
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

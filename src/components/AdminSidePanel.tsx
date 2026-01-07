@@ -134,10 +134,10 @@ export default function AdminSidePanel() {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-1">
-        <NavLink to="/admin-dashboard" className={linkClass}>
-  <i className="fas fa-chart-line w-5"></i>
-  Dashboard
-</NavLink>
+        <NavLink to="/admin" className={linkClass}>
+          <i className="fas fa-chart-line w-5"></i>
+          Dashboard
+        </NavLink>
 
         <NavLink to="/admin/registrations" className={linkClass}>
           <i className="fas fa-clipboard-list w-5"></i>

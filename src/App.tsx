@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { LanguageProvider } from "./contexts/LanguageContext";
+
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Admissions from "./pages/Admissions";
@@ -26,9 +28,12 @@ import StudentProfile from "./pages/StudentProfile";
 import ParentStudentProfile from "./pages/ParentStudentProfile";
 import AdminManageAccounts from "./pages/AdminManageAccounts";
 import AdminParentProfile from "./pages/AdminParentProfile";
+import AdminStudentProfile from "./pages/AdminStudentProfile";
+
 
 export default function App() {
   return (
+    <LanguageProvider>
     <BrowserRouter>
       <div className="min-h-screen flex flex-col">
         <ScrollToTop />
@@ -71,7 +76,8 @@ export default function App() {
             <Route path="account" element={<AccountSettings />} />
             <Route path="manage-accounts" element={<AdminManageAccounts />} />
             <Route path="parents/:parentId" element={<AdminParentProfile />} />
-            <Route path="/admin-dashboard" element={<AdminDashboard />} />
+
+            <Route path="students/:studentId" element={<AdminStudentProfile />} />
           </Route>
 
           {/* Fallback account route for parents and other roles */}
@@ -80,5 +86,6 @@ export default function App() {
         <Footer />
       </div>
     </BrowserRouter>
+    </LanguageProvider>
   );
 }

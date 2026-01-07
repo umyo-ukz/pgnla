@@ -46,3 +46,11 @@ export const listAll = query({
   },
 });
 
+export const getById = query({
+  args: { studentId: v.id("students") },
+  handler: async (ctx, args) => {
+    return await ctx.db.get(args.studentId);
+  },
+});
+
+

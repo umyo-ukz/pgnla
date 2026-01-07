@@ -255,3 +255,88 @@ export const getRecentMessages = query({
     return messages;
   },
 });
+
+// Get student by ID with parent info
+export const getStudentById = query({
+  args: { studentId: v.id("students") },
+  handler: async (ctx, args) => {
+    const student = await ctx.db.get(args.studentId);
+    return student;
+  },
+});
+
+// Get parent by student ID
+export const getParentByStudentId = query({
+  args: { studentId: v.id("students") },
+  handler: async (ctx, args) => {
+    const student = await ctx.db.get(args.studentId);
+    if (!student || !student.parentId) return null;
+    
+    const parent = await ctx.db.get(student.parentId);
+    return parent;
+  },
+});
+
+// Update student information
+export const updateStudent = mutation({
+  args: {
+    studentId: v.id("students"),
+    fullName: v.optional(v.string()),
+    gradeLevel: v.optional(v.string()),
+    studentNumber: v.optional(v.string()),  // Changed from studentId
+    dateOfBirth: v.optional(v.string()),
+    isActive: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
+    const { studentId, ...updates } = args;
+    
+    await ctx.db.patch(studentId, updates);
+    return studentId;
+  },
+});
+
+
+// Delete student
+export const deleteStudent = mutation({
+  args: { studentId: v.id("students") },
+  handler: async (ctx, args) => {
+    // Delete all related data first
+    const grades = await ctx.db
+      .query("grades")
+      .withIndex("by_student", (q) => q.eq("studentId", args.studentId))
+      .collect();
+    
+    // Delete component grades
+    const componentGrades = await ctx.db
+      .query("componentGrades")
+      .withIndex("by_student_classSubject", (q) => 
+        q.eq("studentId", args.studentId)
+      )
+      .collect();
+    
+    // Delete all associated records
+    for (const grade of grades) {
+      await ctx.db.delete(grade._id);
+    }
+    
+    for (const compGrade of componentGrades) {
+      await ctx.db.delete(compGrade._id);
+    }
+    
+    // Finally delete the student
+    await ctx.db.delete(args.studentId);
+    return args.studentId;
+  },
+});
+
+// Get available grade levels (you might want to store this in a separate table)
+export const getGradeLevels = query({
+  handler: async (ctx) => {
+    // This could come from a configuration table
+    return [
+      "Pre-K", "Kindergarten", "1st Grade", "2nd Grade", "3rd Grade",
+      "4th Grade", "5th Grade", "6th Grade", "7th Grade", "8th Grade",
+      "9th Grade", "10th Grade", "11th Grade", "12th Grade"
+    ];
+  },
+});

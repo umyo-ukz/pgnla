@@ -94,11 +94,20 @@ export const approveRegistration = mutation({
 export const rejectRegistration = mutation({
   args: {
     registrationId: v.id("studentApplications"),
+    reason: v.optional(v.string()),
   },
-  handler: async (ctx, { registrationId }) => {
-    await ctx.db.patch(registrationId, {
+  handler: async (ctx, args) => {
+    const registration = await ctx.db.get(args.registrationId);
+    if (!registration) throw new Error("Registration not found");
+    
+    await ctx.db.patch(args.registrationId, {
       status: "rejected",
+      rejectionReason: args.reason || "Application rejected by administrator",
+      reviewedAt: Date.now(),
     });
+    
+  
+    return args.registrationId;
   },
 });
 
@@ -127,4 +136,5 @@ export const listByStatus = query({
       .collect();
   },
 });
+
 

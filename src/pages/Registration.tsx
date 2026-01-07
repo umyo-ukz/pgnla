@@ -268,8 +268,8 @@ export default function Registration() {
                   >
                     <option value="">Select Program</option>
                     <option value="preschool">Preschool</option>
-                    <option value="prek">Pre-Kindergarten</option>
-                    <option value="primary">Primary</option>
+
+                    <option value="primary">Primary School</option>
                   </select>
                 </div>
 

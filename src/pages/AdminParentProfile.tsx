@@ -432,7 +432,7 @@ export default function AdminParentProfile() {
 
                       <div className="flex gap-2 pt-4 border-t border-gray-100">
                         <Link
-                          to={`/staff/performance/${student._id}`}
+                          to={`/admin/students/${student._id}`}
                           className="flex-1 px-3 py-1.5 bg-gray-50 text-gray-700 rounded text-sm hover:bg-gray-100 text-center"
                         >
                           View Profile
