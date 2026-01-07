@@ -39,6 +39,7 @@ export default function App() {
         <ScrollToTop />
         <Navbar />
         <Routes>
+            <Route path="/" element={<Home />} />
           {/* Public Routes */}
           <Route path="/home" element={<Home />} />
           <Route path="/admissions" element={<Admissions />} />
@@ -48,7 +49,6 @@ export default function App() {
           <Route path="/financing" element={<Financing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registration" element={<Registration />} />
-          <Route path="*" element={<Home />} />
           <Route path="/coming-soon" element={<ComingSoon />} />
 
           {/* Parent Routes */}
@@ -82,6 +82,7 @@ export default function App() {
 
           {/* Fallback account route for parents and other roles */}
           <Route path="/account" element={<AccountSettings />} />
+          <Route path="*" element={<Home />} />
         </Routes>
         <Footer />
       </div>
