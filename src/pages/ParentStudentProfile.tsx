@@ -267,7 +267,7 @@ export default function ParentStudentProfile() {
                                 </h1>
                                 <div className="flex items-center gap-3 mt-2">
                                     <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">
-                                        Grade {specificStudent?.gradeLevel}
+                                         {specificStudent?.gradeLevel}
                                     </span>
                                     <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
                                         Student ID: {specificStudent?._id.slice(0, 6)}...

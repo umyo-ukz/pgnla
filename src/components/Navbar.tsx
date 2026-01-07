@@ -289,6 +289,7 @@ export default function Navbar() {
               </div>
             </div>
 
+                {/* 
             <div className="relative group">
               <button className="nav-link text-white hover:text-white hover:bg-red-700 px-3 py-2 rounded flex items-center">
                 <i className="fas fa-graduation-cap mr-1"></i>{t("navbar.studentLife")}
@@ -314,14 +315,19 @@ export default function Navbar() {
                 >
                   <i className="fas fa-book-open mr-2"></i>{t("navbar.yearbook")}
                 </a>
+
+               
                 <Link
                   to="/calendar"
                   className="block px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-primary-red"
                 >
                   <i className="fas fa-calendar-alt mr-2"></i>{t("navbar.schoolCalendar")}
                 </Link>
+                
               </div>
             </div>
+            */}
+            
 
             <Link
               to="/contact"

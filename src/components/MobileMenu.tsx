@@ -110,7 +110,7 @@ export default function MobileMenu({ open, close, isDashboard = false }: MobileM
           <i className="fas fa-hand-holding-usd mr-3"></i>
           {t("navbar.financing")}
         </Link>
-
+        {/*
         <Link
           to="/calendar"
           onClick={close}
@@ -119,7 +119,7 @@ export default function MobileMenu({ open, close, isDashboard = false }: MobileM
           <i className="fas fa-calendar-alt mr-3"></i>
           {t("navbar.schoolCalendar")}
         </Link>
-
+          */}
         <Link
           to="/contact"
           onClick={close}

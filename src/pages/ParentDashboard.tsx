@@ -236,7 +236,7 @@ export default function ParentDashboard() {
 
         </div>
 
-        {/* Grade Distribution Summary */}
+        {/* Grade Distribution Summary
         {dashboardStats && (
           <div className="mb-8 bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
             <div className="flex items-center gap-3 mb-6">
@@ -273,6 +273,8 @@ export default function ParentDashboard() {
             </div>
           </div>
         )}
+
+         */}
 
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

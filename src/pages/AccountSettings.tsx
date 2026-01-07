@@ -174,8 +174,6 @@ export default function AccountSettings() {
                         <i className={`fas fa-${getRoleIcon()}`}></i>
                         {role.charAt(0).toUpperCase() + role.slice(1)}
                       </div>
-                      <span className="text-gray-400">•</span>
-                      <span className="text-sm text-gray-500">Active Account</span>
                     </div>
                   </div>
                 </div>
@@ -239,7 +237,7 @@ export default function AccountSettings() {
               </div>
             </div>
 
-            {/* Security Card */}
+            {/* Security Card 
             <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
               <div className="p-6 border-b border-gray-100">
                 <div className="flex items-center gap-3 mb-4">
@@ -251,7 +249,7 @@ export default function AccountSettings() {
               </div>
               
               <div className="p-6 space-y-6">
-                {/* Two-Factor Authentication */}
+               
                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200">
                   <div>
                     <h3 className="font-medium text-gray-900 mb-1">Two-Factor Authentication</h3>
@@ -262,7 +260,7 @@ export default function AccountSettings() {
                   </button>
                 </div>
 
-                {/* Login Sessions */}
+                
                 <div className="p-4 bg-gray-50 rounded-xl border border-gray-200">
                   <h3 className="font-medium text-gray-900 mb-3">Active Sessions</h3>
                   <div className="space-y-3">
@@ -284,6 +282,7 @@ export default function AccountSettings() {
                 </div>
               </div>
             </div>
+            */}
           </div>
 
           {/* Right Column - Change Password */}
@@ -475,6 +474,10 @@ export default function AccountSettings() {
                       </>
                     )}
                   </button>
+                    <p className="text-xs text-gray-500 hover:text-gray-700 font-medium flex items-center justify-center gap-2 mx-auto">
+                    <i className="fas fa-question-circle"></i>
+                      Forgot your password? Contact Administration
+                  </p>
                 </form>
               </div>
             </div>
@@ -491,14 +494,11 @@ export default function AccountSettings() {
                   className="w-full py-3 px-4 flex items-center justify-center gap-2 border-2 border-red-200 text-red-600 font-medium rounded-xl hover:bg-red-50 transition-all duration-200"
                 >
                   <i className="fas fa-sign-out-alt"></i>
-                  Sign Out of All Devices
+                  Log Out
                 </button>
                 
                 <div className="text-center">
-                  <button className="text-sm text-gray-500 hover:text-gray-700 font-medium flex items-center justify-center gap-2 mx-auto">
-                    <i className="fas fa-question-circle"></i>
-                    Need help? Contact Support
-                  </button>
+                
                 </div>
               </div>
             </div>

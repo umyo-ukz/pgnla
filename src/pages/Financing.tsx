@@ -128,15 +128,15 @@ export default function Financing() {
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-700">- After-School Care (4pm-5pm)</span>
+                    <li> <span className="text-gray-700"> After-School Care (4pm-5pm)</span> </li>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-700">School Canteen</span>
+                    <li> <span className="text-gray-700"> School</span> </li>
                   </div>
                 </div>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-700">- Friday Lunches</span>
+                    <li> <span className="text-gray-700"> Friday Lunches</span> </li>
                   </div>
                 </div>
               </div>

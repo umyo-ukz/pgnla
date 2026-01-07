@@ -69,18 +69,30 @@ export default function Contact() {
 
   return (
     <main className="flex-grow">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-primary-red text-white py-20 md:py-24">
-        <div className="container-wide px-4">
+      <style>{`
+        .process-step { display: flex; margin-bottom: 3rem; position: relative; }
+        .process-step:not(:last-child):after { content: ''; position: absolute; left: 3.25rem; top: 4rem; bottom: -3rem; width: 2px; background: #e5e7eb; }
+        .process-number { background: #ef4444; color: white; width: 4rem; height: 4rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700; margin-right: 1.25rem; flex-shrink: 0; z-index: 1; }
+        .process-content { flex: 1; padding-top: 0.5rem; }
+        @media (max-width: 768px) {
+          .process-step { flex-direction: column; }
+          .process-step:not(:last-child):after { left: 2rem; top: 4.25rem; bottom: -3rem; }
+          .process-number { margin-right: 0; margin-bottom: 1rem; }
+        }
+      `}</style>
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary-red via-red-500 to-red-600 text-white">
+        <div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage:
+              'url("data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23ffffff%22 fill-opacity=%220.4%22%3E%3Cpath d=%22M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+          }}
+        ></div>
+        <div className="relative z-10 container-wide px-4 py-24">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Contact Us
-            </h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">   Contact Us</h1>
           </div>
         </div>
-        {/* Decorative elements */}
-        <div className="absolute top-0 left-0 w-32 h-32 bg-white/10 rounded-full -translate-x-16 -translate-y-16"></div>
-        <div className="absolute bottom-0 right-0 w-48 h-48 bg-white/5 rounded-full translate-x-24 translate-y-24"></div>
       </section>
 
       {/* Contact Container */}
