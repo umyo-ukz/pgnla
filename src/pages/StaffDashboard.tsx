@@ -1,140 +1,81 @@
-import { useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
-import { Navigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { useState, useMemo, useEffect } from "react";
-import StudentGradeCard from "../components/StudentGradeCard";
-import TermSwitcher from "../components/TermSwitcher";
+import { Navigate, Link } from "react-router-dom";
 
 export default function StaffDashboard() {
-  const { user, role, logout, isLoading } = useAuth();
+  const { user, role, isLoading, logout } = useAuth();
 
   if (isLoading) return null;
   if (!user || role !== "staff") return <Navigate to="/login" />;
 
-  const subjects = useQuery(api.subjects.listActiveSubjects);
-  const students = useQuery(api.staff.listAllStudents);
-  const terms = useQuery(api.terms.listAll);
-
-  const [activeSubjectId, setActiveSubjectId] = useState<string | null>(null);
-  const [activeTermId, setActiveTermId] = useState<string | null>(null);
-  const [gradeFilter, setGradeFilter] = useState("");
-  const [search, setSearch] = useState("");
-
-  // Auto-select first subject when loaded
-  useEffect(() => {
-    if (!activeSubjectId && subjects && subjects.length > 0) {
-      setActiveSubjectId(subjects[0]._id);
-    }
-  }, [subjects, activeSubjectId]);
-
-  // Auto-select active term when loaded
-  useEffect(() => {
-    if (!activeTermId && terms && terms.length > 0) {
-      const activeTerm = terms.find(t => t.isActive) ?? terms[0];
-      setActiveTermId(activeTerm._id);
-    }
-  }, [terms, activeTermId]);
-
-  const filteredStudents = useMemo(() => {
-    if (!students) return [];
-
-    return students.filter((s) => {
-      const matchesName = s.fullName
-        .toLowerCase()
-        .includes(search.toLowerCase());
-
-      const matchesGrade = gradeFilter === "" || s.gradeLevel === gradeFilter;
-
-      return matchesName && matchesGrade;
-    });
-  }, [students, search, gradeFilter]);
-
-  const uniqueGrades = useMemo(() => {
-    if (!students) return [];
-    return Array.from(new Set(students.map((s) => s.gradeLevel)));
-  }, [students]);
-
   return (
-    <div className="container-wide px-4 py-10 space-y-8">
-      {/* Header */}
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold">Staff Portal</h1>
-          <p className="text-gray-600">Manage student grades by subject</p>
-        </div>
-
-        <button onClick={logout} className="btn-secondary">
-          Logout
-        </button>
-      </header>
-
-      {/* Subject Tabs */}
-      <div className="shadow-md p-4 bg-gradient-to-t from-gray-100 to-primary-light rounded-xl">
-        <h3 className="font-serif font-semibold text-xl p-2">Subjects</h3>
-        <div className="flex gap-6 border-b">
-          {subjects?.map((subject) => (
-            <button
-              key={subject._id}
-              onClick={() => setActiveSubjectId(subject._id)}
-              className={`pb-2 font-medium ${activeSubjectId === subject._id
-                  ? "bg-primary-red text-white p-2 rounded-t-lg font-semibold"
-                  : "text-gray-600 hover:text-black p-2"
-                }`}
-            >
-              {subject.name}
-
-            </button>
-          ))}
-        </div>
+    <div className="max-w-6xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Welcome, {user.fullName}
+        </h1>
+        <p className="text-gray-600">
+          Staff Dashboard • Manage grades and student performance
+        </p>
       </div>
 
-      {/* Filters */}
-      <div className="bg-white border rounded-xl p-4 flex flex-col md:flex-row gap-4">
-        <input
-          type="text"
-          placeholder="Search by student name…"
-          className="input flex-1"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-
-        <select
-          className="bg-primary-red rounded-md text-white input md:w-48 p-2"
-          value={gradeFilter}
-          onChange={(e) => setGradeFilter(e.target.value)}
-        >
-          <option value="">All Classes</option>
-          {uniqueGrades.map((g) => (
-            <option key={g} value={g}>
-              Grade {g}
-            </option>
-          ))}
-        </select>
-
-        <TermSwitcher
-          terms={terms}
-          activeTermId={activeTermId}
-          onChange={setActiveTermId}
-        />
-      </div>
-
-      {/* Students */}
-      {students === undefined ? (
-        <div>Loading students…</div>
-      ) : filteredStudents.length === 0 ? (
-        <div className="text-gray-600">No students match your filters.</div>
-      ) : (
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
+        {/* Left Column */}
         <div className="space-y-6">
-          {filteredStudents.map((student) => (
-            <StudentGradeCard
-              key={student._id}
-              student={student}
-              subjectId={activeSubjectId}
-            />
-          ))}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
+            <div className="space-y-3">
+              <Link
+                to="/staff/grades"
+                className="flex items-center justify-between p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                    <i className="fas fa-edit text-blue-600"></i>
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900">Enter Grades</h3>
+                    <p className="text-sm text-gray-500">Update student assessments</p>
+                  </div>
+                </div>
+                <i className="fas fa-arrow-right text-gray-400 group-hover:text-blue-600"></i>
+              </Link>
+
+              <Link
+                to="/staff/performance"
+                className="flex items-center justify-between p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
+                    <i className="fas fa-chart-line text-green-600"></i>
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900">View Performance</h3>
+                    <p className="text-sm text-gray-500">Monitor student progress</p>
+                  </div>
+                </div>
+                <i className="fas fa-arrow-right text-gray-400 group-hover:text-green-600"></i>
+              </Link>
+
+              <Link
+                to="/account"
+                className="flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                    <i className="fas fa-cog text-gray-600"></i>
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900">Account Settings</h3>
+                    <p className="text-sm text-gray-500">Update profile & preferences</p>
+                  </div>
+                </div>
+                <i className="fas fa-arrow-right text-gray-400 group-hover:text-gray-600"></i>
+              </Link>
+            </div>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

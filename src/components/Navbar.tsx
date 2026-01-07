@@ -1,16 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MobileMenu from "./MobileMenu";
-
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useTranslation } from "../hooks/useTranslation";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [isDashboardPage, setIsDashboardPage] = useState(false);
+  const location = useLocation();
   const { user, role, isLoading, logout } = useAuth();
   const { language, toggleLanguage } = useLanguage();
   const { t } = useTranslation();
+
+  // Check if we're on a dashboard page
+  useEffect(() => {
+    const path = location.pathname;
+    setIsDashboardPage(
+      path.startsWith("/staff") || 
+      path.startsWith("/parent") || 
+      path.startsWith("/admin") ||
+      path === "/account"
+    );
+  }, [location]);
 
   const dashboardPath =
     role === "parent"
@@ -21,6 +33,96 @@ export default function Navbar() {
       ? "/admin"
       : "/login";
 
+  // Simplified navbar for dashboard pages
+  if (isDashboardPage && user) {
+    return (
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div className="px-4">
+          <div className="flex justify-between items-center py-3">
+            {/* Logo/Back button */}
+            <Link 
+              to="/home" 
+              className="flex items-center gap-2 text-gray-700 hover:text-primary-red transition"
+            >
+              <i className="fas fa-arrow-left text-sm"></i>
+              <span className="text-sm font-medium">Back to Site</span>
+            </Link>
+
+            {/* Right side controls */}
+            <div className="flex items-center gap-3">
+              {/* Language toggle */}
+              <button
+                onClick={toggleLanguage}
+                className="px-2 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded"
+                title={language === "en" ? "Cambiar a Español" : "Switch to English"}
+              >
+                {language === "en" ? "ES" : "EN"}
+              </button>
+
+              {/* User dropdown */}
+              <div className="relative group">
+                <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                  <div className="w-8 h-8 rounded-full bg-primary-red/10 flex items-center justify-center">
+                    <span className="text-primary-red font-bold text-sm">
+                      {user.fullName.charAt(0)}
+                    </span>
+                  </div>
+                  <span className="text-sm font-medium text-gray-700 hidden sm:block">
+                    {user.fullName.split(" ")[0]}
+                  </span>
+                  <i className="fas fa-chevron-down text-xs text-gray-500"></i>
+                </button>
+
+                {/* Dropdown menu */}
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 border border-gray-200">
+                  <div className="p-3 border-b border-gray-100">
+                    <div className="font-medium text-gray-900">{user.fullName}</div>
+                    <div className="text-xs text-gray-500 capitalize">{role}</div>
+                  </div>
+                  <Link
+                    to={dashboardPath}
+                    className="block px-4 py-3 hover:bg-gray-50 text-gray-700"
+                    onClick={() => setOpen(false)}
+                  >
+                    <i className="fas fa-tachometer-alt mr-2"></i>
+                    Dashboard
+                  </Link>
+                  <Link
+                    to="/account"
+                    className="block px-4 py-3 hover:bg-gray-50 text-gray-700"
+                    onClick={() => setOpen(false)}
+                  >
+                    <i className="fas fa-cog mr-2"></i>
+                    Account Settings
+                  </Link>
+                  <button
+                    onClick={logout}
+                    className="w-full text-left px-4 py-3 hover:bg-gray-50 text-red-600 border-t border-gray-100"
+                  >
+                    <i className="fas fa-sign-out-alt mr-2"></i>
+                    Logout
+                  </button>
+                </div>
+              </div>
+
+              {/* Mobile menu button */}
+              <button 
+                onClick={() => setOpen(!open)}
+                className="md:hidden p-2 rounded-lg hover:bg-gray-100"
+              >
+                <i className={`fas ${open ? 'fa-times' : 'fa-bars'} text-gray-600`}></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile menu for dashboard */}
+        <MobileMenu open={open} close={() => setOpen(false)} isDashboard={true} />
+      </nav>
+    );
+  }
+
+  // Full navbar for public pages
   return (
     <nav className="bg-white shadow-lg sticky top-0 z-50">
       <div className="border-b border-gray-200 bg-white">
@@ -145,7 +247,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Bottom navigation bar */}
+      {/* Bottom navigation bar - only for public pages */}
       <div className="hidden md:block bg-primary-red border-t-4 border-red-700">
         <div className="container-wide px-4">
           <div className="flex justify-center items-center space-x-8 py-3">

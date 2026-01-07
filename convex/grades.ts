@@ -46,6 +46,16 @@ export const create = mutation({
   },
 });
 
+export const deleteScore = mutation({
+  args: {
+    gradeId: v.id("componentGrades"),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.delete(args.gradeId);
+  },
+});
+
+
 export const getStudentProfile = query({
   args: {
     studentId: v.id("students"),

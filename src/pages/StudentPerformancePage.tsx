@@ -264,7 +264,7 @@ export default function StudentPerformancePage() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-              📈 Student Performance Overview
+              Student Performance Overview
             </h1>
             <p className="text-gray-600 text-sm mt-1">
               Track academic performance for {activeTermId ? 
@@ -344,29 +344,7 @@ export default function StudentPerformancePage() {
           </div>
         )}
 
-        {/* Subject Summary */}
-        {activeTermId && classSubjects && classSubjects.length > 0 && (
-          <div className="bg-white border border-gray-200 rounded-xl p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-medium text-gray-700">Subjects in This Term</h3>
-              <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                {classSubjects.length} subject{classSubjects.length !== 1 ? 's' : ''}
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {classSubjects.map(cs => (
-                <span 
-                  key={cs._id}
-                  className="px-3 py-1.5 bg-primary-red/10 text-primary-red rounded-lg text-sm font-medium"
-                >
-                  {cs.subject?.name || "Unknown Subject"}
-                  <span className="ml-1 text-xs opacity-75">• Grade {cs.gradeLevel}</span>
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
+      
         {/* Filters Card */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="p-4 border-b border-gray-100">
@@ -391,10 +369,10 @@ export default function StudentPerformancePage() {
                     value={gradeFilter}
                     onChange={e => setGradeFilter(e.target.value)}
                   >
-                    <option value="">All Grade Levels</option>
+                    <option value="">All Class Levels</option>
                     {uniqueGrades.map(g => (
                       <option key={g} value={g}>
-                        Grade {g}
+                         {g}
                       </option>
                     ))}
                   </select>
@@ -463,7 +441,6 @@ export default function StudentPerformancePage() {
                   <th className="p-4 text-left text-white font-semibold text-sm">Overall Score</th>
                   <th className="p-4 text-left text-white font-semibold text-sm">Grade</th>
                   <th className="p-4 text-left text-white font-semibold text-sm">Status</th>
-                  <th className="p-4 text-left text-white font-semibold text-sm">Graded Subjects</th>
                   <th className="p-4 text-left text-white font-semibold text-sm">Actions</th>
                 </tr>
               </thead>
@@ -554,24 +531,7 @@ export default function StudentPerformancePage() {
                             ) : "No Grades"}
                           </span>
                         </td>
-                        
-                        <td className="p-4">
-                          <div className="flex items-center gap-2">
-                            <div className="flex-1 bg-gray-200 rounded-full h-2 overflow-hidden">
-                              <div 
-                                className="bg-primary-red h-full transition-all duration-300"
-                                style={{ 
-                                  width: `${classSubjects && classSubjects.length > 0 
-                                    ? Math.min((perf.subjectsCount / classSubjects.length) * 100, 100) 
-                                    : 0}%` 
-                                }}
-                              ></div>
-                            </div>
-                            <span className="text-sm text-gray-600 min-w-[2rem]">
-                              {perf.subjectsCount}/{classSubjects?.length || 0}
-                            </span>
-                          </div>
-                        </td>
+                  
                         
                         <td className="p-4">
                           <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">

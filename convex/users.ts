@@ -1,4 +1,4 @@
-import { mutation } from "./_generated/server";
+import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import bcrypt from "bcryptjs";
 
@@ -36,6 +36,40 @@ export const createUser = mutation({
     });
 
     return { success: true };
+  },
+});
+
+export const getById = query({
+  args: { userId: v.id("users") },
+  handler: async (ctx, args) => {
+    return await ctx.db.get(args.userId);
+  },
+});
+
+export const update = mutation({
+  args: {
+    userId: v.id("users"),
+    fullName: v.string(),
+    email: v.string(),
+    isActive: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    const { userId, ...updates } = args;
+    
+    // Check if email already exists for another user
+    if (updates.email) {
+      const existingUser = await ctx.db
+        .query("users")
+        .withIndex("by_email", (q) => q.eq("email", updates.email))
+        .first();
+      
+      if (existingUser && existingUser._id !== userId) {
+        throw new Error("Email already exists for another user");
+      }
+    }
+    
+    await ctx.db.patch(userId, updates);
+    return userId;
   },
 });
 

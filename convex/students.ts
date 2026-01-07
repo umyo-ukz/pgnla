@@ -45,3 +45,4 @@ export const listAll = query({
     return ctx.db.query("students").collect();
   },
 });
+

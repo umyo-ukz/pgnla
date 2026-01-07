@@ -220,3 +220,13 @@ studentApplications: defineTable({
 });
 
 
+userActivity: defineTable({
+  userId: v.id("users"),
+  type: v.string(), // "login", "logout", "profile_update", "status_change", etc.
+  description: v.string(),
+  timestamp: v.number(),
+  ipAddress: v.optional(v.string()),
+})
+.index("by_user", ["userId"])
+
+

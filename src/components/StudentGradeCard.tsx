@@ -21,6 +21,7 @@ export default function StudentGradeCard({
 
   const updateScore = useMutation(api.grades.updateScore);
   const createScore = useMutation(api.grades.create);
+  const deleteScore = useMutation(api.grades.deleteScore); // Add delete mutation
   const updateWeight = useMutation(api.subjectComponents.updateComponentWeight);
 
   const [scores, setScores] = useState<Record<string, string>>({});
@@ -29,7 +30,7 @@ export default function StudentGradeCard({
   const [originalWeights, setOriginalWeights] = useState<Record<string, number>>({});
   const [isSaving, setIsSaving] = useState(false);
 
-  // Calculate overall grade - MOVED OUTSIDE handleSave
+  // Calculate overall grade
   const overallScore = useMemo(() => {
     if (!components || !grades) return null;
 
@@ -38,7 +39,7 @@ export default function StudentGradeCard({
 
     components.forEach(component => {
       const grade = grades.find(g => g.componentId === component._id);
-      if (grade !== undefined) {
+      if (grade !== undefined && grade.score !== null) {
         totalWeightedScore += grade.score * component.weight;
         totalWeight += component.weight;
       }
@@ -56,6 +57,7 @@ export default function StudentGradeCard({
     return "text-red-600";
   };
 
+  // Initialize scores and weights
   useEffect(() => {
     if (!components || !grades) return;
 
@@ -67,6 +69,7 @@ export default function StudentGradeCard({
     components.forEach(c => {
       const g = grades.find(gr => gr.componentId === c._id);
       const scoreValue = g ? g.score : null;
+      // Set empty string for null scores
       s[c._id] = scoreValue !== null ? String(scoreValue) : "";
       w[c._id] = String(c.weight);
       origS[c._id] = scoreValue;
@@ -79,18 +82,28 @@ export default function StudentGradeCard({
     setOriginalWeights(origW);
   }, [components, grades]);
 
+  // Check for changes - now handles empty fields
   const hasChanges = useMemo(() => {
     if (!components) return false;
 
     return components.some(c => {
       const currentScore = scores[c._id];
-      const scoreValue = currentScore === "" ? null : Number(currentScore);
+      const scoreValue = currentScore === "" ? null : 
+                         (currentScore === "" ? null : Number(currentScore));
       const originalScore = originalScores[c._id];
 
-      const scoreChanged = scoreValue !== originalScore &&
-        !(scoreValue === null && originalScore === null) &&
-        !Number.isNaN(scoreValue) &&
-        scoreValue !== null;
+      // Score changed if:
+      // 1. Both are null but we have an empty string in input (user cleared it)
+      // 2. Score value changed
+      // 3. Went from null to a number
+      // 4. Went from a number to null (empty field)
+      const scoreChanged = (
+        (currentScore === "" && originalScore !== null) || // User cleared a grade
+        (currentScore !== "" && originalScore === null) || // User added a grade
+        (currentScore !== "" && originalScore !== null && 
+         Number(currentScore) !== originalScore) || // User changed a grade
+        (currentScore === "" && originalScore === null && scores[c._id] === "") // User explicitly cleared null field
+      );
 
       const weightValue = Number(weights[c._id]);
       const weightChanged = !Number.isNaN(weightValue) && weightValue !== originalWeights[c._id];
@@ -99,6 +112,23 @@ export default function StudentGradeCard({
     });
   }, [scores, weights, originalScores, originalWeights, components]);
 
+  // Handle score input change
+  const handleScoreChange = (componentId: string, value: string) => {
+    // Allow empty string, or validate number between 0-100
+    if (value === "" || (Number(value) >= 0 && Number(value) <= 100)) {
+      setScores(prev => ({ ...prev, [componentId]: value }));
+    }
+  };
+
+  // Handle weight input change
+  const handleWeightChange = (componentId: string, value: string) => {
+    // Allow empty string, or validate number between 0-100
+    if (value === "" || (Number(value) >= 0 && Number(value) <= 100)) {
+      setWeights(prev => ({ ...prev, [componentId]: value }));
+    }
+  };
+
+  // Save all changes
   const handleSave = async () => {
     if (!components || !classSubjectId || isSaving) return;
 
@@ -106,30 +136,45 @@ export default function StudentGradeCard({
 
     try {
       for (const c of components) {
-        // Save score
+        // Handle score changes
         const currentScore = scores[c._id];
         const scoreValue = currentScore === "" ? null : Number(currentScore);
         const originalScore = originalScores[c._id];
 
-        if (scoreValue !== originalScore &&
-          !(scoreValue === null && originalScore === null) &&
-          !Number.isNaN(scoreValue) &&
-          scoreValue !== null) {
+        // Check if score actually changed
+        const scoreChanged = (
+          (currentScore === "" && originalScore !== null) ||
+          (currentScore !== "" && originalScore === null) ||
+          (currentScore !== "" && originalScore !== null && 
+           Number(currentScore) !== originalScore)
+        );
+
+        if (scoreChanged) {
           const grade = grades?.find(g => g.componentId === c._id);
 
-          if (grade) {
-            await updateScore({ gradeId: grade._id, score: scoreValue });
+          if (currentScore === "") {
+            // User cleared the field - delete the grade
+            if (grade) {
+              await deleteScore({ gradeId: grade._id });
+            }
+          } else if (grade) {
+            // Update existing grade
+            await updateScore({ 
+              gradeId: grade._id, 
+              score: Number(currentScore) 
+            });
           } else {
+            // Create new grade
             await createScore({
               studentId: student._id,
               classSubjectId,
               componentId: c._id,
-              score: scoreValue,
+              score: Number(currentScore),
             });
           }
         }
 
-        // Save weight
+        // Handle weight changes
         const weightValue = Number(weights[c._id]);
         if (!Number.isNaN(weightValue) && weightValue !== originalWeights[c._id]) {
           await updateWeight({
@@ -151,6 +196,9 @@ export default function StudentGradeCard({
 
       setOriginalScores(newOrigS);
       setOriginalWeights(newOrigW);
+    } catch (error) {
+      console.error("Error saving grades:", error);
+      // You might want to show an error message to the user
     } finally {
       setIsSaving(false);
     }
@@ -161,7 +209,7 @@ export default function StudentGradeCard({
   return (
     <div className="border border-gray-200 rounded-xl p-5 space-y-5 bg-white shadow-sm hover:shadow-md transition-shadow">
       {/* Header with student info and overall grade */}
-      <div className="flex justify-between items-center pb-4 border-b border-gray-100">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center pb-4 border-b border-gray-100 gap-4">
         <div className="flex items-center gap-4">
           {/* Student name and overall grade badge */}
           <div className="flex items-center gap-3">
@@ -181,7 +229,7 @@ export default function StudentGradeCard({
           </div>
 
           {/* Overall grade display */}
-          <div className="ml-6 pl-6 border-l border-gray-200">
+          <div className="md:ml-6 md:pl-6 md:border-l border-gray-200">
             <div className="text-sm text-gray-500 mb-1">Overall Grade</div>
             <div className={`text-2xl font-bold ${getScoreColor(overallScore)}`}>
               {overallScore !== null ? `${overallScore}%` : "—"}
@@ -221,8 +269,10 @@ export default function StudentGradeCard({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {components.map(c => {
           const grade = grades.find(g => g.componentId === c._id);
-          const currentScore = scores[c._id] === "" ? null : Number(scores[c._id]);
-          const componentScoreColor = currentScore !== null ? getScoreColor(currentScore) : "text-gray-400";
+          const currentScore = scores[c._id];
+          const componentScoreColor = currentScore !== "" && !Number.isNaN(Number(currentScore)) 
+            ? getScoreColor(Number(currentScore)) 
+            : "text-gray-400";
 
           return (
             <div
@@ -231,15 +281,20 @@ export default function StudentGradeCard({
             >
               {/* Component header */}
               <div className="flex justify-between items-start mb-3">
-                <div>
-                  <div className="font-medium text-gray-800">{c.name}</div>
-                  {grade && (
-                    <div className={`text-sm font-semibold ${componentScoreColor}`}>
+                <div className="min-w-0">
+                  <div className="font-medium text-gray-800 truncate">{c.name}</div>
+                  {grade && grade.score !== null && (
+                    <div className={`text-sm font-semibold ${componentScoreColor} mt-1`}>
                       Current: {grade.score}%
                     </div>
                   )}
+                  {(!grade || grade.score === null) && (
+                    <div className="text-sm text-gray-400 mt-1">
+                      No grade entered
+                    </div>
+                  )}
                 </div>
-                <div className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded">
+                <div className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded flex-shrink-0 ml-2">
                   ID: {c._id.slice(0, 4)}
                 </div>
               </div>
@@ -250,16 +305,18 @@ export default function StudentGradeCard({
                   Score
                 </label>
                 <input
-                  type="number"
-                  min="0"
-                  max="100"
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary-red/20 focus:border-primary-red outline-none"
                   value={scores[c._id] ?? ""}
-                  onChange={e =>
-                    setScores(p => ({ ...p, [c._id]: e.target.value }))
-                  }
-                  placeholder="0-100"
+                  onChange={e => handleScoreChange(c._id, e.target.value)}
+                  placeholder="Score"
+                  aria-label={`Score for ${c.name}`}
                 />
+                <div className="text-xs text-gray-400 mt-1">
+                  Clear field to remove grade
+                </div>
               </div>
 
               {/* Weight input */}
@@ -279,19 +336,16 @@ export default function StudentGradeCard({
                     max="100"
                     className="flex-1 accent-primary-red"
                     value={weights[c._id]}
-                    onChange={e =>
-                      setWeights(p => ({ ...p, [c._id]: e.target.value }))
-                    }
+                    onChange={e => handleWeightChange(c._id, e.target.value)}
                   />
                   <input
-                    type="number"
-                    min="0"
-                    max="100"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     className="w-16 p-1.5 text-center border border-gray-300 rounded text-sm"
                     value={weights[c._id]}
-                    onChange={e =>
-                      setWeights(p => ({ ...p, [c._id]: e.target.value }))
-                    }
+                    onChange={e => handleWeightChange(c._id, e.target.value)}
+                    placeholder="0"
                   />
                 </div>
               </div>
@@ -300,10 +354,22 @@ export default function StudentGradeCard({
               <div className="mt-3 pt-3 border-t border-gray-100 text-xs">
                 <div className="flex justify-between text-gray-500">
                   <span>Status:</span>
-                  <span className={`font-medium ${currentScore !== null ? "text-green-600" : "text-yellow-600"}`}>
-                    {currentScore !== null ? "Graded" : "Pending"}
+                  <span className={`font-medium ${currentScore !== "" ? "text-green-600" : "text-yellow-600"}`}>
+                    {currentScore !== "" ? "Graded" : "Not Graded"}
                   </span>
                 </div>
+                {currentScore !== "" && originalScores[c._id] === null && (
+                  <div className="text-green-600 font-medium mt-1">
+                    <i className="fas fa-plus mr-1"></i>
+                    New grade to be added
+                  </div>
+                )}
+                {currentScore === "" && originalScores[c._id] !== null && (
+                  <div className="text-red-600 font-medium mt-1">
+                    <i className="fas fa-trash mr-1"></i>
+                    Grade will be removed
+                  </div>
+                )}
               </div>
             </div>
           );
@@ -312,16 +378,31 @@ export default function StudentGradeCard({
 
       {/* Footer with summary */}
       <div className="pt-4 border-t border-gray-100">
-        <div className="flex justify-between items-center text-sm">
-          <div className="text-gray-500">
-            {components.filter(c => {
-              const score = scores[c._id];
-              return score !== "" && !Number.isNaN(Number(score));
-            }).length} of {components.length} components graded
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-2">
+          <div className="text-gray-500 text-sm">
+            <div className="flex items-center gap-2">
+              <span>
+                {components.filter(c => {
+                  const score = scores[c._id];
+                  return score !== "" && !Number.isNaN(Number(score));
+                }).length} of {components.length} components graded
+              </span>
+              {hasChanges && (
+                <span className="text-primary-red font-medium animate-pulse">
+                  •
+                </span>
+              )}
+            </div>
+            {hasChanges && (
+              <div className="text-xs text-gray-400 mt-1">
+                Empty fields will remove existing grades
+              </div>
+            )}
           </div>
           {hasChanges && (
-            <div className="text-primary-red font-medium">
-              ✎ Unsaved changes
+            <div className="text-primary-red font-medium flex items-center gap-2">
+              <i className="fas fa-exclamation-circle"></i>
+              <span>Unsaved changes</span>
             </div>
           )}
         </div>
