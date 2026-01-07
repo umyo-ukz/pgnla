@@ -79,7 +79,7 @@ export function useAuth() {
     role: user?.role,
     login,
     logout,
-    isLoading: userFromQuery === undefined,
+    isLoading: userFromQuery === undefined, // Make sure this exists
     isAuthenticated: !!user,
   };
 }

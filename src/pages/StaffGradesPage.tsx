@@ -8,6 +8,13 @@ import StudentGradeCard from "../components/StudentGradeCard";
 import TermSwitcher from "../components/TermSwitcher";
 import { useTranslation } from "../hooks/useTranslation";
 
+// Define term interface for TermSwitcher
+interface Term {
+  _id: Id<"terms">;
+  name: string;
+  isActive: boolean;
+}
+
 export default function StaffGradesPage() {
   const { user, role, logout } = useAuth();
   const { t } = useTranslation();
@@ -172,8 +179,36 @@ export default function StaffGradesPage() {
   }, [search, selectedClassLevel, activeClassSubjectId]);
 
   // Mobile responsive helpers
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
+  // Prepare terms for TermSwitcher
+  const termSwitcherTerms = useMemo(() => {
+    if (!terms) return [];
+    return terms.map(term => ({
+      _id: term._id,
+      name: term.name,
+      isActive: term.isActive
+    }));
+  }, [terms]);
+
+  // Handle term change for TermSwitcher
+  const handleTermChange = (id: string) => {
+    setActiveTermId(id as Id<"terms">);
+    setSelectedClassLevel("");
+    setActiveClassSubjectId(null);
+  };
+
+  // Remove mobileOnly and className props that TermSwitcher doesn't accept
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Mobile Header */}
@@ -199,20 +234,13 @@ export default function StaffGradesPage() {
         {isMobileMenuOpen && (
           <div className="absolute top-full left-0 right-0 bg-white border-b border-gray-200 shadow-lg">
             <div className="p-4 space-y-3">
-              {terms && activeTermId && (
+              {termSwitcherTerms.length > 0 && activeTermId && (
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <span className="text-xs text-gray-500 mb-1 block">Term:</span>
                   <TermSwitcher
-                    terms={terms}
+                    terms={termSwitcherTerms}
                     activeTermId={activeTermId}
-                    onChange={(id) => {
-                      setActiveTermId(id);
-                      setSelectedClassLevel("");
-                      setActiveClassSubjectId(null);
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="w-full"
-                    mobileOnly
+                    onChange={handleTermChange}
                   />
                 </div>
               )}
@@ -242,18 +270,13 @@ export default function StaffGradesPage() {
           </div>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 md:gap-3">
-            {terms && activeTermId && (
+            {termSwitcherTerms.length > 0 && activeTermId && (
               <div className="flex items-center gap-2 bg-white border rounded-lg p-2 w-full sm:w-auto">
                 <span className="text-gray-500 text-sm whitespace-nowrap">Term:</span>
                 <TermSwitcher
-                  terms={terms}
+                  terms={termSwitcherTerms}
                   activeTermId={activeTermId}
-                  onChange={(id) => {
-                    setActiveTermId(id as Id<"terms">);
-                    setSelectedClassLevel("");
-                    setActiveClassSubjectId(null);
-                  }}
-                  className="border-0 p-0 text-sm font-medium min-w-[120px]"
+                  onChange={handleTermChange}
                 />
               </div>
             )}
