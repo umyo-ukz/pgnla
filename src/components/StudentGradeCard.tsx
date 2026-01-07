@@ -3,10 +3,6 @@ import { api } from "../../convex/_generated/api";
 import { useState, useEffect, useMemo } from "react";
 import { Id } from "../../convex/_generated/dataModel";
 
-interface StudentGradeCardProps {
-  student: any;
-  classSubjectId: Id<"classSubjects"> | null; // Accepts null
-}
 export default function StudentGradeCard({
   student,
   classSubjectId,

@@ -1,12 +1,6 @@
 import { Id } from "../../convex/_generated/dataModel";
 
-interface TermSwitcherProps {
-  terms: { _id: Id<"terms">; name: string; isActive: boolean }[];
-  activeTermId: string | null;
-  onChange: (id: string) => void;
-  className?: string;
-  mobileOnly?: boolean;
-}
+
 export default function TermSwitcher({
   terms,
   activeTermId,

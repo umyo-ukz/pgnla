@@ -7,7 +7,6 @@ const translations = {
   es: esTranslations,
 };
 
-type TranslationKey = keyof typeof enTranslations;
 type NestedKey<T> = T extends object
   ? {
       [K in keyof T]: K extends string

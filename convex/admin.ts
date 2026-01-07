@@ -331,7 +331,7 @@ export const deleteStudent = mutation({
 
 // Get available grade levels (you might want to store this in a separate table)
 export const getGradeLevels = query({
-  handler: async (ctx) => {
+  handler: async (_ctx) => {
     // This could come from a configuration table
     return [
       "Pre-K", "Kindergarten", "1st Grade", "2nd Grade", "3rd Grade",

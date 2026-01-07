@@ -9,11 +9,7 @@ import TermSwitcher from "../components/TermSwitcher";
 import { useTranslation } from "../hooks/useTranslation";
 
 // Define term interface for TermSwitcher
-interface Term {
-  _id: Id<"terms">;
-  name: string;
-  isActive: boolean;
-}
+
 
 export default function StaffGradesPage() {
   const { user, role, logout } = useAuth();
