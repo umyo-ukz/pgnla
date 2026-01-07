@@ -11,21 +11,6 @@ export const listAllStudents = query({
 
 
 
-function getLetterGrade(score: number): string {
-  if (score >= 96) return "A+";
-  if (score >= 93) return "A";
-  if (score >= 90) return "A-";
-  if (score >= 86) return "B+";
-  if (score >= 83) return "B";
-  if (score >= 80) return "B-";
-  if (score >= 76) return "C+";
-  if (score >= 73) return "C";
-  if (score >= 70) return "C-";
-  if (score >= 66) return "D+";
-  if (score >= 63) return "D";
-  if (score >= 60) return "D-";
-  return "F";
-}
 
 export const listStudentPerformance = query({
   args: {

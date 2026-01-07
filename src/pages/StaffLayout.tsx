@@ -4,7 +4,7 @@ import StaffSidePanel from "../components/StaffSidePanel";
 import { useState, useEffect } from "react";
 
 export default function StaffLayout() {
-  const { user, role, isLoading } = useAuth();
+  const { user, role } = useAuth();
   const [isMobile, setIsMobile] = useState(false);
 
   // Check screen size
@@ -18,7 +18,7 @@ export default function StaffLayout() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  if (isLoading) return null;
+W
   if (!user || role !== "staff") return <Navigate to="/login" />;
 
   return (

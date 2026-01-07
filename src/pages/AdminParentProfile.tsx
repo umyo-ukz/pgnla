@@ -9,7 +9,7 @@ import { Id } from "../../convex/_generated/dataModel";
 type TabType = "overview" | "students";
 
 export default function AdminParentProfile() {
-  const { user, role, isLoading } = useAuth();
+  const { user, role } = useAuth();
   const { parentId } = useParams<{ parentId: string }>();
   
   // State
@@ -36,7 +36,7 @@ export default function AdminParentProfile() {
   const assignStudentToParent = useMutation(api.admin.assignStudentToParent);
   const unassignStudentFromParent = useMutation(api.admin.unassignStudentFromParent);
 
-  if (isLoading) return null;
+
   if (!user || role !== "admin") return <Navigate to="/login" />;
   if (!parentId) return <Navigate to="/admin/manage-accounts" />;
 

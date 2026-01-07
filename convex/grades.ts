@@ -70,8 +70,6 @@ export const getStudentProfile = query({
       .withIndex("by_student_classSubject", q => q.eq("studentId", args.studentId))
       .collect();
 
-    // Get all class subjects and their details
-    const classSubjectIds = Array.from(new Set(componentGrades.map(g => g.classSubjectId)));
     
     const gradesWithDetails = await Promise.all(
       componentGrades.map(async (grade) => {
@@ -106,7 +104,7 @@ export const getStudentProfile = query({
 
     gradesWithDetails.forEach((item) => {
       if (!item) return;
-      
+    
       const key = `${item.classSubject?.subjectId}_${item.classSubject?.termId}`;
       if (!groupedGrades[key]) {
         groupedGrades[key] = {

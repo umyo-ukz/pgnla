@@ -212,7 +212,7 @@ export default function StaffGradesPage() {
                       setIsMobileMenuOpen(false);
                     }}
                     className="w-full"
-                    mobile
+                    mobileOnly
                   />
                 </div>
               )}

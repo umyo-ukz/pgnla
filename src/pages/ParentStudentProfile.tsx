@@ -6,11 +6,11 @@ import { useState, useEffect, useMemo } from "react";
 import { Id } from "../../convex/_generated/dataModel";
 
 export default function ParentStudentProfile() {
-    const { user, role, isLoading } = useAuth();
+    const { user, role } = useAuth();
     const { studentId } = useParams<{ studentId: string }>();
 
     // Auth checks
-    if (isLoading) return null;
+
     if (!user || role !== "parent") return <Navigate to="/login" />;
     if (!studentId) return <Navigate to="/parent-dashboard" />;
 

@@ -2,13 +2,13 @@ import { useAuth } from "../hooks/useAuth";
 import { Navigate, Link } from "react-router-dom";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 
 export default function ParentDashboard() {
-  const { user, role, logout, isLoading } = useAuth();
+  const { user, role, logout } = useAuth();
 
-  // Still loading auth state
-  if (isLoading) return null;
+
+
 
   // Not logged in or wrong role
   if (!user || role !== "parent") {

@@ -5,14 +5,13 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
 export default function AdminDashboard() {
-  const { user, role, isLoading } = useAuth();
+  const { user, role } = useAuth();
 
   // Fetch dashboard statistics
   const stats = useQuery(api.admin.getDashboardStats);
   const recentRegistrations = useQuery(api.admin.getRecentRegistrations);
   const recentMessages = useQuery(api.admin.getRecentMessages);
 
-  if (isLoading) return null;
   if (!user || role !== "admin") return <Navigate to="/login" />;
 
   return (

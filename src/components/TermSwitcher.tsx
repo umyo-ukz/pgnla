@@ -8,6 +8,8 @@ export default function TermSwitcher({
     terms: Array<{ _id: Id<"terms">; name: string; isActive: boolean }> | undefined;
     activeTermId: string | null;
     onChange: (id: string) => void;
+    className?: string;
+    mobileOnly?: boolean;
   }) {
     if (!terms || terms.length === 0) return null;
   

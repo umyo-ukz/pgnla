@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { Id } from "../../convex/_generated/dataModel";
 
 export default function AdminStudentProfile() {
-  const { user, role, isLoading } = useAuth();
+  const { user, role } = useAuth();
   const { studentId } = useParams<{ studentId: string }>();
 
   // State for editing
@@ -19,7 +19,6 @@ export default function AdminStudentProfile() {
   });
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
-  if (isLoading) return null;
   if (!user || role !== "admin") return <Navigate to="/login" />;
   if (!studentId) return <Navigate to="/admin/manage-accounts" />;
 

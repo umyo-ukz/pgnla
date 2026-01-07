@@ -5,7 +5,7 @@ import AdminSidePanel from "../components/AdminSidePanel";
 import { useState, useEffect } from "react";
 
 export default function AdminLayout() {
-  const { user, role, isLoading } = useAuth();
+  const { user, role } = useAuth();
   const [isMobile, setIsMobile] = useState(false);
 
   // Check screen size
@@ -18,8 +18,7 @@ export default function AdminLayout() {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
-
-  if (isLoading) return null;
+  
   if (!user || role !== "admin") return <Navigate to="/login" />;
 
   return (

@@ -9,7 +9,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [isDashboardPage, setIsDashboardPage] = useState(false);
   const location = useLocation();
-  const { user, role, isLoading, logout } = useAuth();
+  const { user, role, logout } = useAuth();
   const { language, toggleLanguage } = useLanguage();
   const { t } = useTranslation();
 
@@ -165,7 +165,7 @@ export default function Navbar() {
                 <span>pequenosacademy@gmail.com</span>
               </div>
 
-              {!isLoading && user ? (
+              { user ? (
                 <div className="relative group">
                   <Link
                     to={dashboardPath}
@@ -225,7 +225,7 @@ export default function Navbar() {
                 {language === "en" ? "ES" : "EN"}
               </button>
 
-              {!isLoading && user ? (
+              { user ? (
                 <>
                   <Link to={dashboardPath} className="text-primary-red font-semibold">
                     {user.fullName.split(" ")[0]}

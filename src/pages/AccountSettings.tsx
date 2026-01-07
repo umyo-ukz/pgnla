@@ -5,7 +5,7 @@ import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
 export default function AccountSettings() {
-  const { user, role, logout, isLoading } = useAuth();
+  const { user, role, logout } = useAuth();
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -19,7 +19,13 @@ export default function AccountSettings() {
 
   const changePassword = useMutation(api.account.changePassword);
 
-  if (isLoading) return null;
+
+if (!user || !role) return <Navigate to="/login" />;
+
+// Add this check
+if (!user._id) return <Navigate to="/login" />;
+
+
   if (!user || !role) return <Navigate to="/login" />;
 
   // Password validation
@@ -33,6 +39,10 @@ export default function AccountSettings() {
   };
 
   const isPasswordValid = Object.values(passwordRequirements).every(Boolean);
+
+  
+
+  
 
   async function handleChangePassword(e: React.FormEvent) {
     e.preventDefault();
@@ -106,6 +116,7 @@ export default function AccountSettings() {
     day: 'numeric'
   });
 
+  
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-8 px-4">
       <div className="max-w-6xl mx-auto">

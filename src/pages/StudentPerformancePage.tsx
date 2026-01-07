@@ -8,10 +8,10 @@ import { useTranslation } from "../hooks/useTranslation";
 import { Id } from "../../convex/_generated/dataModel";
 
 export default function StudentPerformancePage() {
-  const { user, role, logout, isLoading } = useAuth();
-  const { t } = useTranslation();
+  const { user, role, logout  } = useAuth();
 
-  if (isLoading) return null;
+
+
   if (!user || role !== "staff") return <Navigate to="/login" />;
 
   const [gradeFilter, setGradeFilter] = useState("");

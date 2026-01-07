@@ -12,6 +12,7 @@ export function useAuth() {
   const loginMutation = useMutation(api.auth.login);
   const logoutMutation = useMutation(api.auth.logout);
 
+
   const user = useQuery(
     api.auth.getCurrentUser,
     token ? { token } : "skip"

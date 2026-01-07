@@ -25,7 +25,7 @@ interface UserAccount {
 }
 
 export default function AdminManageAccounts() {
-  const { user, role, isLoading } = useAuth();
+  const { user, role } = useAuth();
 
   // State management
   const [view, setView] = useState<ViewMode>("parents");
@@ -44,21 +44,9 @@ export default function AdminManageAccounts() {
   const toggleUserStatus = useMutation(api.admin.toggleUserStatus);
   const deleteUser = useMutation(api.admin.deleteUser);
   const createStaffAccount = useMutation(api.admin.createStaffAccount);
-  const updateUserRole = useMutation(api.admin.updateUserRole);
-
-  const handleRoleChange = async (userId: string, newRole: string) => {
-    try {
-      await updateUserRole({
-        userId: userId as Id<"users">,
-        newRole: newRole as "parent" | "staff" | "admin"
-      });
-    } catch (error) {
-      console.error("Error updating user role:", error);
-    }
-  };
 
 
-  if (isLoading) return null;
+
   if (!user || role !== "admin") return <Navigate to="/login" />;
 
   // Process user data

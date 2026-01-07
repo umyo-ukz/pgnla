@@ -10,14 +10,17 @@ export default function StudentGradeCard({
   classSubjectId: string | null;
 }) {
   const components = useQuery(
-    api.subjectComponents.listByClassSubject,
-    classSubjectId ? { classSubjectId } : "skip"
-  );
+  api.subjectComponents.listByClassSubject,
+  classSubjectId ? { classSubjectId: classSubjectId } : "skip"  // Explicit type
+);
 
   const grades = useQuery(
-    api.grades.listByStudentAndClassSubject,
-    classSubjectId ? { studentId: student._id, classSubjectId } : "skip"
-  );
+  api.grades.listByStudentAndClassSubject,
+  classSubjectId ? { 
+    studentId: student._id, 
+    classSubjectId: classSubjectId  // Explicit type
+  } : "skip"
+);
 
   const updateScore = useMutation(api.grades.updateScore);
   const createScore = useMutation(api.grades.create);
