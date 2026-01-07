@@ -107,7 +107,7 @@ export default function Contact() {
                   <i className="fas fa-phone mr-2"></i>1(868) 681-6554
                 </p>
                 <p className="text-gray-700 mb-4">
-                  <i className="fas fa-envelope mr-2"></i> info@pequenosgigantes.edu
+                  <i className="fas fa-envelope mr-2"></i> pequenosacademy@gmail.com
                 </p>
               </div>
             </div>

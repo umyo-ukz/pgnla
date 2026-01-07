@@ -528,142 +528,18 @@ export default function ParentStudentProfile() {
                                     <i className="fas fa-calendar-check"></i>
                                 </div>
                                 <h3 className="text-xl font-medium text-gray-600 mb-2">
-                                    Attendance Records
+                                    Coming Soon
                                 </h3>
                                 <p className="text-gray-500 max-w-md mx-auto mb-6">
                                     Attendance records will be displayed here once they become available for {specificStudent?.fullName}.
                                 </p>
-                                <div className="space-y-4 max-w-md mx-auto">
-                                    <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                                        <div className="flex justify-between items-center">
-                                            <div>
-                                                <p className="font-medium text-blue-800">Current Term Attendance</p>
-                                                <p className="text-sm text-blue-600">Term 1 2024</p>
-                                            </div>
-                                            <span className="text-lg font-bold text-blue-700">95%</span>
-                                        </div>
-                                        <div className="w-full bg-blue-200 rounded-full h-2 mt-3 overflow-hidden">
-                                            <div className="bg-blue-600 h-full" style={{ width: "95%" }}></div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                                        <div className="flex justify-between items-center">
-                                            <div>
-                                                <p className="font-medium text-green-800">Present Days</p>
-                                                <p className="text-sm text-green-600">This month</p>
-                                            </div>
-                                            <span className="text-lg font-bold text-green-700">18/20</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                                        <div className="flex justify-between items-center">
-                                            <div>
-                                                <p className="font-medium text-yellow-800">Late Arrivals</p>
-                                                <p className="text-sm text-yellow-600">This term</p>
-                                            </div>
-                                            <span className="text-lg font-bold text-yellow-700">2</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                             </div>
                         )}
                     </div>
                 </div>
 
-                {/* Quick Actions & Info */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Teacher Contact */}
-                    <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="p-2 bg-blue-100 rounded-lg">
-                                <i className="fas fa-chalkboard-teacher text-xl text-blue-600"></i>
-                            </div>
-                            <h3 className="text-lg font-bold text-gray-900">Teacher Contact</h3>
-                        </div>
-                        <div className="space-y-4">
-                            <div>
-                                <p className="text-sm text-gray-500">Class Teacher</p>
-                                <p className="font-medium">Mrs. Jennifer Wilson</p>
-                                <p className="text-sm text-gray-600">j.wilson@school.edu</p>
-                            </div>
-                            <button className="w-full py-2.5 border border-primary-red text-primary-red rounded-lg hover:bg-primary-red/5 transition">
-                                <i className="fas fa-envelope mr-2"></i>
-                                Send Message
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Upcoming Events */}
-                    <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="p-2 bg-green-100 rounded-lg">
-                                <i className="fas fa-calendar-day text-xl text-green-600"></i>
-                            </div>
-                            <h3 className="text-lg font-bold text-gray-900">Upcoming Events</h3>
-                        </div>
-                        <div className="space-y-3">
-                            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                <div>
-                                    <p className="font-medium text-sm">Parent-Teacher Conference</p>
-                                    <p className="text-xs text-gray-500">Next Week</p>
-                                </div>
-                                <i className="fas fa-chevron-right text-gray-400"></i>
-                            </div>
-                            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                <div>
-                                    <p className="font-medium text-sm">Term Exams</p>
-                                    <p className="text-xs text-gray-500">Starting Dec 15</p>
-                                </div>
-                                <i className="fas fa-chevron-right text-gray-400"></i>
-                            </div>
-                            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                <div>
-                                    <p className="font-medium text-sm">Sports Day</p>
-                                    <p className="text-xs text-gray-500">December 20</p>
-                                </div>
-                                <i className="fas fa-chevron-right text-gray-400"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Performance Summary */}
-                    <div className="bg-gradient-to-br from-primary-red to-red-600 rounded-2xl p-6 text-white">
-                        <h3 className="font-bold mb-4 text-lg">Performance Summary</h3>
-                        <div className="space-y-4">
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm opacity-90">Overall Performance</span>
-                                <span className="font-bold">{overallStats.letterGrade}</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm opacity-90">Subjects with Grades</span>
-                                <span className="font-bold">{overallStats.totalSubjects}</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm opacity-90">Academic Standing</span>
-                                <span className="font-bold">
-                                    {overallStats.hasGrades ? (
-                                        overallStats.overallGrade >= 80 ? "Excellent" :
-                                            overallStats.overallGrade >= 60 ? "Satisfactory" :
-                                                "Needs Support"
-                                    ) : "No Data"}
-                                </span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm opacity-90">Attendance Rate</span>
-                                <span className="font-bold">95%</span>
-                            </div>
-                        </div>
-                        <div className="mt-6 pt-6 border-t border-white/20 text-sm opacity-80">
-                            Last updated: {new Date().toLocaleDateString('en-US', { 
-                                month: 'long', 
-                                day: 'numeric',
-                                year: 'numeric'
-                            })}
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     );

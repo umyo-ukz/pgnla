@@ -129,10 +129,8 @@ export default function Navbar() {
         <div className="container-wide px-4">
           <div className="flex justify-between items-center py-3">
             <Link to="/home" className="flex items-center space-x-3 group">
-              <div className="w-10 h-10 bg-primary-red rounded-full flex items-center justify-center group-hover:scale-105 transition-transform">
-                <span className="text-white font-bold text-xl font-childish">
-                  PG
-                </span>
+              <div className="w-15 h-15 flex items-center justify-center group-hover:scale-105 transition-transform">
+                <img src="./img/logo.png" alt="PGNLA Logo" />
               </div>
               <div className="hidden sm:block">
                 <div className="text-xl font-bold text-primary-black font-serif leading-tight">
@@ -164,7 +162,7 @@ export default function Navbar() {
               </div>
               <div className="text-sm text-gray-600">
                 <i className="fas fa-envelope text-primary-red mr-1"></i>
-                <span>info@pequenosgigantes.edu</span>
+                <span>pequenosacademy@gmail.com</span>
               </div>
 
               {!isLoading && user ? (

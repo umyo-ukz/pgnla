@@ -564,11 +564,6 @@ export default function Registration() {
                       <ol className="list-decimal pl-5 space-y-2 text-sm">
                         <li>All information provided is accurate and complete</li>
                         <li>You agree to the tuition and fee schedule</li>
-                        <li>You consent to emergency medical treatment if needed</li>
-                        <li>You agree to the school's policies and procedures</li>
-                        <li>
-                          You authorize the school to use photographs for educational purposes
-                        </li>
                       </ol>
                     </div>
 
@@ -604,7 +599,7 @@ export default function Registration() {
         </div>
 
         {/* Help Section */}
-        <div className="mt-8 grid md:grid-cols-2 gap-6">
+        <div className="mt-8 grid md:grid-cols-1 gap-6">
           <div className="bg-primary-red rounded-xl p-6 text-white">
             <div className="flex items-start">
               <i className="fas fa-question-circle text-2xl mt-1 mr-4"></i>
@@ -618,26 +613,13 @@ export default function Registration() {
                   </div>
                   <div className="flex items-center">
                     <i className="fas fa-envelope mr-3"></i>
-                    <span>admissions@pequenosgigantes.edu</span>
+                    <span>pequenosacademy@gmail.com</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-gray-100 rounded-xl p-6">
-            <div className="flex items-start">
-              <i className="fas fa-clock text-2xl text-primary-red mt-1 mr-4"></i>
-              <div>
-                <h3 className="text-xl font-bold mb-2">Next Steps</h3>
-                <ul className="space-y-2 text-gray-700">
-                  <li>1. Submit your registration</li>
-                  <li>2. Complete enrollment paperwork</li>
-                  <li>3. Meet your child's teacher</li>
-                </ul>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </main>

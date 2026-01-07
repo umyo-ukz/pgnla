@@ -34,9 +34,9 @@ export default function Admissions() {
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">Admissions</h1>
             <div className="flex flex-col sm:flex-row gap-4 justify-center py-8">
-              <a href="#apply-now" className="btn-primary bg-white text-primary-red hover:bg-gray-100 text-lg px-8 py-4 font-semibold">
+              <Link to="/registration" className="btn-primary bg-white text-primary-red hover:bg-gray-100 text-lg px-8 py-4 font-semibold">
                 <i className="fas fa-edit mr-2"></i>Start Your Application
-              </a>
+              </Link>
               <Link to="/financing" className="btn-secondary border-2 border-white text-white hover:bg-white/20 text-lg px-8 py-4">
                 <i className="fas fa-dollar-sign mr-2"></i>View Financing and Tuition
               </Link>
