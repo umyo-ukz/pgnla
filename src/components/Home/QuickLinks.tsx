@@ -6,7 +6,7 @@ export default function QuickLinks() {
         <h2 className="section-title">Quick Links</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Link to="/parent-dashboard" className="group">
+          <Link to="/login" className="group">
             <div
               className="bg-primary-red text-white rounded-xl p-8 h-full transform group-hover:-translate-y-2 transition-transform duration-300">
               <div className="text-4xl mb-4">
