@@ -1,30 +1,32 @@
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useState, useEffect, useMemo } from "react";
+import { Id } from "../../convex/_generated/dataModel";
 
 export default function StudentGradeCard({
   student,
   classSubjectId,
 }: {
   student: any;
-  classSubjectId: string | null;
+  classSubjectId: Id<"classSubjects"> | undefined; // Changed to undefined instead of null
 }) {
+  // For optional args, pass undefined instead of "skip"
   const components = useQuery(
-  api.subjectComponents.listByClassSubject,
-  classSubjectId ? { classSubjectId: classSubjectId } : "skip"  // Explicit type
-);
+    api.subjectComponents.listByClassSubject,
+{ classSubjectId }
+  );
 
   const grades = useQuery(
-  api.grades.listByStudentAndClassSubject,
-  classSubjectId ? { 
-    studentId: student._id, 
-    classSubjectId: classSubjectId  // Explicit type
-  } : "skip"
-);
+    api.grades.listByStudentAndClassSubject,
+    classSubjectId && student?._id ? { 
+      studentId: student._id, 
+      classSubjectId 
+    } : "skip"
+  );
 
   const updateScore = useMutation(api.grades.updateScore);
   const createScore = useMutation(api.grades.create);
-  const deleteScore = useMutation(api.grades.deleteScore); // Add delete mutation
+  const deleteScore = useMutation(api.grades.deleteScore);
   const updateWeight = useMutation(api.subjectComponents.updateComponentWeight);
 
   const [scores, setScores] = useState<Record<string, string>>({});
@@ -85,27 +87,19 @@ export default function StudentGradeCard({
     setOriginalWeights(origW);
   }, [components, grades]);
 
-  // Check for changes - now handles empty fields
+  // Check for changes
   const hasChanges = useMemo(() => {
     if (!components) return false;
 
     return components.some(c => {
       const currentScore = scores[c._id];
-      const scoreValue = currentScore === "" ? null : 
-                         (currentScore === "" ? null : Number(currentScore));
       const originalScore = originalScores[c._id];
 
-      // Score changed if:
-      // 1. Both are null but we have an empty string in input (user cleared it)
-      // 2. Score value changed
-      // 3. Went from null to a number
-      // 4. Went from a number to null (empty field)
       const scoreChanged = (
-        (currentScore === "" && originalScore !== null) || // User cleared a grade
-        (currentScore !== "" && originalScore === null) || // User added a grade
+        (currentScore === "" && originalScore !== null) ||
+        (currentScore !== "" && originalScore === null) ||
         (currentScore !== "" && originalScore !== null && 
-         Number(currentScore) !== originalScore) || // User changed a grade
-        (currentScore === "" && originalScore === null && scores[c._id] === "") // User explicitly cleared null field
+         Number(currentScore) !== originalScore)
       );
 
       const weightValue = Number(weights[c._id]);
@@ -117,7 +111,6 @@ export default function StudentGradeCard({
 
   // Handle score input change
   const handleScoreChange = (componentId: string, value: string) => {
-    // Allow empty string, or validate number between 0-100
     if (value === "" || (Number(value) >= 0 && Number(value) <= 100)) {
       setScores(prev => ({ ...prev, [componentId]: value }));
     }
@@ -125,7 +118,6 @@ export default function StudentGradeCard({
 
   // Handle weight input change
   const handleWeightChange = (componentId: string, value: string) => {
-    // Allow empty string, or validate number between 0-100
     if (value === "" || (Number(value) >= 0 && Number(value) <= 100)) {
       setWeights(prev => ({ ...prev, [componentId]: value }));
     }
@@ -141,7 +133,6 @@ export default function StudentGradeCard({
       for (const c of components) {
         // Handle score changes
         const currentScore = scores[c._id];
-        const scoreValue = currentScore === "" ? null : Number(currentScore);
         const originalScore = originalScores[c._id];
 
         // Check if score actually changed
@@ -201,13 +192,51 @@ export default function StudentGradeCard({
       setOriginalWeights(newOrigW);
     } catch (error) {
       console.error("Error saving grades:", error);
-      // You might want to show an error message to the user
     } finally {
       setIsSaving(false);
     }
   };
 
-  if (!components || !grades) return null;
+  // Early return if no class subject
+  if (!classSubjectId) {
+    return (
+      <div className="border border-gray-200 rounded-xl p-5 space-y-5 bg-white shadow-sm">
+        <div className="text-center text-gray-500 py-8">
+          <i className="fas fa-book text-3xl mb-3"></i>
+          <p>No class subject selected</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Loading state
+  if (components === undefined || grades === undefined) {
+    return (
+      <div className="border border-gray-200 rounded-xl p-5 space-y-5 bg-white shadow-sm">
+        <div className="animate-pulse">
+          <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[1, 2, 3, 4].map(i => (
+              <div key={i} className="h-32 bg-gray-100 rounded-lg"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // If no components found
+  if (components.length === 0) {
+    return (
+      <div className="border border-gray-200 rounded-xl p-5 space-y-5 bg-white shadow-sm">
+        <div className="text-center text-gray-500 py-8">
+          <i className="fas fa-clipboard-list text-3xl mb-3"></i>
+          <p>No assessment components found for this class</p>
+          <p className="text-sm mt-2">Please add assessment components first</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="border border-gray-200 rounded-xl p-5 space-y-5 bg-white shadow-sm hover:shadow-md transition-shadow">

@@ -4,11 +4,10 @@ import { Navigate, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useState, useMemo, useEffect } from "react";
 import TermSwitcher from "../components/TermSwitcher";
-import { useTranslation } from "../hooks/useTranslation";
 import { Id } from "../../convex/_generated/dataModel";
 
 export default function StudentPerformancePage() {
-  const { user, role, logout  } = useAuth();
+  const { user, role, logout } = useAuth();
 
 
 
@@ -22,13 +21,13 @@ export default function StudentPerformancePage() {
 
   const students = useQuery(api.students.listAll);
   const terms = useQuery(api.terms.listAll);
-  
+
   // FIXED: Use listByClassAndTerm with proper parameters
   const classSubjects = useQuery(
     api.classSubjects.listByClassAndTerm,
     activeTermId ? { termId: activeTermId } : "skip"
   );
-  
+
   const components = useQuery(api.subjectComponents.listAll);
   const componentGrades = useQuery(api.grades.listAll);
 
@@ -131,7 +130,7 @@ export default function StudentPerformancePage() {
       if (hasComponentGrades && componentWeightSum > 0) {
         const subjectAverage = subjectScore / componentWeightSum;
         const subjectWeight = classSubject.weight ?? 100; // Default to 100 if not set
-        
+
         totalWeightedScore += subjectAverage * subjectWeight;
         totalSubjectWeight += subjectWeight;
         gradedSubjects++;
@@ -139,11 +138,11 @@ export default function StudentPerformancePage() {
     });
 
     if (totalSubjectWeight === 0 || gradedSubjects === 0) {
-      return { 
-        overall: 0, 
-        letterGrade: "N/A", 
-        hasGrades: false, 
-        subjectsCount: gradedSubjects 
+      return {
+        overall: 0,
+        letterGrade: "N/A",
+        hasGrades: false,
+        subjectsCount: gradedSubjects
       };
     }
 
@@ -167,7 +166,7 @@ export default function StudentPerformancePage() {
   // Filter and sort students
   const filteredStudents = useMemo(() => {
     if (!students) return [];
-    
+
     let filtered = students.filter(s => {
       const nameMatch = s.fullName.toLowerCase().includes(search.toLowerCase());
       const gradeMatch = gradeFilter === "" || s.gradeLevel === gradeFilter;
@@ -183,7 +182,7 @@ export default function StudentPerformancePage() {
     // Apply sorting
     return studentsWithPerformance.sort((a, b) => {
       let comparison = 0;
-      
+
       switch (sortBy) {
         case "name":
           comparison = a.fullName.localeCompare(b.fullName);
@@ -204,7 +203,7 @@ export default function StudentPerformancePage() {
           }
           break;
       }
-      
+
       return sortOrder === "asc" ? comparison : -comparison;
     });
   }, [students, search, gradeFilter, sortBy, sortOrder, activeTermId, classSubjects, components, componentGrades]);
@@ -212,23 +211,23 @@ export default function StudentPerformancePage() {
   // Calculate overall statistics
   const stats = useMemo(() => {
     if (!filteredStudents.length) return null;
-    
+
     const studentsWithGrades = filteredStudents.filter(s => s.performance.hasGrades);
     const totalScore = studentsWithGrades.reduce((sum, s) => sum + s.performance.overall, 0);
-    const avgScore = studentsWithGrades.length > 0 
+    const avgScore = studentsWithGrades.length > 0
       ? Math.round((totalScore / studentsWithGrades.length) * 100) / 100
       : 0;
-    
+
     const gradeDistribution = {
       a: studentsWithGrades.filter(s => s.performance.overall >= 80).length,
       b: studentsWithGrades.filter(s => s.performance.overall >= 60 && s.performance.overall < 80).length,
       c: studentsWithGrades.filter(s => s.performance.overall < 60 && s.performance.hasGrades).length,
       none: filteredStudents.filter(s => !s.performance.hasGrades).length
     };
-    
-    return { 
-      avgScore, 
-      gradeDistribution, 
+
+    return {
+      avgScore,
+      gradeDistribution,
       totalStudents: filteredStudents.length,
       withGrades: studentsWithGrades.length,
       withoutGrades: filteredStudents.filter(s => !s.performance.hasGrades).length
@@ -236,11 +235,11 @@ export default function StudentPerformancePage() {
   }, [filteredStudents]);
 
   // Loading state - show spinner while any data is loading
-  const isLoadingData = 
-    students === undefined || 
-    terms === undefined || 
-    classSubjects === undefined || 
-    components === undefined || 
+  const isLoadingData =
+    students === undefined ||
+    terms === undefined ||
+    classSubjects === undefined ||
+    components === undefined ||
     componentGrades === undefined;
 
   if (isLoadingData) {
@@ -267,15 +266,15 @@ export default function StudentPerformancePage() {
               Student Performance Overview
             </h1>
             <p className="text-gray-600 text-sm mt-1">
-              Track academic performance for {activeTermId ? 
+              Track academic performance for {activeTermId ?
                 <span className="font-medium text-primary-red">
                   {terms?.find(t => t._id === activeTermId)?.name || "selected term"}
-                </span> : 
+                </span> :
                 "selected term"
               }
             </p>
           </div>
-          
+
           <div className="flex items-center gap-3">
             {terms && terms.length > 0 && (
               <div className="flex items-center gap-2 bg-white border rounded-lg px-3 py-2 shadow-sm">
@@ -283,12 +282,14 @@ export default function StudentPerformancePage() {
                 <TermSwitcher
                   terms={terms}
                   activeTermId={activeTermId}
-                  onChange={setActiveTermId}
+                  onChange={(id) => {
+                    setActiveTermId(id as Id<"terms">);  // Add type assertion
+                  }}
                   className="border-0 p-0 text-sm font-medium"
                 />
               </div>
             )}
-            <button 
+            <button
               onClick={logout}
               className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
@@ -309,7 +310,7 @@ export default function StudentPerformancePage() {
                 {stats.withGrades} of {stats.totalStudents} graded
               </div>
             </div>
-            
+
             <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
               <div className="text-sm text-gray-500 mb-1">High Performers (A)</div>
               <div className="text-2xl font-bold text-green-600">{stats.gradeDistribution.a}</div>
@@ -317,7 +318,7 @@ export default function StudentPerformancePage() {
                 80% or higher
               </div>
             </div>
-            
+
             <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
               <div className="text-sm text-gray-500 mb-1">Satisfactory (B)</div>
               <div className="text-2xl font-bold text-yellow-600">{stats.gradeDistribution.b}</div>
@@ -325,7 +326,7 @@ export default function StudentPerformancePage() {
                 60-79%
               </div>
             </div>
-            
+
             <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
               <div className="text-sm text-gray-500 mb-1">Needs Attention (C-F)</div>
               <div className="text-2xl font-bold text-red-600">{stats.gradeDistribution.c}</div>
@@ -333,7 +334,7 @@ export default function StudentPerformancePage() {
                 Below 60%
               </div>
             </div>
-            
+
             <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
               <div className="text-sm text-gray-500 mb-1">Ungraded</div>
               <div className="text-2xl font-bold text-gray-600">{stats.withoutGrades}</div>
@@ -344,7 +345,7 @@ export default function StudentPerformancePage() {
           </div>
         )}
 
-      
+
         {/* Filters Card */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="p-4 border-b border-gray-100">
@@ -372,7 +373,7 @@ export default function StudentPerformancePage() {
                     <option value="">All Class Levels</option>
                     {uniqueGrades.map(g => (
                       <option key={g} value={g}>
-                         {g}
+                        {g}
                       </option>
                     ))}
                   </select>
@@ -388,16 +389,15 @@ export default function StudentPerformancePage() {
                           setSortOrder("asc");
                         }
                       }}
-                      className={`px-3 py-2 rounded-lg border flex items-center gap-2 ${
-                        sortBy === "name"
+                      className={`px-3 py-2 rounded-lg border flex items-center gap-2 ${sortBy === "name"
                           ? "bg-primary-red/10 border-primary-red text-primary-red"
                           : "border-gray-300 text-gray-600 hover:border-gray-400"
-                      }`}
+                        }`}
                     >
                       <i className={`fas fa-sort-alpha-${sortBy === "name" && sortOrder === "desc" ? "down-alt" : "down"}`}></i>
                       <span className="text-sm">Name</span>
                     </button>
-                    
+
                     <button
                       onClick={() => {
                         if (sortBy === "score") {
@@ -407,11 +407,10 @@ export default function StudentPerformancePage() {
                           setSortOrder("desc");
                         }
                       }}
-                      className={`px-3 py-2 rounded-lg border flex items-center gap-2 ${
-                        sortBy === "score"
+                      className={`px-3 py-2 rounded-lg border flex items-center gap-2 ${sortBy === "score"
                           ? "bg-blue-600/10 border-blue-600 text-blue-600"
                           : "border-gray-300 text-gray-600 hover:border-gray-400"
-                      }`}
+                        }`}
                     >
                       <i className={`fas fa-sort-numeric-${sortBy === "score" && sortOrder === "desc" ? "down" : "up"}`}></i>
                       <span className="text-sm">Score</span>
@@ -469,10 +468,10 @@ export default function StudentPerformancePage() {
                   filteredStudents.map(student => {
                     const perf = student.performance;
                     const scoreColor = perf.hasGrades ? getScoreColor(perf.overall) : "text-gray-400";
-                    
+
                     return (
-                      <tr 
-                        key={student._id} 
+                      <tr
+                        key={student._id}
                         className="border-t border-gray-100 hover:bg-gray-50/50 transition-colors group"
                       >
                         <td className="p-4">
@@ -490,13 +489,13 @@ export default function StudentPerformancePage() {
                             </div>
                           </div>
                         </td>
-                        
+
                         <td className="p-4">
                           <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm font-medium">
                             {student.gradeLevel}
                           </span>
                         </td>
-                        
+
                         <td className="p-4">
                           <div className={`text-lg font-bold ${scoreColor}`}>
                             {perf.hasGrades ? (
@@ -516,23 +515,23 @@ export default function StudentPerformancePage() {
                             )}
                           </div>
                         </td>
-                        
+
                         <td className="p-4">
                           <div className={`font-bold ${scoreColor}`}>
                             {perf.letterGrade}
                           </div>
                         </td>
-                        
+
                         <td className="p-4">
                           <span className={`px-3 py-1.5 rounded-full text-xs font-medium ${getStatusColor(perf.overall, perf.hasGrades)}`}>
                             {perf.hasGrades ? (
                               perf.overall >= 80 ? "Excellent" :
-                              perf.overall >= 60 ? "Satisfactory" : "Needs Attention"
+                                perf.overall >= 60 ? "Satisfactory" : "Needs Attention"
                             ) : "No Grades"}
                           </span>
                         </td>
-                  
-                        
+
+
                         <td className="p-4">
                           <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                             <Link

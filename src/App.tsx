@@ -28,7 +28,6 @@ import StudentProfile from "./pages/StudentProfile";
 import ParentStudentProfile from "./pages/ParentStudentProfile";
 import AdminManageAccounts from "./pages/AdminManageAccounts";
 import AdminParentProfile from "./pages/AdminParentProfile";
-import AdminStudentProfile from "./pages/AdminStudentProfile";
 
 
 export default function App() {
@@ -77,7 +76,6 @@ export default function App() {
             <Route path="manage-accounts" element={<AdminManageAccounts />} />
             <Route path="parents/:parentId" element={<AdminParentProfile />} />
 
-            <Route path="students/:studentId" element={<AdminStudentProfile />} />
           </Route>
 
           {/* Fallback account route for parents and other roles */}

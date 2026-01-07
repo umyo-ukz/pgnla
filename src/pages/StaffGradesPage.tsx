@@ -626,8 +626,6 @@ export default function StaffGradesPage() {
                             <StudentGradeCard
                               student={student}
                               classSubjectId={activeClassSubjectId}
-                              isMobile={true}
-                              isExpanded={true}
                             />
                           </div>
                         )}
@@ -639,7 +637,6 @@ export default function StaffGradesPage() {
                       <StudentGradeCard
                         student={student}
                         classSubjectId={activeClassSubjectId}
-                        isMobile={false}
                       />
                     </div>
                   </div>

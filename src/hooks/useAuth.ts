@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useState } from "react";
+import { Id } from "../../convex/_generated/dataModel";
 
 const TOKEN_KEY = "pngla_session";
 
@@ -11,7 +12,6 @@ export function useAuth() {
 
   const loginMutation = useMutation(api.auth.login);
   const logoutMutation = useMutation(api.auth.logout);
-
 
   const user = useQuery(
     api.auth.getCurrentUser,
@@ -33,8 +33,8 @@ export function useAuth() {
   }
 
   return {
-    user,
-    role: user?.role,
+    user: user || null, // Convert undefined to null
+    role: user?.role || null,
     login,
     logout,
     isAuthenticated: !!user,

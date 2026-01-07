@@ -18,7 +18,7 @@ export default function StaffLayout() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-W
+
   if (!user || role !== "staff") return <Navigate to="/login" />;
 
   return (

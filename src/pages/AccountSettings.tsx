@@ -5,7 +5,27 @@ import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
 export default function AccountSettings() {
-  const { user, role, logout } = useAuth();
+  const { user, role, logout, isAuthenticated } = useAuth();
+
+  // Show loading state while user is being fetched
+  if (user === undefined) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100">
+        <div className="text-center">
+          <i className="fas fa-spinner fa-spin text-4xl text-primary-red mb-4"></i>
+          <p className="text-gray-600">Loading account information...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect if not authenticated or missing user data
+  if (!isAuthenticated || !user || !role || !user._id) {
+    return <Navigate to="/login" />;
+  }
+
+  // At this point, TypeScript knows user is not null/undefined
+  const safeUser = user;
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -19,15 +39,6 @@ export default function AccountSettings() {
 
   const changePassword = useMutation(api.account.changePassword);
 
-
-if (!user || !role) return <Navigate to="/login" />;
-
-// Add this check
-if (!user._id) return <Navigate to="/login" />;
-
-
-  if (!user || !role) return <Navigate to="/login" />;
-
   // Password validation
   const passwordRequirements = {
     minLength: newPassword.length >= 8,
@@ -39,10 +50,6 @@ if (!user._id) return <Navigate to="/login" />;
   };
 
   const isPasswordValid = Object.values(passwordRequirements).every(Boolean);
-
-  
-
-  
 
   async function handleChangePassword(e: React.FormEvent) {
     e.preventDefault();
@@ -62,7 +69,7 @@ if (!user._id) return <Navigate to="/login" />;
     setIsChangingPassword(true);
     try {
       await changePassword({
-        userId: user._id,
+        userId: safeUser._id,
         currentPassword,
         newPassword,
       });
@@ -158,10 +165,10 @@ if (!user._id) return <Navigate to="/login" />;
                 {/* Profile Header */}
                 <div className="flex items-start gap-4">
                   <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary-red to-red-600 flex items-center justify-center text-white text-3xl font-bold">
-                    {user.fullName.charAt(0).toUpperCase()}
+                    {safeUser.fullName.charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-1">{user.fullName}</h3>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-1">{safeUser.fullName}</h3>
                     <div className="flex items-center gap-2">
                       <div className={`px-3 py-1 rounded-full border ${getRoleBadgeColor()} text-sm font-medium flex items-center gap-2`}>
                         <i className={`fas fa-${getRoleIcon()}`}></i>
@@ -182,7 +189,7 @@ if (!user._id) return <Navigate to="/login" />;
                         Email Address
                       </label>
                       <div className="p-3 bg-gray-50 rounded-xl border border-gray-200 text-gray-900">
-                        {user.email}
+                        {safeUser.email}
                       </div>
                     </div>
                     
@@ -192,8 +199,13 @@ if (!user._id) return <Navigate to="/login" />;
                         Account ID
                       </label>
                       <div className="p-3 bg-gray-50 rounded-xl border border-gray-200 text-gray-900 font-mono text-sm flex items-center justify-between">
-                        <span>{user._id.slice(0, 12)}...</span>
-                        <button className="text-xs text-primary-red hover:text-red-700">
+                        <span>{safeUser._id.slice(0, 12)}...</span>
+                        <button 
+                          className="text-xs text-primary-red hover:text-red-700"
+                          onClick={() => {
+                            navigator.clipboard.writeText(safeUser._id);
+                          }}
+                        >
                           Copy
                         </button>
                       </div>

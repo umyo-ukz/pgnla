@@ -22,3 +22,24 @@ export const changeParentPassword = mutation({
     });
   },
 });
+
+export const changePassword = mutation({
+  args: {
+    userId: v.id("users"),
+    currentPassword: v.string(),
+    newPassword: v.string(),
+  },
+  handler: async (ctx, { userId, currentPassword, newPassword }) => {
+    const user = await ctx.db.get(userId);
+    if (!user) throw new Error("User not found");
+
+    const valid = bcrypt.compareSync(currentPassword, user.passwordHash);
+    if (!valid) throw new Error("Current password is incorrect");
+
+    const newHash = bcrypt.hashSync(newPassword, 10);
+
+    await ctx.db.patch(userId, {
+      passwordHash: newHash,
+    });
+  },
+});
