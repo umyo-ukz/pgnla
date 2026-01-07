@@ -7,6 +7,7 @@ import { useMemo } from "react";
 export default function ParentDashboard() {
   const { user, role, isLoading, isAuthenticated, logout } = useAuth();
 
+  // Check authentication first
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -22,6 +23,7 @@ export default function ParentDashboard() {
     return <Navigate to="/login" />;
   }
 
+  // NOW it's safe to use user._id
   const students = useQuery(api.students.listForParent, {
     parentId: user._id,
   });
@@ -32,19 +34,17 @@ export default function ParentDashboard() {
 
   const allComponentGrades = useQuery(api.grades.listAll);
   
-  // FIXED: Check if activeTerm exists before calling the query
   const classSubjects = useQuery(
-  api.classSubjects.listByClassAndTerm,
-  activeTerm ? { termId: activeTerm._id } : "skip"
-);
+    api.classSubjects.listByClassAndTerm,
+    activeTerm ? { termId: activeTerm._id } : "skip"
+  );
 
-  // Calculate overall grade for a student - UPDATED FOR POINTS SYSTEM
+  // Calculate overall grade for a student
   const calculateStudentGrade = (studentId: string) => {
     if (!allComponentGrades || !classSubjects || !components || !activeTerm) {
       return { overall: 0, letterGrade: "N/A", hasGrades: false };
     }
 
-    // Filter class subjects for active term
     const termClassSubjects = classSubjects.filter(cs => cs.termId === activeTerm._id);
     const studentGrades = allComponentGrades.filter(g => g.studentId === studentId);
 
@@ -87,7 +87,6 @@ export default function ParentDashboard() {
 
     const overall = subjectPercentages.reduce((sum, p) => sum + p, 0) / subjectPercentages.length;
 
-    // Calculate letter grade
     const getLetterGrade = (score: number): string => {
       if (score >= 96) return "A+";
       if (score >= 93) return "A";
