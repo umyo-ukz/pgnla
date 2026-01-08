@@ -29,6 +29,10 @@ import ParentStudentProfile from "./pages/ParentStudentProfile";
 import AdminManageAccounts from "./pages/AdminManageAccounts";
 import AdminParentProfile from "./pages/AdminParentProfile";
 import ComingSoon from "./pages/ComingSoon";
+import ParentLayout from "./components/ParentLayout";
+import ParentNoticesPage from "./pages/ParentNoticesPage";
+import ParentChildrenPage from "./pages/ParentChildrenPage";
+
 
 
 export default function App() {
@@ -41,6 +45,7 @@ export default function App() {
           <Routes>
             <Route path="/home" element={<Navigate to="/" replace />} />
             <Route path="/" element={<Home />} />
+            
             {/* Public Routes */}
             <Route path="/admissions" element={<Admissions />} />
             <Route path="/about" element={<About />} />
@@ -51,10 +56,18 @@ export default function App() {
             <Route path="/registration" element={<Registration />} />
             <Route path="/coming-soon" element={<ComingSoon />} />
 
-            {/* Parent Routes */}
-            <Route path="/parent-dashboard" element={<ParentDashboard />} />
-            <Route path="/student/:studentId/grades" element={<GradesPage />} />
-            <Route path="/parent/student/:studentId" element={<ParentStudentProfile />} />
+            {/* Parent Routes - uses ParentLayout with side panel */}
+            <Route path="/parent" element={<ParentLayout />}>
+              <Route index element={<ParentDashboard />} />
+              <Route path="notices" element={<ParentNoticesPage />} />
+              <Route path="children" element={<ParentChildrenPage />} /> {/* Create this page */}
+              <Route path="student/:studentId" element={<ParentStudentProfile />} />
+              <Route path="account" element={<AccountSettings />} />
+            </Route>
+
+            {/* Legacy parent routes - redirect to new layout */}
+            <Route path="/parent-dashboard" element={<Navigate to="/parent" replace />} />
+            <Route path="/student/:studentId/grades" element={<Navigate to="/parent/student/:studentId" replace />} />
 
             {/* Staff Routes - uses StaffLayout with side panel */}
             <Route path="/staff" element={<StaffLayout />}>
@@ -77,7 +90,6 @@ export default function App() {
               <Route path="account" element={<AccountSettings />} />
               <Route path="manage-accounts" element={<AdminManageAccounts />} />
               <Route path="parents/:parentId" element={<AdminParentProfile />} />
-
             </Route>
 
             {/* Fallback account route for parents and other roles */}

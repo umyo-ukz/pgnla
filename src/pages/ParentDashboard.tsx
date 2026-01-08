@@ -3,14 +3,14 @@ import { Navigate, Link } from "react-router-dom";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useMemo } from "react";
+import { Id } from "../../convex/_generated/dataModel";
 
 export default function ParentDashboard() {
   const { user, role, isLoading, isAuthenticated, logout } = useAuth();
 
-    if (!isAuthenticated || !user || role !== "parent") {
+  if (!isAuthenticated || !user || role !== "parent") {
     return <Navigate to="/login" />;
   }
-
 
   // Check authentication first
   if (isLoading) {
@@ -24,22 +24,88 @@ export default function ParentDashboard() {
     );
   }
 
-
-  // NOW it's safe to use user._id
+  // Fetch data
   const students = useQuery(api.students.listForParent, {
     parentId: user._id,
   });
 
   const components = useQuery(api.subjectComponents.listAll);
   const terms = useQuery(api.terms.listAll);
-  const activeTerm = terms?.find(t => t.isActive);
-
+  const activeTerm = terms?.find((t) => t.isActive);
   const allComponentGrades = useQuery(api.grades.listAll);
-  
+
   const classSubjects = useQuery(
     api.classSubjects.listByClassAndTerm,
-    activeTerm ? { termId: activeTerm._id } : "skip"
+    activeTerm ? { termId: activeTerm._id } : "skip",
   );
+
+  // Fetch notices for parent
+  const parentNotices = useQuery(api.parentNotices.getForParent, {
+    parentId: user._id,
+  });
+
+  // Fetch all published notices
+  const publishedNotices = useQuery(api.notices.getPublished);
+
+  // Process notices data
+  const { generalNotices, academicNotices, unreadCounts } = useMemo(() => {
+    if (!parentNotices || !publishedNotices) {
+      return {
+        generalNotices: [],
+        academicNotices: [],
+        unreadCounts: { general: 0, academic: 0, total: 0 }
+      };
+    }
+
+    // Create a map of notice IDs to read status
+    const readStatusMap = new Map<Id<"notices">, boolean>();
+    parentNotices.forEach(pn => {
+      readStatusMap.set(pn.noticeId, pn.hasRead);
+    });
+
+    // Get parent's student grade levels
+    const studentGradeLevels = students?.map(s => s.gradeLevel) || [];
+
+    // Filter notices: published AND (general notice OR matches student grade level)
+    const relevantNotices = publishedNotices.filter(notice => {
+      // Check if notice is for "general" or matches student grade level
+      const isGeneralNotice = notice.noticeType === "general" || notice.noticeType === "urgent";
+      const matchesGradeLevel = studentGradeLevels.includes(notice.gradeLevel);
+      
+      return notice.isPublished && (isGeneralNotice || matchesGradeLevel);
+    });
+
+    // Categorize notices and add read status
+    const generalNotices = relevantNotices
+      .filter(notice => notice.noticeType === "general" || notice.noticeType === "urgent")
+      .map(notice => ({
+        ...notice,
+        hasRead: readStatusMap.get(notice._id) || false
+      }))
+      .sort((a, b) => b.createdAt - a.createdAt);
+
+    const academicNotices = relevantNotices
+      .filter(notice => notice.noticeType === "academic")
+      .map(notice => ({
+        ...notice,
+        hasRead: readStatusMap.get(notice._id) || false
+      }))
+      .sort((a, b) => b.createdAt - a.createdAt);
+
+    // Count unread notices
+    const unreadGeneral = generalNotices.filter(notice => !notice.hasRead).length;
+    const unreadAcademic = academicNotices.filter(notice => !notice.hasRead).length;
+
+    return {
+      generalNotices,
+      academicNotices,
+      unreadCounts: {
+        general: unreadGeneral,
+        academic: unreadAcademic,
+        total: unreadGeneral + unreadAcademic
+      }
+    };
+  }, [parentNotices, publishedNotices, students]);
 
   // Calculate overall grade for a student
   const calculateStudentGrade = (studentId: string) => {
@@ -47,8 +113,12 @@ export default function ParentDashboard() {
       return { overall: 0, letterGrade: "N/A", hasGrades: false };
     }
 
-    const termClassSubjects = classSubjects.filter(cs => cs.termId === activeTerm._id);
-    const studentGrades = allComponentGrades.filter(g => g.studentId === studentId);
+    const termClassSubjects = classSubjects.filter(
+      (cs) => cs.termId === activeTerm._id,
+    );
+    const studentGrades = allComponentGrades.filter(
+      (g) => g.studentId === studentId,
+    );
 
     if (studentGrades.length === 0) {
       return { overall: 0, letterGrade: "N/A", hasGrades: false };
@@ -56,15 +126,17 @@ export default function ParentDashboard() {
 
     const subjectPercentages: number[] = [];
 
-    termClassSubjects.forEach(classSubject => {
-      const subjectComps = components.filter(comp => comp.classSubjectId === classSubject._id);
-      
+    termClassSubjects.forEach((classSubject) => {
+      const subjectComps = components.filter(
+        (comp) => comp.classSubjectId === classSubject._id,
+      );
+
       let totalEarned = 0;
       let totalPossible = 0;
       let hasGrades = false;
 
-      subjectComps.forEach(comp => {
-        const grade = studentGrades.find(g => g.componentId === comp._id);
+      subjectComps.forEach((comp) => {
+        const grade = studentGrades.find((g) => g.componentId === comp._id);
         const compWeight = comp.weight || 0;
 
         if (grade) {
@@ -87,7 +159,9 @@ export default function ParentDashboard() {
       return { overall: 0, letterGrade: "N/A", hasGrades: false };
     }
 
-    const overall = subjectPercentages.reduce((sum, p) => sum + p, 0) / subjectPercentages.length;
+    const overall =
+      subjectPercentages.reduce((sum, p) => sum + p, 0) /
+      subjectPercentages.length;
 
     const getLetterGrade = (score: number): string => {
       if (score >= 96) return "A+";
@@ -108,7 +182,7 @@ export default function ParentDashboard() {
     return {
       overall: Math.round(overall * 100) / 100,
       letterGrade: getLetterGrade(overall),
-      hasGrades: true
+      hasGrades: true,
     };
   };
 
@@ -116,22 +190,33 @@ export default function ParentDashboard() {
   const dashboardStats = useMemo(() => {
     if (!students) return null;
 
-    const studentsWithGrades = students.map(s => {
+    const studentsWithGrades = students.map((s) => {
       const grade = calculateStudentGrade(s._id);
       return { ...s, grade };
     });
 
-    const studentsWithValidGrades = studentsWithGrades.filter(s => s.grade.hasGrades);
+    const studentsWithValidGrades = studentsWithGrades.filter(
+      (s) => s.grade.hasGrades,
+    );
 
-    const totalScore = studentsWithValidGrades.reduce((sum, s) => sum + s.grade.overall, 0);
-    const avgScore = studentsWithValidGrades.length > 0
-      ? Math.round(totalScore / studentsWithValidGrades.length)
-      : 0;
+    const totalScore = studentsWithValidGrades.reduce(
+      (sum, s) => sum + s.grade.overall,
+      0,
+    );
+    const avgScore =
+      studentsWithValidGrades.length > 0
+        ? Math.round(totalScore / studentsWithValidGrades.length)
+        : 0;
 
     const gradeDistribution = {
-      excellent: studentsWithValidGrades.filter(s => s.grade.overall >= 80).length,
-      satisfactory: studentsWithValidGrades.filter(s => s.grade.overall >= 60 && s.grade.overall < 80).length,
-      needsAttention: studentsWithValidGrades.filter(s => s.grade.overall < 60 && s.grade.hasGrades).length,
+      excellent: studentsWithValidGrades.filter((s) => s.grade.overall >= 80)
+        .length,
+      satisfactory: studentsWithValidGrades.filter(
+        (s) => s.grade.overall >= 60 && s.grade.overall < 80,
+      ).length,
+      needsAttention: studentsWithValidGrades.filter(
+        (s) => s.grade.overall < 60 && s.grade.hasGrades,
+      ).length,
     };
 
     return {
@@ -167,7 +252,10 @@ export default function ParentDashboard() {
             </h1>
             <div className="flex items-center gap-3">
               <span className="text-gray-600">
-                Welcome back, <span className="font-semibold text-primary-red">{user.fullName}</span>
+                Welcome back,{" "}
+                <span className="font-semibold text-primary-red">
+                  {user.fullName}
+                </span>
               </span>
               {activeTerm && (
                 <span className="px-3 py-1 bg-blue-50 text-blue-700 text-sm rounded-full border border-blue-200">
@@ -178,7 +266,8 @@ export default function ParentDashboard() {
             </div>
           </div>
 
-          <Link to="/login"
+          <Link
+            to="/login"
             onClick={logout}
             className="mt-4 md:mt-0 px-4 py-2.5 border border-gray-300 rounded-xl hover:bg-gray-50 transition-all duration-200 text-gray-700 font-medium flex items-center gap-2"
           >
@@ -198,7 +287,9 @@ export default function ParentDashboard() {
                 {dashboardStats?.studentCount || 0}
               </span>
             </div>
-            <h3 className="text-sm font-medium text-gray-500 mb-1">Registered Students</h3>
+            <h3 className="text-sm font-medium text-gray-500 mb-1">
+              Registered Students
+            </h3>
           </div>
 
           <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
@@ -210,7 +301,9 @@ export default function ParentDashboard() {
                 {dashboardStats?.avgScore || 0}%
               </span>
             </div>
-            <h3 className="text-sm font-medium text-gray-500 mb-1">Average Grade</h3>
+            <h3 className="text-sm font-medium text-gray-500 mb-1">
+              Average Grade
+            </h3>
             <p className="text-xs text-gray-400">
               Combined academic performance
             </p>
@@ -221,55 +314,16 @@ export default function ParentDashboard() {
               <div className="p-3 bg-blue-100 rounded-xl">
                 <i className="fas fa-bell text-2xl text-blue-600"></i>
               </div>
-              <span className="text-2xl font-bold text-gray-900">0</span>
+              <span className="text-2xl font-bold text-gray-900">
+                {unreadCounts.total || 0}
+              </span>
             </div>
-            <h3 className="text-sm font-medium text-gray-500 mb-1">Notifications</h3>
-            <p className="text-xs text-gray-400">
-              New alerts and updates
-            </p>
+            <h3 className="text-sm font-medium text-gray-500 mb-1">
+              Notifications
+            </h3>
+            <p className="text-xs text-gray-400">New alerts and updates</p>
           </div>
-
         </div>
-
-        {/* Grade Distribution Summary
-        {dashboardStats && (
-          <div className="mb-8 bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 bg-primary-red/10 rounded-lg">
-                <i className="fas fa-graduation-cap text-xl text-primary-red"></i>
-              </div>
-              <h2 className="text-xl font-bold text-gray-900">Academic Overview</h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center p-4 bg-green-50 rounded-xl border border-green-100">
-                <div className="text-2xl font-bold text-green-700 mb-1">
-                  {dashboardStats.gradeDistribution.excellent}
-                </div>
-                <div className="text-sm font-medium text-green-800">Excellent (A-B)</div>
-                <div className="text-xs text-green-600 mt-1">80% or higher</div>
-              </div>
-
-              <div className="text-center p-4 bg-yellow-50 rounded-xl border border-yellow-100">
-                <div className="text-2xl font-bold text-yellow-700 mb-1">
-                  {dashboardStats.gradeDistribution.satisfactory}
-                </div>
-                <div className="text-sm font-medium text-yellow-800">Satisfactory (C-D)</div>
-                <div className="text-xs text-yellow-600 mt-1">60-79%</div>
-              </div>
-
-              <div className="text-center p-4 bg-red-50 rounded-xl border border-red-100">
-                <div className="text-2xl font-bold text-red-700 mb-1">
-                  {dashboardStats.gradeDistribution.needsAttention}
-                </div>
-                <div className="text-sm font-medium text-red-800">Needs Attention (F)</div>
-                <div className="text-xs text-red-600 mt-1">Below 60%</div>
-              </div>
-            </div>
-          </div>
-        )}
-
-         */}
 
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -282,10 +336,13 @@ export default function ParentDashboard() {
                     <div className="p-2 bg-primary-red/10 rounded-lg">
                       <i className="fas fa-user text-xl text-primary-red"></i>
                     </div>
-                    <h2 className="text-xl font-bold text-gray-900">Your Students</h2>
+                    <h2 className="text-xl font-bold text-gray-900">
+                      Your Students
+                    </h2>
                   </div>
                   <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                    {students?.length || 0} child{students?.length !== 1 ? 'ren' : ''}
+                    {students?.length || 0} child
+                    {students?.length !== 1 ? "ren" : ""}
                   </span>
                 </div>
               </div>
@@ -294,7 +351,9 @@ export default function ParentDashboard() {
                 {students === undefined ? (
                   <div className="text-center py-12">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-red mx-auto mb-4"></div>
-                    <p className="text-gray-600">Loading student information...</p>
+                    <p className="text-gray-600">
+                      Loading student information...
+                    </p>
                   </div>
                 ) : students.length === 0 ? (
                   <div className="text-center py-12">
@@ -316,7 +375,7 @@ export default function ParentDashboard() {
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {dashboardStats?.studentsWithGrades?.map(student => (
+                    {dashboardStats?.studentsWithGrades?.map((student) => (
                       <div
                         key={student._id}
                         className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-all duration-200 hover:border-primary-red/30"
@@ -347,10 +406,16 @@ export default function ParentDashboard() {
 
                           {/* Grade Display */}
                           <div className="text-right">
-                            <div className={`text-2xl font-bold ${getGradeColor(student.grade.overall)}`}>
-                              {student.grade.hasGrades ? `${student.grade.overall}%` : "—"}
+                            <div
+                              className={`text-2xl font-bold ${getGradeColor(student.grade.overall)}`}
+                            >
+                              {student.grade.hasGrades
+                                ? `${student.grade.overall}%`
+                                : "—"}
                             </div>
-                            <div className={`text-sm font-medium mt-1 ${getGradeColor(student.grade.overall)}`}>
+                            <div
+                              className={`text-sm font-medium mt-1 ${getGradeColor(student.grade.overall)}`}
+                            >
                               {student.grade.letterGrade}
                             </div>
                           </div>
@@ -358,12 +423,16 @@ export default function ParentDashboard() {
 
                         {/* Status Badge */}
                         <div className="mb-4">
-                          <span className={`px-3 py-1.5 rounded-full text-xs font-medium ${getGradeBadgeColor(student.grade.overall, student.grade.hasGrades)}`}>
-                            {student.grade.hasGrades ? (
-                              student.grade.overall >= 80 ? "Excellent Performance" :
-                                student.grade.overall >= 60 ? "Satisfactory Performance" :
-                                  "Needs Attention"
-                            ) : "No Grades Yet"}
+                          <span
+                            className={`px-3 py-1.5 rounded-full text-xs font-medium ${getGradeBadgeColor(student.grade.overall, student.grade.hasGrades)}`}
+                          >
+                            {student.grade.hasGrades
+                              ? student.grade.overall >= 80
+                                ? "Excellent Performance"
+                                : student.grade.overall >= 60
+                                  ? "Satisfactory Performance"
+                                  : "Needs Attention"
+                              : "No Grades Yet"}
                           </span>
                         </div>
 
@@ -385,44 +454,133 @@ export default function ParentDashboard() {
             </div>
           </div>
 
-          {/* Sidebar */}
+          {/* Sidebar - Notices */}
           <div className="space-y-6">
-            {/* Recent Activity */}
+            {/* General Notices */}
             <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
               <div className="p-6 border-b border-gray-100">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <i className="fas fa-bell text-xl text-blue-600"></i>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-blue-100 rounded-lg">
+                      <i className="fas fa-bullhorn text-blue-600 text-xl"></i>
+                    </div>
+                    <h2 className="text-lg font-bold text-gray-900">
+                      General Notices
+                    </h2>
                   </div>
-                  <h2 className="text-lg font-bold text-gray-900"> General Notices</h2>
+                  {unreadCounts.general > 0 && (
+                    <span className="bg-primary-red text-white text-xs font-medium px-2 py-1 rounded-full">
+                      {unreadCounts.general} new
+                    </span>
+                  )}
                 </div>
               </div>
 
               <div className="p-6">
-                <div className="space-y-4">
-                  <div className="text-gray-600">
-                    <h1>Coming Soon</h1>
+                {parentNotices === undefined ? (
+                  <div className="text-center py-4">
+                    <i className="fas fa-spinner fa-spin text-primary-red mr-2"></i>
+                    <span className="text-gray-600">Loading notices...</span>
                   </div>
-                </div>
+                ) : generalNotices.length === 0 ? (
+                  <div className="text-center py-4 text-gray-500">
+                    <i className="fas fa-newspaper text-3xl text-gray-300 mb-3"></i>
+                    <p>No general notices</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {generalNotices.slice(0, 3).map((notice) => (
+                      <div
+                        key={notice._id}
+                        className={`border rounded-lg p-4 ${notice.hasRead ? "border-gray-200" : "border-primary-red/30 bg-primary-red/5"}`}
+                      >
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <h3 className="font-medium text-gray-900">
+                              {notice.title}
+                            </h3>
+                            <p className="text-xs text-gray-500 mt-1">
+                              From: {notice.createdBy} •{" "}
+                              {new Date(notice.createdAt).toLocaleDateString()}
+                            </p>
+                          </div>
+                          {!notice.hasRead && (
+                            <span className="bg-primary-red text-white text-xs px-2 py-1 rounded-full">
+                              New
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          {notice.content.substring(0, 100)}...
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
+            {/* Academic Notices */}
             <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
               <div className="p-6 border-b border-gray-100">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <i className="fas fa-bell text-xl text-blue-600"></i>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-green-100 rounded-lg">
+                      <i className="fas fa-graduation-cap text-green-600 text-xl"></i>
+                    </div>
+                    <h2 className="text-lg font-bold text-gray-900">
+                      Academic Notices
+                    </h2>
                   </div>
-                  <h2 className="text-lg font-bold text-gray-900"> Academic Notices</h2>
+                  {unreadCounts.academic > 0 && (
+                    <span className="bg-primary-red text-white text-xs font-medium px-2 py-1 rounded-full">
+                      {unreadCounts.academic} new
+                    </span>
+                  )}
                 </div>
               </div>
 
               <div className="p-6">
-                <div className="space-y-4">
-                  <div className="text-gray-600">
-                    <h1>Coming Soon</h1>
+                {parentNotices === undefined ? (
+                  <div className="text-center py-4">
+                    <i className="fas fa-spinner fa-spin text-primary-red mr-2"></i>
+                    <span className="text-gray-600">Loading notices...</span>
                   </div>
-                </div>
+                ) : academicNotices.length === 0 ? (
+                  <div className="text-center py-4 text-gray-500">
+                    <i className="fas fa-book text-3xl text-gray-300 mb-3"></i>
+                    <p>No academic notices</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {academicNotices.slice(0, 3).map((notice) => (
+                      <div
+                        key={notice._id}
+                        className={`border rounded-lg p-4 ${notice.hasRead ? "border-gray-200" : "border-green-300 bg-green-50"}`}
+                      >
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <h3 className="font-medium text-gray-900">
+                              {notice.title}
+                            </h3>
+                            <p className="text-xs text-gray-500 mt-1">
+                              From: {notice.createdBy} •{" "}
+                              {new Date(notice.createdAt).toLocaleDateString()}
+                            </p>
+                          </div>
+                          {!notice.hasRead && (
+                            <span className="bg-green-600 text-white text-xs px-2 py-1 rounded-full">
+                              New
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          {notice.content.substring(0, 100)}...
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>

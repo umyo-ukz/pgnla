@@ -90,7 +90,7 @@ export default function Contact() {
         ></div>
         <div className="relative z-10 container-wide px-4 py-24">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">   Contact Us</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">Contact Us</h1>
           </div>
         </div>
       </section>
@@ -119,7 +119,7 @@ export default function Contact() {
               <div>
                 <h3 className="text-xl font-bold text-primary-black mb-4">Contact Details</h3>
                 <p className="text-gray-700 mb-4">
-                  <i className="fas fa-phone mr-2"></i>1(868) 681-6554 
+                  <i className="fa-brands fa-whatsapp mr-2"></i>1(868) 681-6554 (Whatsapp Message)
                 </p>
                 <p className="text-gray-700 mb-4">
                   <i className="fas fa-envelope mr-2"></i> pequenosacademy@gmail.com

@@ -447,14 +447,7 @@ export default function StaffGradesPage() {
                       />
                     </div>
 
-                    {/* Current Class Display */}
-                    <div className="flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 bg-primary-red/10 text-primary-red rounded-lg border border-primary-red/20 whitespace-nowrap">
-                      <i className="fas fa-users text-xs md:text-sm"></i>
-                      <span className="font-medium text-xs md:text-sm">{selectedClassLevel}</span>
-                      <span className="text-xs bg-primary-red/20 px-1 md:px-2 py-0.5 rounded">
-                        {filteredStudents.length}
-                      </span>
-                    </div>
+                   
 
                     {/* Sort Options */}
                     <div className="flex gap-1 md:gap-2">
@@ -579,17 +572,17 @@ export default function StaffGradesPage() {
                 </div>
 
                 {/* Desktop Header Summary */}
-                <div className="hidden md:flex items-center justify-between mb-3 md:mb-4 p-3 bg-gray-50 rounded-lg">
+                <div className="hidden md:flex items-center justify-between mb-3 md:mb-4 p-3 bg-primary-red rounded-lg">
                   <div className="min-w-0">
-                    <h3 className="font-semibold text-gray-800">
+                    <h3 className="font-semibold text-white">
                       {selectedClassLevel} • {activeClassSubject?.subject?.name ?? "Subject"}
                     </h3>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-200">
                       Enter grades for {filteredStudents.length} student{filteredStudents.length !== 1 ? 's' : ''}
                       {search && ` matching "${search}"`}
                     </p>
                   </div>
-                  <div className="text-sm text-gray-500 whitespace-nowrap">
+                  <div className="text-sm text-gray-200 whitespace-nowrap">
                     <i className="fas fa-sort-amount-down mr-1"></i>
                     Sorted by {sortBy === "name" ? "Name (A-Z)" : "Grade Level"}
                   </div>

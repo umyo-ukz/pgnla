@@ -1,13 +1,13 @@
 // hooks/useAuth.ts
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { useState, useEffect } from "react"; // Add useEffect
+import { useState, useEffect } from "react";
 import { Id } from "../../convex/_generated/dataModel";
 
 const TOKEN_KEY = "pngla_session";
 
 interface User {
-  _id: Id<"users">;  // Changed back to _id to match the query response
+  _id: Id<"users">;
   fullName: string;
   email: string;
   role: "admin" | "staff" | "parent";
@@ -16,13 +16,11 @@ interface User {
   isActive: boolean;
 }
 
-
-
 export function useAuth() {
-  const [token, setToken] = useState<string | null>(
+  const [token, setTokenState] = useState<string | null>(
     localStorage.getItem(TOKEN_KEY)
   );
-  const [immediateUser, setImmediateUser] = useState<User | null>(null); // New state
+  const [immediateUser, setImmediateUser] = useState<User | null>(null);
 
   const loginMutation = useMutation(api.auth.login);
   const logoutMutation = useMutation(api.auth.logout);
@@ -32,26 +30,23 @@ export function useAuth() {
     token ? { token } : "skip"
   );
 
-  // Sync query user with immediate user
-  // Sync query user with immediate user
   useEffect(() => {
     if (userFromQuery && (!immediateUser || userFromQuery._id !== immediateUser._id)) {
       setImmediateUser(userFromQuery);
     }
   }, [userFromQuery, immediateUser]);
 
-
   async function login(email: string, password: string) {
     const res = await loginMutation({ email, password });
     localStorage.setItem(TOKEN_KEY, res.token);
-    setToken(res.token);
+    setTokenState(res.token);
 
-    // Create a properly typed user object from the response
+    // Create user object from response
     const user: User = {
       _id: res.user.id,
       fullName: res.user.fullName,
       email: res.user.email,
-      role: "parent", // Default role - should be updated based on your auth logic
+      role: res.role as "admin" | "staff" | "parent",
       _creationTime: Date.now(),
       passwordHash: "",
       isActive: true,
@@ -61,25 +56,28 @@ export function useAuth() {
     return user;
   }
 
-
-
   async function logout() {
     if (!token) return;
     await logoutMutation({ token });
     localStorage.removeItem(TOKEN_KEY);
-    setToken(null);
-    setImmediateUser(null); // Clear immediate user on logout
+    setTokenState(null);
+    setImmediateUser(null);
   }
 
-  // Use immediateUser first, fall back to query user
   const user = immediateUser || userFromQuery || null;
+
+  // Add a method to get the current token
+  function getToken() {
+    return token;
+  }
 
   return {
     user,
     role: user?.role,
+    token: getToken(), // Expose token
     login,
     logout,
-    isLoading: userFromQuery === undefined, // Make sure this exists
+    isLoading: userFromQuery === undefined,
     isAuthenticated: !!user,
   };
 }

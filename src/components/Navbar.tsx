@@ -54,7 +54,7 @@ export default function Navbar() {
               className="flex items-center gap-2 text-gray-700 hover:text-primary-red transition"
             >
               <i className="fas fa-arrow-left text-sm"></i>
-              <span className="text-sm font-medium">Back to Site</span>
+              <span className="text-sm font-medium">Back to Main Website</span>
             </Link>
 
             {/* Right side controls */}

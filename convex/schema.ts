@@ -67,7 +67,7 @@ export default defineSchema({
     .index("by_createdAt", ["createdAt"]),
 
   terms: defineTable({
-    name: v.string(), // "Term 1"
+    name: v.string(),
     startDate: v.string(),
     endDate: v.string(),
     isActive: v.boolean(),
@@ -89,7 +89,7 @@ export default defineSchema({
     studentId: v.id("students"),
     subject: v.string(),
     score: v.number(),
-    term: v.string(), // e.g. "Term 1"
+    term: v.string(),
     createdAt: v.number(),
   }).index("by_student", ["studentId"]),
 
@@ -155,6 +155,35 @@ events: defineTable({
   createdAt: v.number(),
 }),
 
+// Add to your schema.ts file
+notices: defineTable({
+  title: v.string(),
+  content: v.string(),
+  createdBy: v.id("users"),
+  gradeLevel: v.string(), // Which class/grade this notice is for
+  noticeType: v.union(
+    v.literal("general"),
+    v.literal("academic"),
+    v.literal("event"),
+    v.literal("urgent")
+  ),
+  isPublished: v.boolean(),
+  publishedAt: v.optional(v.number()),
+  createdAt: v.number(),
+})
+.index("by_grade_level", ["gradeLevel"])
+.index("by_created_at", ["createdAt"]),
+
+parentNotices: defineTable({
+  parentId: v.id("users"),
+  noticeId: v.id("notices"),
+  hasRead: v.boolean(),
+  readAt: v.optional(v.number()),
+})
+.index("by_parent", ["parentId"])
+.index("by_notice", ["noticeId"])
+.index("by_parent_notice", ["parentId", "noticeId"]),
+
 
 
 
@@ -190,6 +219,8 @@ studentApplications: defineTable({
   emergencyName: v.string(),
   emergencyRelationship: v.string(),
   emergencyPhone: v.string(),
+
+  
 
   /* =====================
      APPLICATION METADATA

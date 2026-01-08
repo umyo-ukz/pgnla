@@ -34,6 +34,20 @@ export const listStudentPerformance = query({
   },
 });
 
+export const getDashboardStats = query({
+  handler: async (ctx) => {
+    const students = await ctx.db.query("students").collect();
+    const componentGrades = await ctx.db.query("componentGrades").collect();
+    
+    // Count students with grades
+    const gradedStudents = new Set(componentGrades.map(g => g.studentId)).size;
+    
+    return {
+      totalStudents: students.length,
+      pendingGrading: students.length - gradedStudents,
+    };
+  },
+});
 
 /* ===================== GRADES ===================== */
 

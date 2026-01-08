@@ -17,6 +17,8 @@ import type * as documents from "../documents.js";
 import type * as grades from "../grades.js";
 import type * as http from "../http.js";
 import type * as messages from "../messages.js";
+import type * as notices from "../notices.js";
+import type * as parentNotices from "../parentNotices.js";
 import type * as parents from "../parents.js";
 import type * as signInParent from "../signInParent.js";
 import type * as staff from "../staff.js";
@@ -44,6 +46,8 @@ declare const fullApi: ApiFromModules<{
   grades: typeof grades;
   http: typeof http;
   messages: typeof messages;
+  notices: typeof notices;
+  parentNotices: typeof parentNotices;
   parents: typeof parents;
   signInParent: typeof signInParent;
   staff: typeof staff;
