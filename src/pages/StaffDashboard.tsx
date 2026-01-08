@@ -219,6 +219,7 @@ export default function StaffDashboard() {
                   required
                 >
                   <option value="">Select a class</option>
+                  <option value="all">All Classes</option>
                   {gradeLevels.map((grade) => (
                     <option key={grade} value={grade}>
                       {grade}
@@ -226,8 +227,9 @@ export default function StaffDashboard() {
                   ))}
                 </select>
                 <p className="text-sm text-gray-500 mt-2">
-                  This notice will be sent to all parents with students in this
-                  class.
+                  {noticeForm.gradeLevel === "all"
+                    ? "This notice will be sent to all parents with students in any class."
+                    : "This notice will be sent to all parents with students in this class."}
                 </p>
               </div>
 

@@ -53,4 +53,13 @@ export const getById = query({
   },
 });
 
+export const getGradeLevels = query({
+  handler: async (ctx) => {
+    const students = await ctx.db.query("students").collect();
+    // Get unique grade levels and sort them
+    const gradeLevels = [...new Set(students.map(s => s.gradeLevel))].sort();
+    return gradeLevels;
+  },
+});
+
 

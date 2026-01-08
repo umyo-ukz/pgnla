@@ -87,6 +87,15 @@ export default function StaffSidePanel() {
                 </NavLink>
 
                 <NavLink 
+                  to="/staff/notices" 
+                  className={linkClass}
+                  onClick={() => setIsExpanded(false)}
+                >
+                  <i className="fas fa-paper-plane w-5"></i>
+                  <span>Send Notices</span>
+                </NavLink>
+
+                <NavLink 
                   to="/staff/account" 
                   className={linkClass}
                   onClick={() => setIsExpanded(false)}
@@ -131,6 +140,11 @@ export default function StaffSidePanel() {
         <NavLink to="/staff/performance" className={linkClass}>
           <i className="fas fa-chart-line w-5"></i>
           <span>Student Performance</span>
+        </NavLink>
+
+        <NavLink to="/staff/notices" className={linkClass}>
+          <i className="fas fa-paper-plane w-5"></i>
+          <span>Send Notices</span>
         </NavLink>
 
         <NavLink to="/account" className={linkClass}>

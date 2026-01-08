@@ -1,6 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
-import { Doc } from "./_generated/dataModel"; // Import the Doc type
+import { Doc, Id } from "./_generated/dataModel"; // Import the Doc and Id types
 
 // Helper function to authenticate user by token
 async function authenticateUser(ctx: any, token?: string) {
@@ -85,35 +85,58 @@ export const createNotice = mutation({
 
     console.log("Created notice with ID:", noticeId);
 
-    // Find all parents with students in this grade level
-    const studentsInGrade = await ctx.db
-      .query("students")
-      .filter((q) => q.eq(q.field("gradeLevel"), args.gradeLevel))
-      .collect();
+    if (args.gradeLevel === "all") {
+      // Send to ALL parents - get all students and their parents
+      const allStudents = await ctx.db.query("students").collect();
+      const parentIdsSet = new Set(allStudents.map(s => s.parentId));
+      console.log(`Sending to all parents: Found ${parentIdsSet.size} unique parents from ${allStudents.length} students`);
 
-    console.log(`Found ${studentsInGrade.length} students in grade ${args.gradeLevel}`);
-
-    // Get unique parent IDs
-    const parentIds = [...new Set(studentsInGrade.map(s => s.parentId))];
-    
-    console.log(`Found ${parentIds.length} unique parents`);
-
-    // Create parent notice records for each parent
-    const parentNoticePromises = parentIds.map(async (parentId) => {
-      return await ctx.db.insert("parentNotices", {
-        parentId,
-        noticeId,
-        hasRead: false,
+      // Create parent notice records for each parent
+      const parentNoticePromises = Array.from(parentIdsSet).map(async (parentId) => {
+        return await ctx.db.insert("parentNotices", {
+          parentId: parentId as Id<"users">,
+          noticeId,
+          hasRead: false,
+        });
       });
-    });
 
-    await Promise.all(parentNoticePromises);
+      await Promise.all(parentNoticePromises);
 
-    return {
-      noticeId,
-      parentCount: parentIds.length,
-      message: "Notice created successfully",
-    };
+      return {
+        noticeId,
+        parentCount: parentIdsSet.size,
+        message: "Notice created successfully",
+      };
+    } else {
+      // Find all parents with students in this specific grade level
+      const studentsInGrade = await ctx.db
+        .query("students")
+        .filter((q) => q.eq(q.field("gradeLevel"), args.gradeLevel))
+        .collect();
+
+      console.log(`Found ${studentsInGrade.length} students in grade ${args.gradeLevel}`);
+
+      // Get unique parent IDs
+      const parentIdsSet = new Set(studentsInGrade.map(s => s.parentId));
+      console.log(`Found ${parentIdsSet.size} unique parents`);
+
+      // Create parent notice records for each parent
+      const parentNoticePromises = Array.from(parentIdsSet).map(async (parentId) => {
+        return await ctx.db.insert("parentNotices", {
+          parentId: parentId as Id<"users">,
+          noticeId,
+          hasRead: false,
+        });
+      });
+
+      await Promise.all(parentNoticePromises);
+
+      return {
+        noticeId,
+        parentCount: parentIdsSet.size,
+        message: "Notice created successfully",
+      };
+    }
   },
 });
 
@@ -122,37 +145,79 @@ export const getParentNotices = query({
   args: {
     parentId: v.id("users"),
     noticeType: v.optional(v.string()),
+    gradeLevels: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
+    // Get all students for this parent to determine their grade levels
+    const students = await ctx.db
+      .query("students")
+      .withIndex("by_parent", (q) => q.eq("parentId", args.parentId))
+      .collect();
+
+    // Get unique grade levels from parent's students
+    const studentGradeLevels = Array.from(new Set(students.map(s => s.gradeLevel)));
+    
+    // Use provided grade levels or fall back to student's grade levels
+    const targetGradeLevels = args.gradeLevels || studentGradeLevels;
+
     const parentNotices = await ctx.db
       .query("parentNotices")
       .withIndex("by_parent", (q) => q.eq("parentId", args.parentId))
       .collect();
 
-    const notices = await Promise.all(
-      parentNotices.map(async (pn) => {
-        const notice = await ctx.db.get(pn.noticeId);
-        if (!notice) return null;
+    interface NoticeWithReadStatus {
+      _id: Id<"notices">;
+      _creationTime: number;
+      title: string;
+      content: string;
+      createdBy: Id<"users">;
+      gradeLevel: string;
+      noticeType: "general" | "academic" | "event" | "urgent";
+      isPublished: boolean;
+      publishedAt?: number;
+      createdAt: number;
+      creatorName: string;
+      hasRead: boolean;
+      readAt?: number;
+    }
 
-        const creator = await ctx.db.get(notice.createdBy);
-        
-        return {
-          ...notice,
-          creatorName: creator?.fullName || "Staff Member",
-          hasRead: pn.hasRead,
-          readAt: pn.readAt,
-        };
-      })
+    const notices: NoticeWithReadStatus[] = [];
+
+    for (const pn of parentNotices) {
+      const notice = await ctx.db.get(pn.noticeId);
+      if (!notice) continue;
+
+      const creator = await ctx.db.get(notice.createdBy);
+      
+      notices.push({
+        _id: notice._id,
+        _creationTime: notice._creationTime,
+        title: notice.title,
+        content: notice.content,
+        createdBy: notice.createdBy,
+        gradeLevel: notice.gradeLevel,
+        noticeType: notice.noticeType,
+        isPublished: notice.isPublished,
+        publishedAt: notice.publishedAt,
+        createdAt: notice.createdAt,
+        creatorName: creator?.fullName || "Staff Member",
+        hasRead: pn.hasRead,
+        readAt: pn.readAt,
+      });
+    }
+
+    // Filter notices: include if gradeLevel is "all" OR matches one of the target grade levels
+    const filtered = notices.filter(n => 
+      n.gradeLevel === "all" || targetGradeLevels.includes(n.gradeLevel)
     );
 
     // Filter by type if specified
-    let filtered = notices.filter(n => n !== null);
-    if (args.noticeType) {
-      filtered = filtered.filter(n => n.noticeType === args.noticeType);
-    }
+    const finalFiltered = args.noticeType
+      ? filtered.filter(n => n.noticeType === args.noticeType)
+      : filtered;
 
     // Sort by creation date (newest first)
-    return filtered.sort((a, b) => b.createdAt - a.createdAt);
+    return finalFiltered.sort((a, b) => b.createdAt - a.createdAt);
   },
 });
 

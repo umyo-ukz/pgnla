@@ -32,6 +32,7 @@ import ComingSoon from "./pages/ComingSoon";
 import ParentLayout from "./components/ParentLayout";
 import ParentNoticesPage from "./pages/ParentNoticesPage";
 import ParentChildrenPage from "./pages/ParentChildrenPage";
+import StaffNoticesPage from "./pages/StaffNoticesPage";
 
 
 
@@ -75,6 +76,7 @@ export default function App() {
               <Route path="grades" element={<StaffGradesPage />} />
               <Route path="performance" element={<StudentPerformancePage />} />
               <Route path="performance/:studentId" element={<StudentProfile />} />
+              <Route path="notices" element={<StaffNoticesPage />} />
               <Route path="account" element={<AccountSettings />} />
             </Route>
 
