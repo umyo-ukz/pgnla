@@ -14,7 +14,7 @@ export default function QuickLinks() {
               </div>
               <h3 className="text-xl font-bold mb-3">Parent Portal</h3>
               <p className="opacity-90 mb-4">
-                Access grades, attendance, and communication with teachers
+                Access grades, attendance and communication with teachers
               </p>
               <span className="font-semibold group-hover:underline">
                 Login Now <i className="fas fa-arrow-right ml-1"></i>
@@ -31,7 +31,7 @@ export default function QuickLinks() {
               </div>
               <h3 className="text-xl font-bold mb-3">School Calendar</h3>
               <p className="opacity-90 mb-4">
-                View upcoming events, holidays, and important dates
+                View upcoming events, holidays and important dates
               </p>
               <span className="font-semibold group-hover:underline">
                 View Calendar <i className="fas fa-arrow-right ml-1"></i>

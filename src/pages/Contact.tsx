@@ -109,14 +109,17 @@ export default function Contact() {
             <div className="space-y-8">
               <div>
                 <h3 className="text-xl font-bold text-primary-black mb-4">Our Location</h3>
-                <p className="text-gray-700 mb-4">8 Boothman Drive, St. Augustine</p>
-                <p className="text-gray-700 mb-4">Open Hours:</p>
+                <p className="text-gray-700 mb-4">8 Boothman Drive,<br></br> St. John's Road, St. Augustine</p>
+
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-primary-black mb-4">Opening Hours</h3>
                 <p className="text-gray-700">Monday - Friday: 7:00 AM - 4:00 PM</p>
               </div>
               <div>
                 <h3 className="text-xl font-bold text-primary-black mb-4">Contact Details</h3>
                 <p className="text-gray-700 mb-4">
-                  <i className="fas fa-phone mr-2"></i>1(868) 681-6554
+                  <i className="fas fa-phone mr-2"></i>1(868) 681-6554 
                 </p>
                 <p className="text-gray-700 mb-4">
                   <i className="fas fa-envelope mr-2"></i> pequenosacademy@gmail.com
@@ -190,7 +193,7 @@ export default function Contact() {
                     onChange={handleInputChange}
                     required
                     className="input-field"
-                    placeholder="123-456-7890"
+                    placeholder="1-868-123-4567"
                   />
                 </div>
                 <div>

@@ -165,6 +165,7 @@ export default function Navbar() {
                 <span>{language === "en" ? "ES" : "EN"}</span>
               </button>
 
+              {/*
               <div className="text-sm text-gray-600">
                 <i className="fas fa-phone text-primary-red mr-1"></i>
                 <span>1(868) 681-6554</span>
@@ -173,6 +174,7 @@ export default function Navbar() {
                 <i className="fas fa-envelope text-primary-red mr-1"></i>
                 <span>pequenosacademy@gmail.com</span>
               </div>
+              */}
 
               {user ? (
                 <div className="relative group">
@@ -257,6 +259,12 @@ export default function Navbar() {
       <div className="hidden md:block bg-primary-red border-t-4 border-red-700">
         <div className="container-wide px-4">
           <div className="flex justify-center items-center space-x-8 py-3">
+            <Link
+              to="/home"
+              className="nav-link text-white hover:text-white hover:bg-red-700 px-3 py-2 rounded"
+            >
+              <i className="fas fa-house mr-1"></i>Home
+            </Link>
             <Link
               to="/about"
               className="nav-link text-white hover:text-white hover:bg-red-700 px-3 py-2 rounded"

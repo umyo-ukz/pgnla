@@ -903,29 +903,6 @@ export default function Registration() {
             </div>
           )}
         </div>
-
-        {/* Help Section */}
-        <div className="mt-8 grid md:grid-cols-1 gap-6">
-          <div className="bg-primary-red rounded-xl p-6 text-white">
-            <div className="flex items-start">
-              <i className="fas fa-question-circle text-2xl mt-1 mr-4"></i>
-              <div>
-                <h3 className="text-xl font-bold mb-2">Need Help?</h3>
-                <p className="mb-4 opacity-90">Contact us directly.</p>
-                <div className="space-y-2">
-                  <div className="flex items-center">
-                    <i className="fas fa-phone mr-3"></i>
-                    <span>1(868) 681-6554</span>
-                  </div>
-                  <div className="flex items-center">
-                    <i className="fas fa-envelope mr-3"></i>
-                    <span>pequenosacademy@gmail.com</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </main>
   );

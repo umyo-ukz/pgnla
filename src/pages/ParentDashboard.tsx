@@ -7,6 +7,11 @@ import { useMemo } from "react";
 export default function ParentDashboard() {
   const { user, role, isLoading, isAuthenticated, logout } = useAuth();
 
+    if (!isAuthenticated || !user || role !== "parent") {
+    return <Navigate to="/login" />;
+  }
+
+
   // Check authentication first
   if (isLoading) {
     return (
@@ -19,9 +24,6 @@ export default function ParentDashboard() {
     );
   }
 
-  if (!isAuthenticated || !user || role !== "parent") {
-    return <Navigate to="/login" />;
-  }
 
   // NOW it's safe to use user._id
   const students = useQuery(api.students.listForParent, {

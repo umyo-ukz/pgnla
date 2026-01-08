@@ -65,7 +65,7 @@ export default function Footer() {
                         <ul className="space-y-4">
                             <li className="flex items-start">
                                 <i className="fas fa-map-marker-alt text-primary-red mt-1 mr-3"></i>
-                                <span>8 Boothman Drive<br></br>St. Augustine</span>
+                                <span>8 Boothman Drive,<br></br> St. John's Road, St. Augustine</span>
                             </li>
                             <li className="flex items-center">
                                 <i className="fas fa-phone text-primary-red mr-3"></i>
