@@ -92,6 +92,15 @@ export default function AdminSidePanel() {
                 </NavLink>
 
                 <NavLink
+                  to="/admin/students"
+                  className={linkClass}
+                  onClick={() => setIsExpanded(false)}
+                >
+                  <i className="fas fa-users w-5"></i>
+                  <span>Students</span>
+                </NavLink>
+
+                <NavLink
                   to="/admin/account"
                   className={linkClass}
                   onClick={() => setIsExpanded(false)}
@@ -121,7 +130,7 @@ export default function AdminSidePanel() {
 
   // Desktop Side Panel
   return (
-    <aside className="w-64 min-h-screen bg-white border-r flex flex-col flex-shrink-0 hidden md:flex">
+    <aside className="w-64 min-h-screen bg-white border-r flex flex-col flex-shrink-0 sticky top-16 hidden md:flex">
       {/* Logo */}
       <div className="px-6 py-6 border-b">
         <h1 className="text-xl font-bold text-primary-red">
@@ -152,6 +161,11 @@ export default function AdminSidePanel() {
         <NavLink to="/admin/messages" className={linkClass}>
           <i className="fas fa-envelope w-5"></i>
           Messages
+        </NavLink>
+
+        <NavLink to="/admin/students" className={linkClass}>
+          <i className="fas fa-users w-5"></i>
+          Students
         </NavLink>
 
         <NavLink to="/admin/account" className={linkClass}>

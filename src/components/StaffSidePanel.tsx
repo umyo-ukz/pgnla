@@ -113,7 +113,7 @@ export default function StaffSidePanel() {
 
   // Desktop Side Panel
   return (
-    <aside className="w-64 border-r bg-white sticky top-0 h-screen flex-shrink-0 hidden md:block">
+    <aside className="w-64 border-r bg-white sticky top-16 h-screen flex-shrink-0 hidden md:block">
       <div className="p-5 border-b">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-primary-red flex items-center justify-center">

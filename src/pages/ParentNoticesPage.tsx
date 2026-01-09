@@ -251,9 +251,11 @@ export default function ParentNoticesPage() {
 
                     {/* Notice Message */}
                     <div className="mb-4">
-                      <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
-                        {notice.content}
-                      </p>
+                      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                        <p className="text-gray-800 whitespace-pre-wrap leading-relaxed font-medium">
+                          {notice.content}
+                        </p>
+                      </div>
                     </div>
 
                     {/* Actions */}
@@ -306,21 +308,7 @@ export default function ParentNoticesPage() {
         )}
       </div>
 
-      {/* Help Info */}
-      <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-        <div className="flex items-start gap-3">
-          <i className="fas fa-info-circle text-blue-600 mt-0.5"></i>
-          <div>
-            <h4 className="font-medium text-blue-800 mb-1">About School Notices</h4>
-            <p className="text-sm text-blue-700">
-              • <strong>Urgent</strong> notices require immediate attention<br />
-              • <strong>Academic</strong> notices contain important grade and curriculum updates<br />
-              • <strong>General</strong> notices contain school-wide announcements<br />
-              • Mark notices as "read" to track what you've seen
-            </p>
-          </div>
-        </div>
-      </div>
+      
     </div>
   );
 }

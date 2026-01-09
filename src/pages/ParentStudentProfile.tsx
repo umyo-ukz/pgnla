@@ -610,31 +610,7 @@ export default function ParentStudentProfile() {
                     </div>
                 </div>
 
-                {/* Grading System Explanation */}
-                <div className="bg-white rounded-2xl p-6 border border-gray-200">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                        <i className="fas fa-info-circle text-primary-red mr-2"></i>
-                        Understanding the Grading System
-                    </h3>
-                    <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-600">
-                        <div>
-                            <h4 className="font-medium text-gray-700 mb-1">Points System</h4>
-                            <ul className="list-disc pl-5 space-y-1">
-                                <li>Each component has a <strong>weight</strong> (max points)</li>
-                                <li>Grades are <strong>points earned</strong> out of component weight</li>
-                                <li>Example: 18/20 points = 90% of that component</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="font-medium text-gray-700 mb-1">Calculations</h4>
-                            <ul className="list-disc pl-5 space-y-1">
-                                <li>Component % = (Points Earned / Component Weight) × 100</li>
-                                <li>Subject % = (Total Points Earned / Total Possible Points) × 100</li>
-                                <li>Overall % = Weighted average of all subjects</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+              
             </div>
         </div>
     );

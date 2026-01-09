@@ -32,6 +32,8 @@ import ParentLayout from "./components/ParentLayout";
 import ParentNoticesPage from "./pages/ParentNoticesPage";
 import ParentChildrenPage from "./pages/ParentChildrenPage";
 import StaffNoticesPage from "./pages/StaffNoticesPage";
+import AdminStudentList from "./pages/AdminStudentList";
+import AdminStudentProfile from "./pages/AdminStudentProfile";
 
 
 
@@ -91,6 +93,8 @@ export default function App() {
               <Route path="account" element={<AccountSettings />} />
               <Route path="manage-accounts" element={<AdminManageAccounts />} />
               <Route path="parents/:parentId" element={<AdminParentProfile />} />
+              <Route path="students" element={<AdminStudentList />} />
+              <Route path="studentprofile/:studentId" element={<AdminStudentProfile />} />
             </Route>
 
             {/* Fallback account route for parents and other roles */}

@@ -8,6 +8,7 @@ import { Id } from "../../convex/_generated/dataModel";
 
 type ViewMode = "parents" | "staff";
 type StatusFilter = "all" | "active" | "disabled";
+type SortOrder = "asc" | "desc";
 
 interface UserAccount {
   _id: Id<"users">;
@@ -31,6 +32,7 @@ export default function AdminManageAccounts() {
   const [view, setView] = useState<ViewMode>("parents");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
   const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
   const [bulkAction, setBulkAction] = useState<string>("");
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -68,7 +70,7 @@ export default function AdminManageAccounts() {
   const filteredUsers = useMemo(() => {
     if (!activeList) return [];
 
-    return activeList.filter((u) => {
+    let filtered = activeList.filter((u) => {
       // Search filter
       const matchesSearch = `${u.fullName} ${u.email} ${u.department || ''} ${u.position || ''}`
         .toLowerCase()
@@ -81,7 +83,15 @@ export default function AdminManageAccounts() {
 
       return matchesSearch && matchesStatus;
     });
-  }, [activeList, search, statusFilter]);
+
+    // Sort by fullName
+    filtered.sort((a, b) => {
+      const comparison = a.fullName.localeCompare(b.fullName);
+      return sortOrder === "asc" ? comparison : -comparison;
+    });
+
+    return filtered;
+  }, [activeList, search, statusFilter, sortOrder]);
 
   // Stats
   const stats = useMemo(() => {

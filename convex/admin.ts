@@ -2,6 +2,7 @@ import { query } from "./_generated/server";
 import { mutation } from "./_generated/server";
 import { v } from "convex/values";
 import bcrypt from "bcryptjs";
+import { api } from "./_generated/api";
 
 
 
@@ -338,5 +339,146 @@ export const getGradeLevels = query({
       "4th Grade", "5th Grade", "6th Grade", "7th Grade", "8th Grade",
       "9th Grade", "10th Grade", "11th Grade", "12th Grade"
     ];
+  },
+});
+
+// Calculate overall grade percentage for a student
+export const getStudentOverallGrade = query({
+  args: { studentId: v.id("students") },
+  handler: async (ctx, args) => {
+    // Get all component grades for this student
+    const componentGrades = await ctx.db
+      .query("componentGrades")
+      .withIndex("by_student_classSubject", q => q.eq("studentId", args.studentId))
+      .collect();
+
+    if (componentGrades.length === 0) {
+      return null; // No grades yet
+    }
+
+    // Group grades by class subject
+    const subjectGrades: Record<string, {
+      totalEarned: number;
+      totalPossible: number;
+    }> = {};
+
+    await Promise.all(
+      componentGrades.map(async (grade) => {
+        const classSubject = await ctx.db.get(grade.classSubjectId);
+        if (!classSubject) return;
+
+        const component = await ctx.db.get(grade.componentId);
+        if (!component) return;
+
+        const key = grade.classSubjectId;
+        if (!subjectGrades[key]) {
+          subjectGrades[key] = { totalEarned: 0, totalPossible: 0 };
+        }
+
+        subjectGrades[key].totalEarned += Math.min(grade.score, component.weight);
+        subjectGrades[key].totalPossible += component.weight;
+      })
+    );
+
+    // Calculate overall average across all subjects
+    let totalEarnedPoints = 0;
+    let totalPossiblePoints = 0;
+
+    Object.values(subjectGrades).forEach(({ totalEarned, totalPossible }) => {
+      totalEarnedPoints += totalEarned;
+      totalPossiblePoints += totalPossible;
+    });
+
+    const overallPercentage = totalPossiblePoints > 0
+      ? Math.round((totalEarnedPoints / totalPossiblePoints) * 100)
+      : 0;
+
+    return overallPercentage;
+  },
+});
+
+// Get student application by student ID (matching by name)
+export const getStudentApplicationByStudentId = query({
+  args: { studentId: v.id("students") },
+  handler: async (ctx, args) => {
+    const student = await ctx.db.get(args.studentId);
+    if (!student) return null;
+
+    // Find application by matching full name
+    const [firstName, ...lastNameParts] = student.fullName.split(' ');
+    const lastName = lastNameParts.join(' ');
+
+    const applications = await ctx.db
+      .query("studentApplications")
+      .filter(q =>
+        q.and(
+          q.eq(q.field("studentFirstName"), firstName),
+          q.eq(q.field("studentLastName"), lastName)
+        )
+      )
+      .collect();
+
+    // Return the first matching application (assuming one per student)
+    return applications[0] || null;
+  },
+});
+
+// List all students with parent information and overall grades
+export const listAllStudents = query({
+  handler: async (ctx): Promise<Array<{
+    _id: string;
+    _creationTime: number;
+    parentId?: string;
+    fullName: string;
+    gradeLevel: string;
+    letterGrade?: string;
+    parent: {
+      _id: string;
+      fullName: string;
+      email: string;
+    } | null;
+    overall: number | null;
+  }>> => {
+    const students = await ctx.db.query("students").collect();
+
+    // Get parent information and overall grades for each student
+    const studentsWithParents: Array<{
+      _id: string;
+      _creationTime: number;
+      parentId?: string;
+      fullName: string;
+      gradeLevel: string;
+      letterGrade?: string;
+      parent: {
+        _id: string;
+        fullName: string;
+        email: string;
+      } | null;
+      overall: number | null;
+    }> = await Promise.all(
+      students.map(async (student) => {
+        let parent = null;
+        if (student.parentId) {
+          parent = await ctx.db.get(student.parentId);
+        }
+
+        // Calculate overall grade percentage
+        const overallGrade: number | null = await ctx.runQuery(api.admin.getStudentOverallGrade, {
+          studentId: student._id,
+        });
+
+        return {
+          ...student,
+          parent: parent ? {
+            _id: parent._id,
+            fullName: parent.fullName,
+            email: parent.email,
+          } : null,
+          overall: overallGrade,
+        };
+      })
+    );
+
+    return studentsWithParents;
   },
 });
