@@ -3,7 +3,6 @@ import { Navigate } from "react-router-dom";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useState, useMemo } from "react";
-import { Id } from "../../convex/_generated/dataModel";
 
 export default function StaffNoticesPage() {
   const { user, role, isLoading, isAuthenticated, token } = useAuth();
