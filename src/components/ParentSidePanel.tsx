@@ -9,7 +9,7 @@ export default function ParentSidePanel() {
   const [isMobile, setIsMobile] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const location = useLocation();
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuth();
 
   // Get unread notice count
   const unreadCount = useQuery(

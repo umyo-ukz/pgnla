@@ -12,7 +12,6 @@ import Login from "./pages/Login";
 import Registration from "./pages/Registration";
 import Footer from "./components/Footer";
 import ParentDashboard from "./pages/ParentDashboard";
-import GradesPage from "./pages/GradesPage";
 import AccountSettings from "./pages/AccountSettings";
 import StaffDashboard from "./pages/StaffDashboard";
 import AdminDashboard from "./pages/AdminDashboard";

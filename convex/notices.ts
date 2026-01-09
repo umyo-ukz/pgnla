@@ -1,6 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
-import { Doc, Id } from "./_generated/dataModel"; // Import the Doc and Id types
+import { Id } from "./_generated/dataModel"; // Import the Doc and Id types
 
 // Helper function to authenticate user by token
 async function authenticateUser(ctx: any, token?: string) {
