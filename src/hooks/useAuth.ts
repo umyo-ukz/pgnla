@@ -21,10 +21,8 @@ export function useAuth() {
     localStorage.getItem(TOKEN_KEY)
   );
   const [immediateUser, setImmediateUser] = useState<User | null>(null);
-
   const loginMutation = useMutation(api.auth.login);
   const logoutMutation = useMutation(api.auth.logout);
-
   const userFromQuery = useQuery(
     api.auth.getCurrentUser,
     token ? { token } : "skip"
@@ -41,7 +39,6 @@ export function useAuth() {
     localStorage.setItem(TOKEN_KEY, res.token);
     setTokenState(res.token);
 
-    // Create user object from response
     const user: User = {
       _id: res.user.id,
       fullName: res.user.fullName,
@@ -53,6 +50,8 @@ export function useAuth() {
     };
 
     setImmediateUser(user);
+    // Dispatch auth state change event
+    window.dispatchEvent(new CustomEvent('authstatechange', { detail: user }));
     return user;
   }
 
@@ -62,19 +61,16 @@ export function useAuth() {
     localStorage.removeItem(TOKEN_KEY);
     setTokenState(null);
     setImmediateUser(null);
+    window.dispatchEvent(new Event('authstatechange'));
+    window.location.href = '/login';
   }
 
   const user = immediateUser || userFromQuery || null;
 
-  // Add a method to get the current token
-  function getToken() {
-    return token;
-  }
-
   return {
     user,
     role: user?.role,
-    token: getToken(), // Expose token
+    token,
     login,
     logout,
     isLoading: userFromQuery === undefined,

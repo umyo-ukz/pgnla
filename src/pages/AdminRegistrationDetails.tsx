@@ -1,4 +1,4 @@
-import { useParams, Navigate, Link } from "react-router-dom";
+import { useParams, Navigate, Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useAuth } from "../hooks/useAuth";
@@ -8,6 +8,7 @@ import { Id } from "../../convex/_generated/dataModel";
 export default function AdminRegistrationDetails() {
   const { user } = useAuth();
   const { id } = useParams();
+  const navigate = useNavigate();
 
   // Modal states
   const [approveModalOpen, setApproveModalOpen] = useState(false);
@@ -29,13 +30,13 @@ export default function AdminRegistrationDetails() {
 
   const handleApprove = async () => {
     if (!registration) return;
-    
+
     setIsProcessing(true);
     try {
       await approve({ registrationId: registration._id });
       setApproveModalOpen(false);
       alert("Application approved successfully!");
-      window.location.reload();
+      navigate("/admin/registrations");
     } catch (error) {
       console.error("Error approving application:", error);
       alert("Failed to approve application. Please try again.");
@@ -52,14 +53,14 @@ export default function AdminRegistrationDetails() {
 
     setIsProcessing(true);
     try {
-      await reject({ 
+      await reject({
         registrationId: registration._id,
-        reason: rejectionReason 
+        reason: rejectionReason
       });
       setRejectModalOpen(false);
       setRejectionReason("");
       alert("Application rejected successfully!");
-      window.location.reload();
+      navigate("/admin/registrations");
     } catch (error) {
       console.error("Error rejecting application:", error);
       alert("Failed to reject application. Please try again.");

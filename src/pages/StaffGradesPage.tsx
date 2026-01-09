@@ -25,9 +25,15 @@ export default function StaffGradesPage() {
   const [selectedClassLevel, setSelectedClassLevel] = useState<string>("");
   const [activeClassSubjectId, setActiveClassSubjectId] = useState<Id<"classSubjects"> | null>(null);
   const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState<"name" | "grade">("name");
+  const [sortBy, setSortBy] = useState<"lastNameAsc" | "lastNameDesc" | "gradeAsc" | "gradeDesc">("lastNameAsc");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [expandedStudentId, setExpandedStudentId] = useState<string | null>(null);
+
+  // Get components for the active class subject
+  const components = useQuery(
+    api.subjectComponents.listByClassSubject,
+    activeClassSubjectId ? { classSubjectId: activeClassSubjectId } : "skip"
+  );
 
   // Initialize active term
   useEffect(() => {
@@ -85,6 +91,56 @@ export default function StaffGradesPage() {
     return classSubjects.filter(cs => cs.gradeLevel === selectedClassLevel);
   }, [classSubjects, selectedClassLevel]);
 
+  // Get all grades for calculating overall scores
+  const allGrades = useQuery(api.grades.listAll);
+
+  // Calculate overall scores for students
+  const studentOverallScores = useMemo(() => {
+    if (!allGrades || !activeClassSubjectId || !components) return new Map();
+
+    const scores = new Map<string, number>();
+
+    // Group grades by student
+    const studentGrades = new Map<string, any[]>();
+    allGrades
+      .filter(g => g.classSubjectId === activeClassSubjectId)
+      .forEach(grade => {
+        if (!studentGrades.has(grade.studentId)) {
+          studentGrades.set(grade.studentId, []);
+        }
+        studentGrades.get(grade.studentId)!.push(grade);
+      });
+
+    // Calculate overall score for each student
+    studentGrades.forEach((grades, studentId) => {
+      let totalEarnedPoints = 0;
+      let totalPossiblePoints = 0;
+
+      components.forEach(component => {
+        const grade = grades.find(g => g.componentId === component._id);
+        const weight = component.weight;
+
+        if (grade !== undefined && grade.score !== null) {
+          const earned = Math.min(grade.score, weight);
+          totalEarnedPoints += earned;
+          totalPossiblePoints += weight;
+        } else {
+          totalPossiblePoints += weight;
+        }
+      });
+
+      const overallScore = totalPossiblePoints > 0
+        ? Math.round((totalEarnedPoints / totalPossiblePoints) * 10000) / 100
+        : null;
+
+      if (overallScore !== null) {
+        scores.set(studentId, overallScore);
+      }
+    });
+
+    return scores;
+  }, [allGrades, activeClassSubjectId, components]);
+
   // Filter students by selected class level
   const filteredStudents = useMemo(() => {
     if (!students) return [];
@@ -99,17 +155,32 @@ export default function StaffGradesPage() {
 
     // Apply sorting
     filtered = [...filtered].sort((a, b) => {
-      if (sortBy === "name") {
-        return a.fullName.localeCompare(b.fullName);
-      } else {
-        const gradeCompare = a.gradeLevel.localeCompare(b.gradeLevel);
-        if (gradeCompare !== 0) return gradeCompare;
-        return a.fullName.localeCompare(b.fullName);
+      switch (sortBy) {
+        case "lastNameAsc":
+          const lastNameA = a.fullName.split(' ').pop() || '';
+          const lastNameB = b.fullName.split(' ').pop() || '';
+          return lastNameA.localeCompare(lastNameB);
+        case "lastNameDesc":
+          const lastNameADesc = a.fullName.split(' ').pop() || '';
+          const lastNameBDesc = b.fullName.split(' ').pop() || '';
+          return lastNameBDesc.localeCompare(lastNameADesc);
+        case "gradeAsc":
+          const scoreA = studentOverallScores.get(a._id) || 0;
+          const scoreB = studentOverallScores.get(b._id) || 0;
+          if (scoreA !== scoreB) return scoreA - scoreB;
+          return a.fullName.localeCompare(b.fullName);
+        case "gradeDesc":
+          const scoreADesc = studentOverallScores.get(a._id) || 0;
+          const scoreBDesc = studentOverallScores.get(b._id) || 0;
+          if (scoreADesc !== scoreBDesc) return scoreBDesc - scoreADesc;
+          return a.fullName.localeCompare(b.fullName);
+        default:
+          return a.fullName.localeCompare(b.fullName);
       }
     });
 
     return filtered;
-  }, [students, search, selectedClassLevel, sortBy]);
+  }, [students, search, selectedClassLevel, sortBy, studentOverallScores]);
 
   // Reset subject selection when class level changes
   useEffect(() => {
@@ -449,28 +520,19 @@ export default function StaffGradesPage() {
 
                    
 
-                    {/* Sort Options */}
-                    <div className="flex gap-1 md:gap-2">
-                      <button
-                        onClick={() => setSortBy("name")}
-                        className={`px-2 md:px-3 py-1.5 md:py-2 rounded-lg border flex items-center gap-1 md:gap-2 text-xs md:text-sm ${sortBy === "name"
-                            ? "bg-primary-red/10 border-primary-red text-primary-red"
-                            : "border-gray-300 text-gray-600 hover:border-gray-400"
-                          }`}
+                    {/* Sort Options Dropdown */}
+                    <div className="relative">
+                      <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value as "lastNameAsc" | "lastNameDesc" | "gradeAsc" | "gradeDesc")}
+                        className="px-2 md:px-3 py-1.5 md:py-2 pr-6 md:pr-8 rounded-lg border border-gray-300 bg-white text-xs md:text-sm focus:border-primary-red focus:ring-2 focus:ring-primary-red/20 appearance-none"
                       >
-                        <i className="fas fa-sort-alpha-down text-xs md:text-sm"></i>
-                        <span className="hidden sm:inline">Name</span>
-                      </button>
-                      <button
-                        onClick={() => setSortBy("grade")}
-                        className={`px-2 md:px-3 py-1.5 md:py-2 rounded-lg border flex items-center gap-1 md:gap-2 text-xs md:text-sm ${sortBy === "grade"
-                            ? "bg-blue-600/10 border-blue-600 text-blue-600"
-                            : "border-gray-300 text-gray-600 hover:border-gray-400"
-                          }`}
-                      >
-                        <i className="fas fa-layer-group text-xs md:text-sm"></i>
-                        <span className="hidden sm:inline">Grade</span>
-                      </button>
+                        <option value="lastNameAsc">Last Name A-Z</option>
+                        <option value="lastNameDesc">Last Name Z-A</option>
+                        <option value="gradeAsc">Grade % Low-High</option>
+                        <option value="gradeDesc">Grade % High-Low</option>
+                      </select>
+                      <i className="fas fa-chevron-down absolute right-2 md:right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs md:text-sm pointer-events-none"></i>
                     </div>
                   </div>
                 </div>
@@ -566,7 +628,7 @@ export default function StaffGradesPage() {
                     </div>
                     <div className="text-xs text-gray-500 flex items-center gap-1">
                       <i className="fas fa-sort-amount-down"></i>
-                      <span>{sortBy === "name" ? "Name" : "Grade"}</span>
+                      <span>{sortBy.startsWith("lastName") ? "Name" : "Grade"}</span>
                     </div>
                   </div>
                 </div>
@@ -584,7 +646,7 @@ export default function StaffGradesPage() {
                   </div>
                   <div className="text-sm text-gray-200 whitespace-nowrap">
                     <i className="fas fa-sort-amount-down mr-1"></i>
-                    Sorted by {sortBy === "name" ? "Name (A-Z)" : "Grade Level"}
+                    Sorted by {sortBy.startsWith("lastName") ? "Name (A-Z)" : "Grade Level"}
                   </div>
                 </div>
 

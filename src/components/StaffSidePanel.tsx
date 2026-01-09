@@ -147,10 +147,10 @@ export default function StaffSidePanel() {
           <span>Send Notices</span>
         </NavLink>
 
-        <NavLink to="/account" className={linkClass}>
+        <NavLink to="/staff/account" className={linkClass}>
           <i className="fas fa-cog w-5"></i>
           <span>Account Settings</span>
-        </NavLink>
+          </NavLink>
       </nav>
     </aside>
   );

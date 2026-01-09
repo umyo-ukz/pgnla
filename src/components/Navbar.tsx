@@ -23,14 +23,14 @@ export default function Navbar() {
       path === "/account"
     );
 
-    const handleAuthLogin = (event: CustomEvent) => {
-      console.log("Auth login event received:", event.detail);
+    const handleAuthStateChange = (event: CustomEvent) => {
+      console.log("Auth state change event received:", event.detail);
       // Force re-render
       window.location.reload(); // Or use state to trigger update
     };
 
-    window.addEventListener('auth-login', handleAuthLogin as EventListener);
-    return () => window.removeEventListener('auth-login', handleAuthLogin as EventListener);
+    window.addEventListener('authstatechange', handleAuthStateChange as EventListener);
+    return () => window.removeEventListener('authstatechange', handleAuthStateChange as EventListener);
   }, [location]);
 
   const dashboardPath =

@@ -4,27 +4,32 @@ import { useAuth } from "../hooks/useAuth";
 import { useEffect } from "react";
 
 export default function Login() {
-  const { login } = useAuth();
+  const { login, isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
-
-  useEffect(() => {
-  const handleAuthChange = () => {
-    // This will force a re-render when auth state changes
-    console.log("Auth state changed, re-rendering navbar");
-  };
-
-  window.addEventListener('authstatechange', handleAuthChange);
   
-  return () => {
-    window.removeEventListener('authstatechange', handleAuthChange);
-  };
-}, []);
+  
+
+ useEffect(() => {
+  if (isAuthenticated && user && !isRedirecting) {
+    if (user.role === "admin") {
+      navigate("/admin", { replace: true });
+    } else if (user.role === "staff") {
+      navigate("/staff", { replace: true });
+    } else if (user.role === "parent") {
+      navigate("/parent", { replace: true });
+    }
+  }
+}, [isAuthenticated, user, navigate]);
+
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [active, setActive] = useState<"parent" | "staff">("parent");
   const [loading, setLoading] = useState(false);
+  const [showParentPassword, setShowParentPassword] = useState(false);
+  const [showStaffPassword, setShowStaffPassword] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
   e.preventDefault();
@@ -33,28 +38,30 @@ export default function Login() {
 
   try {
     const user = await login(email, password);
-    
-    // Add a small delay to ensure state updates propagate
+
+    // Show redirecting page
+    setIsRedirecting(true);
+
+    // Navigate after a short delay to show the redirecting page
     setTimeout(() => {
-      // Check role and navigate
       if (user.role === "admin") {
         navigate("/admin", { replace: true });
       } else if (user.role === "staff") {
         navigate("/staff", { replace: true });
-      } else {
-        navigate("/home", { replace: true });
+      } else if (user.role === "parent") {
+        navigate("/parent", { replace: true });
       }
-      
-      // Force a small state refresh for immediate UI update
-      window.dispatchEvent(new Event('authstatechange'));
-    }, 100);
-    
+    }, 1000); // 1 second delay
+
   } catch (err: any) {
     setError(err.message || "Invalid credentials");
   } finally {
     setLoading(false);
   }
 }
+
+
+
   return (
     <main className="container-wide px-4 py-12">
       <div className="max-w-md mx-auto">
@@ -75,11 +82,10 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => setActive("parent")}
-                className={`flex-1 py-4 font-semibold text-center border-b-2 ${
-                  active === "parent"
+                className={`flex-1 py-4 font-semibold text-center border-b-2 ${active === "parent"
                     ? "border-primary-red text-primary-red"
                     : "border-transparent text-gray-500"
-                }`}
+                  }`}
               >
                 <i className="fas fa-user-friends mr-2"></i>
                 Parent Login
@@ -88,11 +94,10 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => setActive("staff")}
-                className={`flex-1 py-4 font-semibold text-center border-b-2 ${
-                  active === "staff"
+                className={`flex-1 py-4 font-semibold text-center border-b-2 ${active === "staff"
                     ? "border-primary-red text-primary-red"
                     : "border-transparent text-gray-500"
-                }`}
+                  }`}
               >
                 <i className="fas fa-chalkboard-teacher mr-2"></i>
                 Staff Login
@@ -125,14 +130,23 @@ export default function Login() {
 
                 <div>
                   <label className="form-label">Password</label>
-                  <input
-                    type="password"
-                    required
-                    className="input-field"
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
+                  <div className="relative">
+                    <input
+                      type={showParentPassword ? "text" : "password"}
+                      required
+                      className="input-field pr-12"
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      onClick={() => setShowParentPassword(!showParentPassword)}
+                    >
+                      <i className={`fas fa-${showParentPassword ? 'eye-slash' : 'eye'}`}></i>
+                    </button>
+                  </div>
                 </div>
 
                 <button
@@ -165,14 +179,23 @@ export default function Login() {
 
                 <div>
                   <label className="form-label">Password</label>
-                  <input
-                    type="password"
-                    required
-                    className="input-field"
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
+                  <div className="relative">
+                    <input
+                      type={showStaffPassword ? "text" : "password"}
+                      required
+                      className="input-field pr-12"
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      onClick={() => setShowStaffPassword(!showStaffPassword)}
+                    >
+                      <i className={`fas fa-${showStaffPassword ? 'eye-slash' : 'eye'}`}></i>
+                    </button>
+                  </div>
                 </div>
 
                 <button
