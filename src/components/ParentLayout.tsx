@@ -18,6 +18,7 @@ export default function ParentLayout() {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+  
 
   if (!user || role !== "parent") return <Navigate to="/login" />;
 
