@@ -20,6 +20,7 @@ export default function ParentLayout() {
   }, []);
   
 
+
   if (!user || role !== "parent") return <Navigate to="/login" />;
 
   return (
