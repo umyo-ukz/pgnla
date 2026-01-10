@@ -127,15 +127,14 @@ export default function ParentSidePanel() {
 
   // Desktop Side Panel
   return (
-    <aside className="w-64 border-r bg-white sticky top-0 h-screen flex-shrink-0 hidden md:block">
-      <div className="p-5 border-b">
+    <aside className="w-64 border-r border-gray-200 bg-white sticky top-0 h-screen flex-shrink-0 hidden md:block">
+      <div className="p-5 border-b border-gray-200">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-primary-red flex items-center justify-center">
             <i className="fas fa-user-friends text-white"></i>
           </div>
           <div>
             <h2 className="text-xl font-bold">Parent Panel</h2>
-            <p className="text-sm text-gray-500">Children & updates</p>
           </div>
         </div>
       </div>
