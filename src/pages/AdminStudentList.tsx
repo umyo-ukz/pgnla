@@ -3,7 +3,6 @@ import { api } from "../../convex/_generated/api";
 import { Navigate, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useState, useMemo } from "react";
-import { Id } from "../../convex/_generated/dataModel";
 
 type GradeFilter = "all" | string;
 type ParentFilter = "all" | "unassigned" | string;

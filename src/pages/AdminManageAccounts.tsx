@@ -32,7 +32,7 @@ export default function AdminManageAccounts() {
   const [view, setView] = useState<ViewMode>("parents");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
-  const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
+  const [sortOrder] = useState<SortOrder>("asc");
   const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
   const [bulkAction, setBulkAction] = useState<string>("");
   const [showCreateModal, setShowCreateModal] = useState(false);
