@@ -346,9 +346,9 @@ export default function StaffNoticesPage() {
           {/* Preview Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl border border-gray-200 p-6 sticky top-4">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">
-                <i className="fas fa-eye mr-2 text-gray-400"></i>
-                Preview
+              <h3 className="text-lg font-bold text-red-600 mb-4">
+                <i className="fas fa-eye mr-2 text-red-600"></i>
+                Notice Preview
               </h3>
 
               <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
@@ -391,24 +391,7 @@ export default function StaffNoticesPage() {
                       ? "All Grades"
                       : formData.gradeLevel}
                   </p>
-                  <p>
-                    <i className="fas fa-clock mr-1"></i>
-                    Will be sent immediately
-                  </p>
                 </div>
-              </div>
-
-              {/* Tips */}
-              <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-                <h4 className="font-medium text-amber-800 mb-2">
-                  <i className="fas fa-lightbulb mr-2"></i>
-                  Tips
-                </h4>
-                <ul className="text-sm text-amber-700 space-y-1">
-                  <li>• Use "Urgent" only for time-sensitive matters</li>
-                  <li>• Be clear and concise in your messaging</li>
-                  <li>• "All Grades" sends to all parents</li>
-                </ul>
               </div>
             </div>
           </div>
@@ -579,23 +562,6 @@ export default function StaffNoticesPage() {
           )}
         </div>
       )}
-
-      {/* Help Info */}
-      <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-        <div className="flex items-start gap-3">
-          <i className="fas fa-info-circle text-blue-600 mt-0.5"></i>
-          <div>
-            <h4 className="font-medium text-blue-800 mb-1">About Creating Notices</h4>
-            <p className="text-sm text-blue-700">
-              • <strong>General</strong> notices are for general announcements<br />
-              • <strong>Academic</strong> notices are for grades and curriculum updates<br />
-              • <strong>Event</strong> notices are for school events and activities<br />
-              • <strong>Urgent</strong> notices are for time-sensitive matters<br />
-              • Notices are automatically sent to all relevant parents
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

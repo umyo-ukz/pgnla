@@ -272,7 +272,6 @@ export default function StudentProfile() {
                                percentage >= 60 ? "Satisfactory" :
                                "Needs Improvement"}
                             </span>
-                            <span>{percentage.toFixed(1)}% of component</span>
                           </div>
                         </div>
                       );
@@ -298,32 +297,6 @@ export default function StudentProfile() {
               </div>
             );
           })}
-        </div>
-      )}
-
-      {/* Summary Card */}
-      {filteredGrades.length > 0 && (
-        <div className="bg-primary-red text-white rounded-xl p-6">
-          <h2 className="text-xl font-bold mb-4">{t("student.academicSummary")}</h2>
-          <div className="grid md:grid-cols-4 gap-6">
-            <div>
-              <p className="text-sm opacity-90">{t("student.overallAverage")}</p>
-              <p className="text-3xl font-bold">{overallAverage.toFixed(1)}%</p>
-            </div>
-            <div>
-              <p className="text-sm opacity-90">{t("student.letterGrade")}</p>
-              <p className="text-3xl font-bold">{getLetterGrade(overallAverage)}</p>
-            </div>
-            <div>
-              <p className="text-sm opacity-90">{t("student.subjectsCompleted")}</p>
-              <p className="text-3xl font-bold">{filteredGrades.length}</p>
-            </div>
-            <div>
-              <p className="text-sm opacity-90">Grading System</p>
-              <p className="text-lg font-bold">Points-Based</p>
-              <p className="text-xs opacity-80 mt-1">Scores show points earned</p>
-            </div>
-          </div>
         </div>
       )}
     </div>

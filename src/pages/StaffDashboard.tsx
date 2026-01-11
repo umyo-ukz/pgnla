@@ -543,27 +543,6 @@ export default function StaffDashboard() {
               </div>
             )}
           </div>
-
-          {/* Recent Activity */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">
-              Quick Stats
-            </h2>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="text-sm text-gray-600 mb-1">Classes Active</div>
-                <div className="text-2xl font-bold text-gray-900">
-                  {gradeLevels.length}
-                </div>
-              </div>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="text-sm text-gray-600 mb-1">Total Students</div>
-                <div className="text-2xl font-bold text-gray-900">
-                  {students?.length || 0}
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

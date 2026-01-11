@@ -130,9 +130,9 @@ export default function AdminSidePanel() {
 
   // Desktop Side Panel
   return (
-    <aside className="w-64 min-h-screen bg-white border-r flex flex-col flex-shrink-0 sticky top-16 hidden md:flex">
+    <aside className="w-64 min-h-screen bg-white border-r border-gray-200 flex flex-col flex-shrink-0 sticky top-16 hidden md:flex">
       {/* Logo */}
-      <div className="px-6 py-6 border-b">
+      <div className="px-6 py-6 border-b border-gray-200">
         <h1 className="text-xl font-bold text-primary-red">
           Admin Panel
         </h1>
